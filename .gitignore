@@ -1,0 +1,49 @@
+# ============#
+# UNITY IGNORE #
+# ============#
+
+# Ignorar pastas geradas automaticamente pela Unity
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+UserSettings/
+
+# Ignorar configurações locais do VS Code e IDEs
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln*
+*.csproj
+*.pidb
+*.userprefs
+*.booproj
+
+# Ignorar arquivos gerados automaticamente da Unity
+*.unityproj
+*.dll
+*.exe
+*.apk
+*.log
+*.asset
+*.idb
+*.pdb
+*.mdb
+*.swp
+
+# Ignorar configurações do sistema operacional
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Ignorar cache de pacotes e dependências geradas pelo Unity Package Manager
+Packages/*
+!Packages/manifest.json
+!Packages/packages-lock.json
+
+# Git pode armazenar cenas e assets, mas ignora metadados de cache da Unity
+Assets/**/*.meta
