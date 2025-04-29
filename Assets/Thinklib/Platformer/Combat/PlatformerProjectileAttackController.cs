@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ProjectileAttackController : MonoBehaviour
+public class PlatformerProjectileAttackController : MonoBehaviour
 {
     [Header("Configurações de Projétil")]
     public GameObject projectilePrefab; // Prefab do projétil

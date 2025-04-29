@@ -1564,8 +1564,8 @@ MonoBehaviour:
   projectilePrefab: {fileID: 1840044498542721038, guid: 32e33cd78c694794899bbcd5bbb31590, type: 3}
   launchPosition: {fileID: 735385553}
   projectileSpeed: 10
-  maxProjectileLifetime: 5
-  shootButton: {fileID: 749669742}
+  maxProjectileLifetime: 3
+  shootButton: {fileID: 0}
   shootKey: 101
   isFacingRight: 1
   isFacingLeft: 0

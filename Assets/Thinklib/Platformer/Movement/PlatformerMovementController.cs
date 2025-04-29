@@ -19,7 +19,7 @@ public class PlatformerMovementController : MovementController
     public bool isFalling = false; // Atualizado pelo script de pulo
 
     [Header("Configuração de Ataque")]
-    public ProjectileAttackController projectileAttackController; // Referência ao controlador de projéteis
+    public PlatformerProjectileAttackController projectileAttackController; // Referência ao controlador de projéteis
 
     private InputHandler inputHandler;
     private Animator animator;

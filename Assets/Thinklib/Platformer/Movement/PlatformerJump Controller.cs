@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerJump : MonoBehaviour
+public class PlatformerJumpController : MonoBehaviour
 {
     [Header("Configurações de Pulo")]
     public KeyCode jumpKey = KeyCode.Space;
