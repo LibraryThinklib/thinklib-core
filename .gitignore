@@ -14,17 +14,21 @@ UserSettings/
 # Ignorar configurações locais do VS Code e IDEs
 .vscode/
 .idea/
+.vs/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln*
 *.csproj
+*.unityproj
 *.pidb
 *.userprefs
 *.booproj
+*.user
+*.VC.db
+*.VC.opendb
 
 # Ignorar arquivos gerados automaticamente da Unity
-*.unityproj
 *.dll
 *.exe
 *.apk
