@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class PlatformerJumpController : MonoBehaviour
 {
-    [Header("Configurações de Pulo")]
+    [Header("Jump Settings")]
     public KeyCode jumpKey = KeyCode.Space;
     public Button jumpButton;
     public bool enableDoubleJump = false;
@@ -29,6 +29,7 @@ public class PlatformerJumpController : MonoBehaviour
             Jump();
         }
 
+        // Update falling state in animator
         animator.SetBool("IsFalling", rb.velocity.y < 0 && !isGrounded);
     }
 

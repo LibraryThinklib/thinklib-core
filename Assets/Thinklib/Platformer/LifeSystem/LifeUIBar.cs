@@ -4,45 +4,45 @@ using System.Collections;
 
 public class LifeUIBar : MonoBehaviour
 {
-    [SerializeField] private Image barraDeVida;
+    [SerializeField] private Image healthFill;
 
-    [Header("Cores configuráveis")]
-    [SerializeField] private Color corVidaAlta = new Color(0f, 1f, 0f);     // verde
-    [SerializeField] private Color corVidaMedia = new Color(1f, 0.64f, 0f);  // laranja
-    [SerializeField] private Color corVidaBaixa = new Color(1f, 0f, 0f);     // vermelho
+    [Header("Color Settings")]
+    [SerializeField] private Color highHealthColor = new Color(0f, 1f, 0f);      // green
+    [SerializeField] private Color mediumHealthColor = new Color(1f, 0.64f, 0f);  // orange
+    [SerializeField] private Color lowHealthColor = new Color(1f, 0f, 0f);        // red
 
-    public void AtualizarBarra(int vidaAtual, int vidaMaxima)
+    public void UpdateBar(int currentHealth, int maxHealth)
     {
-        if (barraDeVida != null && vidaMaxima > 0)
+        if (healthFill != null && maxHealth > 0)
         {
-            float percentual = (float)vidaAtual / vidaMaxima;
-            barraDeVida.fillAmount = percentual;
+            float percent = (float)currentHealth / maxHealth;
+            healthFill.fillAmount = percent;
 
-            // Trocar cor com base na vida restante
-            if (percentual >= 0.7f)
-                barraDeVida.color = corVidaAlta;
-            else if (percentual >= 0.3f)
-                barraDeVida.color = corVidaMedia;
+            // Change color based on remaining health
+            if (percent >= 0.7f)
+                healthFill.color = highHealthColor;
+            else if (percent >= 0.3f)
+                healthFill.color = mediumHealthColor;
             else
-                barraDeVida.color = corVidaBaixa;
+                healthFill.color = lowHealthColor;
         }
     }
 
-    public void Tremer(float intensidade)
+    public void Shake(float intensity)
     {
-        StartCoroutine(TremerUI(transform, intensidade));
+        StartCoroutine(ShakeUI(transform, intensity));
     }
 
-    private IEnumerator TremerUI(Transform alvo, float intensidade)
+    private IEnumerator ShakeUI(Transform target, float intensity)
     {
-        Vector3 posOriginal = alvo.localPosition;
+        Vector3 originalPos = target.localPosition;
 
         for (int i = 0; i < 5; i++)
         {
-            alvo.localPosition = posOriginal + (Vector3)Random.insideUnitCircle * intensidade;
+            target.localPosition = originalPos + (Vector3)Random.insideUnitCircle * intensity;
             yield return new WaitForSeconds(0.02f);
         }
 
-        alvo.localPosition = posOriginal;
+        target.localPosition = originalPos;
     }
 }

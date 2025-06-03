@@ -9,40 +9,40 @@ public class EnemyShooterAIEditor : Editor
     {
         EnemyShooterAI ai = (EnemyShooterAI)target;
 
-        EditorGUILayout.LabelField("Referências", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField("References", EditorStyles.boldLabel);
         ai.player = (Transform)EditorGUILayout.ObjectField("Player", ai.player, typeof(Transform), true);
 
         EditorGUILayout.Space(8);
 
-        EditorGUILayout.LabelField("Configuração de Disparo", EditorStyles.boldLabel);
-        ai.raioDeDisparo = EditorGUILayout.FloatField("Raio de Disparo", ai.raioDeDisparo);
-        ai.tempoEntreTiros = EditorGUILayout.FloatField("Tempo entre Tiros", ai.tempoEntreTiros);
+        EditorGUILayout.LabelField("Shooting Settings", EditorStyles.boldLabel);
+        ai.shootingRadius = EditorGUILayout.FloatField("Shooting Radius", ai.shootingRadius);
+        ai.timeBetweenShots = EditorGUILayout.FloatField("Time Between Shots", ai.timeBetweenShots);
 
         EditorGUILayout.Space(8);
 
-        EditorGUILayout.LabelField("Modo de Disparo", EditorStyles.boldLabel);
-        ai.mirarNoAlvo = EditorGUILayout.Toggle("Mirar no Alvo", ai.mirarNoAlvo);
+        EditorGUILayout.LabelField("Shooting Mode", EditorStyles.boldLabel);
+        ai.aimAtTarget = EditorGUILayout.Toggle("Aim at Target", ai.aimAtTarget);
 
         EditorGUILayout.Space(8);
 
-        EditorGUILayout.LabelField("Modo de Funcionamento", EditorStyles.boldLabel);
-        ai.isEstatico = EditorGUILayout.Toggle("Estático", ai.isEstatico);
-        ai.isPatrulheiro = EditorGUILayout.Toggle("Patrulheiro", ai.isPatrulheiro);
+        EditorGUILayout.LabelField("Behavior Mode", EditorStyles.boldLabel);
+        ai.isStatic = EditorGUILayout.Toggle("Static", ai.isStatic);
+        ai.isPatroller = EditorGUILayout.Toggle("Patroller", ai.isPatroller);
 
-        if (ai.isEstatico && ai.isPatrulheiro)
+        if (ai.isStatic && ai.isPatroller)
         {
-            EditorGUILayout.HelpBox("Você marcou os dois modos ao mesmo tempo. Use apenas um: Estático ou Patrulheiro.", MessageType.Warning);
+            EditorGUILayout.HelpBox("Both modes are selected. Please choose only one: Static or Patroller.", MessageType.Warning);
         }
 
         EditorGUILayout.Space(8);
 
-        if (ai.isPatrulheiro)
+        if (ai.isPatroller)
         {
-            EditorGUILayout.LabelField("Pontos de Patrulha", EditorStyles.boldLabel);
-            ai.pontoA = (Transform)EditorGUILayout.ObjectField("Ponto A", ai.pontoA, typeof(Transform), true);
-            ai.pontoB = (Transform)EditorGUILayout.ObjectField("Ponto B", ai.pontoB, typeof(Transform), true);
-            ai.velocidadePatrulha = EditorGUILayout.FloatField("Velocidade", ai.velocidadePatrulha);
-            ai.tolerancia = EditorGUILayout.FloatField("Tolerância", ai.tolerancia);
+            EditorGUILayout.LabelField("Patrol Points", EditorStyles.boldLabel);
+            ai.pointA = (Transform)EditorGUILayout.ObjectField("Point A", ai.pointA, typeof(Transform), true);
+            ai.pointB = (Transform)EditorGUILayout.ObjectField("Point B", ai.pointB, typeof(Transform), true);
+            ai.patrolSpeed = EditorGUILayout.FloatField("Speed", ai.patrolSpeed);
+            ai.patrolTolerance = EditorGUILayout.FloatField("Tolerance", ai.patrolTolerance);
         }
 
         EditorUtility.SetDirty(ai);

@@ -6,96 +6,95 @@ namespace Thinklib.Platformer.Enemy.Types
     [RequireComponent(typeof(ProjectileShooterBase))]
     public class EnemyShooterAI : MonoBehaviour
     {
-        [Header("Referências")]
+        [Header("References")]
         public Transform player;
 
-        [Header("Configuração de Disparo")]
-        public float raioDeDisparo = 5f;
-        public float tempoEntreTiros = 1.5f;
+        [Header("Shooting Settings")]
+        public float shootingRadius = 5f;
+        public float timeBetweenShots = 1.5f;
 
-        [Header("Modo de Disparo")]
-        public bool mirarNoAlvo = false;
+        [Header("Shooting Mode")]
+        public bool aimAtTarget = false;
 
+        [Header("Behavior Mode")]
+        public bool isStatic = true;
+        public bool isPatroller = false;
 
-        [Header("Modo de Funcionamento")]
-        public bool isEstatico = true;
-        public bool isPatrulheiro = false;
-
-        [Header("Pontos de Patrulha (se patrulheiro)")]
-        public Transform pontoA;
-        public Transform pontoB;
-        public float velocidadePatrulha = 2f;
-        public float tolerancia = 0.1f;
+        [Header("Patrol Points (if patroller)")]
+        public Transform pointA;
+        public Transform pointB;
+        public float patrolSpeed = 2f;
+        public float patrolTolerance = 0.1f;
 
         private ProjectileShooterBase shooter;
         private Animator animator;
-        private Transform destinoAtual;
-        private float cooldownAtual;
-        private bool indoParaA = false;
+        private Transform currentTarget;
+        private float currentCooldown;
+        private bool goingToA = false;
 
         private void Awake()
         {
             shooter = GetComponent<ProjectileShooterBase>();
             animator = GetComponent<Animator>();
-            destinoAtual = pontoB;
+            currentTarget = pointB;
         }
 
         private void Update()
         {
             if (player == null) return;
 
-            float distancia = Vector2.Distance(transform.position, player.position);
+            float distance = Vector2.Distance(transform.position, player.position);
 
-            if (distancia <= raioDeDisparo)
+            if (distance <= shootingRadius)
             {
-                if (cooldownAtual <= 0f)
+                if (currentCooldown <= 0f)
                 {
-                    Vector2 direcao;
+                    Vector2 direction;
 
-                    if (mirarNoAlvo)
-                        direcao = (player.position - shooter.launchPosition.position).normalized;
+                    if (aimAtTarget)
+                        direction = (player.position - shooter.launchPosition.position).normalized;
                     else
-                        direcao = new Vector2(player.position.x > transform.position.x ? 1 : -1, 0);
+                        direction = new Vector2(player.position.x > transform.position.x ? 1 : -1, 0);
 
-                    shooter.ShootProjectile(direcao);
-                    cooldownAtual = tempoEntreTiros;
+                    shooter.ShootProjectile(direction);
+                    currentCooldown = timeBetweenShots;
                 }
 
                 animator.SetBool("IsWalking", false);
             }
-            else if (isPatrulheiro)
+            else if (isPatroller)
             {
-                Patrulhar();
+                Patrol();
             }
 
-            cooldownAtual -= Time.deltaTime;
+            currentCooldown -= Time.deltaTime;
         }
 
-        private void Patrulhar()
+        private void Patrol()
         {
-            if (pontoA == null || pontoB == null) return;
+            if (pointA == null || pointB == null) return;
 
             animator.SetBool("IsWalking", true);
-            transform.position = Vector2.MoveTowards(transform.position, destinoAtual.position, velocidadePatrulha * Time.deltaTime);
+            transform.position = Vector2.MoveTowards(transform.position, currentTarget.position, patrolSpeed * Time.deltaTime);
 
-            if (Vector2.Distance(transform.position, destinoAtual.position) <= tolerancia)
+            if (Vector2.Distance(transform.position, currentTarget.position) <= patrolTolerance)
             {
-                destinoAtual = (destinoAtual == pontoA) ? pontoB : pontoA;
+                currentTarget = (currentTarget == pointA) ? pointB : pointA;
                 Flip();
             }
         }
 
         private void Flip()
         {
-            Vector3 escala = transform.localScale;
-            float direcao = destinoAtual.position.x - transform.position.x;
+            Vector3 scale = transform.localScale;
+            float direction = currentTarget.position.x - transform.position.x;
 
-            if (direcao > 0f)
-                escala.x = Mathf.Abs(escala.x);
-            else if (direcao < 0f)
-                escala.x = -Mathf.Abs(escala.x);
+            if (direction > 0f)
+                scale.x = Mathf.Abs(scale.x);
+            else if (direction < 0f)
+                scale.x = -Mathf.Abs(scale.x);
 
-            transform.localScale = escala;
+            transform.localScale = scale;
         }
     }
 }

@@ -7,7 +7,7 @@ public class EnemyAnimatorControllerCreator : MonoBehaviour
     [MenuItem("Tools/Create Enemy Animator Controller")]
     public static void CreateEnemyAnimatorController()
     {
-        string folderPath = "Assets/Thinklib/Platformer/Enemy/Animations";
+        string folderPath = "Assets/Thinklib/Animator Controller/Platformer";
 
         if (!AssetDatabase.IsValidFolder(folderPath))
         {

@@ -3,70 +3,70 @@ using UnityEngine.Events;
 
 public class LifeSystemController : MonoBehaviour
 {
-    [Header("Configuração Geral")]
-    public int vidaMaxima = 5;
-    private int vidaAtual;
+    [Header("General Settings")]
+    public int maxHealth = 5;
+    private int currentHealth;
 
-    [Header("Eventos")]
-    public UnityEvent aoMorrer;
+    [Header("Events")]
+    public UnityEvent onDeath;
 
-    [Header("Referência à UI")]
-    public LifeUIBar barraDeVida;
-    public LifeUIIcons iconesDeVida;
+    [Header("UI Reference")]
+    public LifeUIBar healthBar;
+    public LifeUIIcons healthIcons;
 
-    [Header("Feedback Visual")]
-    [SerializeField] private bool ativarTremor = false;
+    [Header("Visual Feedback")]
+    [SerializeField] private bool enableShake = false;
 
-    [Tooltip("Intensidade do tremor ao perder vida")]
-    [SerializeField, Range(0f, 10f)] private float intensidadeTremor = 0.05f;
+    [Tooltip("Shake intensity when losing health")]
+    [SerializeField, Range(0f, 10f)] private float shakeIntensity = 0.05f;
 
     private void Start()
     {
-        vidaAtual = vidaMaxima;
-        AtualizarUI();
+        currentHealth = maxHealth;
+        UpdateUI();
     }
 
-    public void SetVidaMaxima(int novaVidaMaxima)
+    public void SetMaxHealth(int newMaxHealth)
     {
-        vidaMaxima = novaVidaMaxima;
-        vidaAtual = Mathf.Min(vidaAtual, vidaMaxima);
-        AtualizarUI();
+        maxHealth = newMaxHealth;
+        currentHealth = Mathf.Min(currentHealth, maxHealth);
+        UpdateUI();
     }
 
-    public void PerderVida(int quantidade)
+    public void TakeDamage(int amount)
     {
-        vidaAtual -= quantidade;
-        vidaAtual = Mathf.Clamp(vidaAtual, 0, vidaMaxima);
-        AtualizarUI();
+        currentHealth -= amount;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        UpdateUI();
 
-        if (ativarTremor)
+        if (enableShake)
         {
-            if (barraDeVida != null)
-                barraDeVida.Tremer(intensidadeTremor);
+            if (healthBar != null)
+                healthBar.Shake(shakeIntensity);
 
-            if (iconesDeVida != null)
-                iconesDeVida.Tremer(intensidadeTremor);
+            if (healthIcons != null)
+                healthIcons.Shake(shakeIntensity);
         }
 
-        if (vidaAtual <= 0)
+        if (currentHealth <= 0)
         {
-            aoMorrer?.Invoke();
+            onDeath?.Invoke();
         }
     }
 
-    public void GanharVida(int quantidade)
+    public void Heal(int amount)
     {
-        vidaAtual += quantidade;
-        vidaAtual = Mathf.Clamp(vidaAtual, 0, vidaMaxima);
-        AtualizarUI();
+        currentHealth += amount;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        UpdateUI();
     }
 
-    private void AtualizarUI()
+    private void UpdateUI()
     {
-        if (barraDeVida != null)
-            barraDeVida.AtualizarBarra(vidaAtual, vidaMaxima);
+        if (healthBar != null)
+            healthBar.UpdateBar(currentHealth, maxHealth);
 
-        if (iconesDeVida != null)
-            iconesDeVida.AtualizarIcones(vidaAtual, vidaMaxima);
+        if (healthIcons != null)
+            healthIcons.UpdateIcons(currentHealth, maxHealth);
     }
 }
