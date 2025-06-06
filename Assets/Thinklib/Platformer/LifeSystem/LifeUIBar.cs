@@ -6,10 +6,10 @@ public class LifeUIBar : MonoBehaviour
 {
     [SerializeField] private Image barraDeVida;
 
-    [Header("Cores configuráveis")]
-    [SerializeField] private Color corVidaAlta = new Color(0f, 1f, 0f);     // verde
-    [SerializeField] private Color corVidaMedia = new Color(1f, 0.64f, 0f);  // laranja
-    [SerializeField] private Color corVidaBaixa = new Color(1f, 0f, 0f);     // vermelho
+    [Header("Cores configurÃ¡veis")]
+    [SerializeField] private Color corVidaAlta = Color.green;
+    [SerializeField] private Color corVidaMedia = new Color(1f, 0.64f, 0f); // laranja
+    [SerializeField] private Color corVidaBaixa = Color.red;
 
     public void AtualizarBarra(int vidaAtual, int vidaMaxima)
     {
@@ -18,7 +18,6 @@ public class LifeUIBar : MonoBehaviour
             float percentual = (float)vidaAtual / vidaMaxima;
             barraDeVida.fillAmount = percentual;
 
-            // Trocar cor com base na vida restante
             if (percentual >= 0.7f)
                 barraDeVida.color = corVidaAlta;
             else if (percentual >= 0.3f)

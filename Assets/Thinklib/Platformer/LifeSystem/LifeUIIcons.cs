@@ -5,8 +5,8 @@ using System.Collections.Generic;
 
 public class LifeUIIcons : MonoBehaviour
 {
-    [Header("Configuração de Ícones")]
-    [SerializeField] private Image iconeOriginal; // Image já presente na hierarquia
+    [Header("Configuraï¿½ï¿½o de ï¿½cones")]
+    [SerializeField] private Image iconeOriginal; // Image jï¿½ presente na hierarquia
     [SerializeField] private Sprite iconeAtivo;
     [SerializeField] private Sprite iconeInativo;
 
@@ -16,7 +16,7 @@ public class LifeUIIcons : MonoBehaviour
     {
         if (iconeOriginal == null)
         {
-            Debug.LogWarning("Nenhum ícone original foi atribuído.");
+            Debug.LogWarning("Nenhum icone original foi atribuido.");
             return;
         }
 
@@ -38,10 +38,10 @@ public class LifeUIIcons : MonoBehaviour
 
     private void GerarIcones(int quantidade)
     {
-        // Oculta o ícone original
+        // Oculta o icone original
         iconeOriginal.gameObject.SetActive(false);
 
-        // Remove todos os ícones antigos (exceto o original)
+        // Remove todos os icones antigos (exceto o original)
         foreach (Transform filho in transform)
         {
             if (filho != iconeOriginal.transform)

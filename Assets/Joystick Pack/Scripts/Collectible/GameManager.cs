@@ -5,13 +5,9 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    [Header("Contadores")]
+    [Header("Moedas")]
     public int moedas = 0;
-    public int vidas = 3;
-
-    [Header("Referência da UI")]
     public Text moedasText;
-    public Text vidasText;
 
     private void Awake()
     {
@@ -25,21 +21,27 @@ public class GameManager : MonoBehaviour
         {
             case TipoColetavel.Moeda:
                 moedas += valor;
+                AtualizarUI();
                 break;
+
             case TipoColetavel.Vida:
-                vidas += valor;
+                GameObject jogador = GameObject.FindGameObjectWithTag("Player");
+                if (jogador != null)
+                {
+                    LifeSystemController vida = jogador.GetComponent<LifeSystemController>();
+                    if (vida != null)
+                    {
+                        Debug.Log("Chamando GanharVida()");
+                        vida.GanharVida(valor);
+                    }
+                }
                 break;
         }
-
-        AtualizarUI();
     }
 
     private void AtualizarUI()
     {
         if (moedasText != null)
-            moedasText.text = "Moedas: " + moedas;
-
-        if (vidasText != null)
-            vidasText.text = "Vidas: " + vidas;
+            moedasText.text = "" + moedas;
     }
 }

@@ -3,14 +3,14 @@ using UnityEngine.Events;
 
 public class LifeSystemController : MonoBehaviour
 {
-    [Header("Configuração Geral")]
+    [Header("ConfiguraÃ§Ã£o Geral")]
     public int vidaMaxima = 5;
     private int vidaAtual;
 
     [Header("Eventos")]
     public UnityEvent aoMorrer;
 
-    [Header("Referência à UI")]
+    [Header("ReferÃªncia Ã  UI")]
     public LifeUIBar barraDeVida;
     public LifeUIIcons iconesDeVida;
 
@@ -56,6 +56,7 @@ public class LifeSystemController : MonoBehaviour
 
     public void GanharVida(int quantidade)
     {
+        Debug.Log("Ganhando vida: " + quantidade);
         vidaAtual += quantidade;
         vidaAtual = Mathf.Clamp(vidaAtual, 0, vidaMaxima);
         AtualizarUI();
