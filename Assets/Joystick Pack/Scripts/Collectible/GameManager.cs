@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public int moedas = 0;
     public int vidas = 3;
 
-    [Header("UI")]
+    [Header("Referência da UI")]
     public Text moedasText;
     public Text vidasText;
 
@@ -25,19 +25,20 @@ public class GameManager : MonoBehaviour
         {
             case TipoColetavel.Moeda:
                 moedas += valor;
-                AtualizarUI();
                 break;
             case TipoColetavel.Vida:
                 vidas += valor;
-                AtualizarUI();
                 break;
         }
+
+        AtualizarUI();
     }
 
     private void AtualizarUI()
     {
         if (moedasText != null)
             moedasText.text = "Moedas: " + moedas;
+
         if (vidasText != null)
             vidasText.text = "Vidas: " + vidas;
     }
