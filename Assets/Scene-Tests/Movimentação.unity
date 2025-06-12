@@ -723,10 +723,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48c37a60e353f7a459942bb0b3548f6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pontoA: {fileID: 492508881}
-  pontoB: {fileID: 1657406358}
-  velocidade: 2
-  tolerancia: 0.5
+  pointA: {fileID: 492508881}
+  pointB: {fileID: 1657406358}
+  speed: 2
+  tolerance: 0.5
 --- !u!95 &399447536
 Animator:
   serializedVersion: 5
@@ -2134,15 +2134,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1867263111}
-  raioDeDisparo: 5
-  tempoEntreTiros: 1.5
-  mirarNoAlvo: 0
-  isEstatico: 0
-  isPatrulheiro: 0
-  pontoA: {fileID: 492508881}
-  pontoB: {fileID: 1657406358}
-  velocidadePatrulha: 2
-  tolerancia: 0.5
+  shootingRadius: 5
+  timeBetweenShots: 1.5
+  aimAtTarget: 0
+  isStatic: 1
+  isPatroller: 0
+  pointA: {fileID: 0}
+  pointB: {fileID: 0}
+  patrolSpeed: 2
+  patrolTolerance: 0.1
 --- !u!114 &1679487846
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2707,14 +2707,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42ccd337ba3ae1241a5939d0a344618d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vidaMaxima: 5
-  aoMorrer:
+  maxHealth: 5
+  onDeath:
     m_PersistentCalls:
       m_Calls: []
-  barraDeVida: {fileID: 2057821912}
-  iconesDeVida: {fileID: 1466812527}
-  ativarTremor: 1
-  intensidadeTremor: 0.05
+  healthBar: {fileID: 2057821912}
+  healthIcons: {fileID: 1466812527}
+  enableShake: 0
+  shakeIntensity: 0.05
 --- !u!4 &2057821911 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4007684278234374386, guid: 1a33ab4901fb26742b0558379b3e8632, type: 3}

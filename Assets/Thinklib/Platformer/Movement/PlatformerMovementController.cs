@@ -4,22 +4,22 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class PlatformerMovementController : MovementController
 {
-    [Header("Configuração de Movimentação")]
+    [Header("Movement Settings")]
     public List<KeyCode> rightKeys = new List<KeyCode> { KeyCode.D, KeyCode.RightArrow };
     public List<KeyCode> leftKeys = new List<KeyCode> { KeyCode.A, KeyCode.LeftArrow };
     public Joystick joystick;
 
-    [Header("Configurações de Velocidade")]
+    [Header("Speed Settings")]
     public float walkSpeed = 5f;
     public float runSpeed = 8f;
     public KeyCode runKey = KeyCode.LeftShift;
 
-    [Header("Estado do Jogador")]
-    public bool isJumping = false; // Atualizado pelo script de pulo
-    public bool isFalling = false; // Atualizado pelo script de pulo
+    [Header("Player State")]
+    public bool isJumping = false; // Updated by the jump script
+    public bool isFalling = false; // Updated by the jump script
 
-    [Header("Configuração de Ataque")]
-    public PlatformerProjectileAttackController projectileAttackController; // Referência ao controlador de projéteis
+    [Header("Attack Settings")]
+    public PlatformerProjectileAttackController projectileAttackController; // Reference to the projectile controller
 
     private InputHandler inputHandler;
     private Animator animator;
@@ -33,23 +33,22 @@ public class PlatformerMovementController : MovementController
 
     private void Update()
     {
-        // Obter a direção de entrada
+        // Get input direction
         Vector2 inputDirection = joystick != null
             ? inputHandler.GetJoystickInput(joystick)
             : inputHandler.GetKeyboardInput(rightKeys, leftKeys);
 
-        // Determinar a velocidade
+        // Determine movement speed
         float speed = Input.GetKey(runKey) ? runSpeed : walkSpeed;
 
-        // Movimentar o personagem
+        // Move the character
         Move(inputDirection, speed);
 
-        // Atualizar o Animator
+        // Update animator
         UpdateAnimator(inputDirection, speed);
 
-        // Girar o sprite do personagem
+        // Flip character sprite
         FlipSprite(inputDirection.x);
-
     }
 
     private void UpdateAnimator(Vector2 inputDirection, float speed)
@@ -65,12 +64,12 @@ public class PlatformerMovementController : MovementController
     {
         if (horizontalInput > 0 && !isFacingRight)
         {
-            Debug.Log("Virando para a direita");
+            Debug.Log("Flipping to the right");
             Flip();
         }
         else if (horizontalInput < 0 && isFacingRight)
         {
-            Debug.Log("Virando para a esquerda");
+            Debug.Log("Flipping to the left");
             Flip();
         }
     }
@@ -79,14 +78,14 @@ public class PlatformerMovementController : MovementController
     {
         isFacingRight = !isFacingRight;
         Vector3 localScale = transform.localScale;
-        localScale.x *= -1; // Inverte o eixo X para virar o sprite
+        localScale.x *= -1; // Invert X axis to flip the sprite
         transform.localScale = localScale;
 
-        // Atualiza a direção do projétil de forma consistente
+        // Update projectile direction accordingly
         if (projectileAttackController != null)
         {
             int newDirection = isFacingRight ? 1 : -1;
-            projectileAttackController.SetDirection(newDirection); // Passa a direção para o controlador de projéteis
+            projectileAttackController.SetDirection(newDirection); // Pass direction to the projectile controller
         }
     }
 }

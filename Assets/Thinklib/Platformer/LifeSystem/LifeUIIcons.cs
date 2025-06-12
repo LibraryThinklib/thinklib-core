@@ -5,74 +5,70 @@ using System.Collections.Generic;
 
 public class LifeUIIcons : MonoBehaviour
 {
-    [Header("Configura��o de �cones")]
-    [SerializeField] private Image iconeOriginal; // Image j� presente na hierarquia
-    [SerializeField] private Sprite iconeAtivo;
-    [SerializeField] private Sprite iconeInativo;
+    [Header("Icon Configuration")]
+    [SerializeField] private Image originalIcon; // Image already present in the hierarchy
+    [SerializeField] private Sprite activeIcon;
+    [SerializeField] private Sprite inactiveIcon;
 
-    private List<Image> icones = new List<Image>();
+    private List<Image> iconList = new List<Image>();
 
-    public void AtualizarIcones(int vidaAtual, int vidaMaxima)
+    public void UpdateIcons(int currentHealth, int maxHealth)
     {
-        if (iconeOriginal == null)
+        if (originalIcon == null)
         {
-            Debug.LogWarning("Nenhum icone original foi atribuido.");
+            Debug.LogWarning("No original icon assigned.");
             return;
         }
 
-        if (icones.Count != vidaMaxima)
+        if (iconList.Count != maxHealth)
         {
-            GerarIcones(vidaMaxima);
+            GenerateIcons(maxHealth);
         }
 
-        for (int i = 0; i < icones.Count; i++)
+        for (int i = 0; i < iconList.Count; i++)
         {
-            if (i < vidaAtual)
-                icones[i].sprite = iconeAtivo;
-            else
-                icones[i].sprite = iconeInativo;
-
-            icones[i].enabled = i < vidaMaxima;
+            iconList[i].sprite = i < currentHealth ? activeIcon : inactiveIcon;
+            iconList[i].enabled = i < maxHealth;
         }
     }
 
-    private void GerarIcones(int quantidade)
+    private void GenerateIcons(int amount)
     {
-        // Oculta o icone original
-        iconeOriginal.gameObject.SetActive(false);
+        // Hide the original icon
+        originalIcon.gameObject.SetActive(false);
 
-        // Remove todos os icones antigos (exceto o original)
-        foreach (Transform filho in transform)
+        // Remove all old icons (except the original)
+        foreach (Transform child in transform)
         {
-            if (filho != iconeOriginal.transform)
-                Destroy(filho.gameObject);
+            if (child != originalIcon.transform)
+                Destroy(child.gameObject);
         }
 
-        icones.Clear();
+        iconList.Clear();
 
-        for (int i = 0; i < quantidade; i++)
+        for (int i = 0; i < amount; i++)
         {
-            Image novoIcone = Instantiate(iconeOriginal, transform);
-            novoIcone.gameObject.SetActive(true);
-            icones.Add(novoIcone);
+            Image newIcon = Instantiate(originalIcon, transform);
+            newIcon.gameObject.SetActive(true);
+            iconList.Add(newIcon);
         }
     }
 
-    public void Tremer(float intensidade)
+    public void Shake(float intensity)
     {
-        StartCoroutine(TremerUI(transform, intensidade));
+        StartCoroutine(ShakeUI(transform, intensity));
     }
 
-    private IEnumerator TremerUI(Transform alvo, float intensidade)
+    private IEnumerator ShakeUI(Transform target, float intensity)
     {
-        Vector3 posOriginal = alvo.localPosition;
+        Vector3 originalPos = target.localPosition;
 
         for (int i = 0; i < 5; i++)
         {
-            alvo.localPosition = posOriginal + (Vector3)Random.insideUnitCircle * intensidade;
+            target.localPosition = originalPos + (Vector3)Random.insideUnitCircle * intensity;
             yield return new WaitForSeconds(0.02f);
         }
 
-        alvo.localPosition = posOriginal;
+        target.localPosition = originalPos;
     }
 }

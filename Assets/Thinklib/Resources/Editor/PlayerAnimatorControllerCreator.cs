@@ -2,12 +2,12 @@ using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
 
-public class AnimatorControllerCreator : MonoBehaviour
+public class PlayerAnimatorControllerCreator : MonoBehaviour
 {
-    [MenuItem("Tools/Create Functional Animator Controller")]
+    [MenuItem("Tools/Create Player Animator Controller")]
     public static void CreateFunctionalAnimatorController()
     {
-        string folderPath = "Assets/Thinklib/Platformer/Movement/Animations";
+        string folderPath = "Assets/Thinklib/Animator Controller/Platformer";
 
         // Garantir que o diretório exista
         if (!AssetDatabase.IsValidFolder(folderPath))

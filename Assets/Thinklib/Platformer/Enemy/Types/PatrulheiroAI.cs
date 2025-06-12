@@ -1,23 +1,23 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
-public class PatrulheiroAI : MonoBehaviour
+public class PatrollerAI : MonoBehaviour
 {
-    [Header("Pontos de Patrulha (fora do inimigo!)")]
-    [SerializeField] private Transform pontoA;
-    [SerializeField] private Transform pontoB;
+    [Header("Patrol Points (placed outside the enemy!)")]
+    [SerializeField] private Transform pointA;
+    [SerializeField] private Transform pointB;
 
-    [Header("Configurações")]
-    [SerializeField] private float velocidade = 2f;
-    [SerializeField] private float tolerancia = 0.5f;
+    [Header("Settings")]
+    [SerializeField] private float speed = 2f;
+    [SerializeField] private float tolerance = 0.5f;
 
     private Animator animator;
-    private Transform destinoAtual;
+    private Transform currentTarget;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        destinoAtual = pontoB;
+        currentTarget = pointB;
         Flip();
     }
 
@@ -30,33 +30,33 @@ public class PatrulheiroAI : MonoBehaviour
     {
         animator.SetBool("IsWalking", true);
 
-        // Move em direção ao destino
-        transform.position = Vector2.MoveTowards(transform.position, destinoAtual.position, velocidade * Time.deltaTime);
+        // Move toward the current target
+        transform.position = Vector2.MoveTowards(transform.position, currentTarget.position, speed * Time.deltaTime);
 
-        // Chegou ao destino?
-        if (Vector2.Distance(transform.position, destinoAtual.position) <= tolerancia)
+        // Reached destination?
+        if (Vector2.Distance(transform.position, currentTarget.position) <= tolerance)
         {
-            AlternarDestino();
+            SwitchTarget();
         }
     }
 
-    private void AlternarDestino()
+    private void SwitchTarget()
     {
-        // Alterna entre ponto A e B
-        destinoAtual = destinoAtual == pontoA ? pontoB : pontoA;
+        // Toggle between point A and B
+        currentTarget = currentTarget == pointA ? pointB : pointA;
         Flip();
     }
 
     private void Flip()
     {
-        Vector3 escala = transform.localScale;
-        float direcao = destinoAtual.position.x - transform.position.x;
+        Vector3 scale = transform.localScale;
+        float direction = currentTarget.position.x - transform.position.x;
 
-        if (direcao > 0f)
-            escala.x = Mathf.Abs(escala.x); // olhando para a direita
-        else if (direcao < 0f)
-            escala.x = -Mathf.Abs(escala.x); // olhando para a esquerda
+        if (direction > 0f)
+            scale.x = Mathf.Abs(scale.x); // facing right
+        else if (direction < 0f)
+            scale.x = -Mathf.Abs(scale.x); // facing left
 
-        transform.localScale = escala;
+        transform.localScale = scale;
     }
 }

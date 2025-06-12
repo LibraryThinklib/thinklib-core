@@ -5,17 +5,17 @@ namespace Thinklib.Platformer.Enemy.Core
 {
     public class ProjectileShooterBase : MonoBehaviour
     {
-        [Header("Configurações de Projétil")]
+        [Header("Projectile Settings")]
         public GameObject projectilePrefab;
         public Transform launchPosition;
         public float projectileSpeed = 10f;
         public float maxProjectileLifetime = 5f;
 
-        [Header("Referência ao Animator (opcional)")]
+        [Header("Animator Reference (optional)")]
         public Animator animator;
 
         /// <summary>
-        /// Dispara um projétil em direção horizontal (1 = direita, -1 = esquerda)
+        /// Shoots a projectile in horizontal direction (1 = right, -1 = left)
         /// </summary>
         public void ShootProjectile(int direction)
         {
@@ -23,13 +23,13 @@ namespace Thinklib.Platformer.Enemy.Core
         }
 
         /// <summary>
-        /// Dispara um projétil na direção definida (normalizada ou não).
+        /// Shoots a projectile in the given direction (normalized or not).
         /// </summary>
         public void ShootProjectile(Vector2 direction)
         {
             if (projectilePrefab == null || launchPosition == null)
             {
-                Debug.LogWarning("ProjectileShooterBase: Projétil ou ponto de lançamento não atribuídos.");
+                Debug.LogWarning("ProjectileShooterBase: Projectile prefab or launch position not assigned.");
                 return;
             }
 
@@ -45,7 +45,7 @@ namespace Thinklib.Platformer.Enemy.Core
                 rb.velocity = direction * projectileSpeed;
             }
 
-            // Ajusta a escala para corresponder à direção horizontal
+            // Adjust the scale to match the horizontal direction
             Vector3 scale = proj.transform.localScale;
             if (Mathf.Abs(direction.x) > 0.01f)
                 scale.x = Mathf.Abs(scale.x) * Mathf.Sign(direction.x);
