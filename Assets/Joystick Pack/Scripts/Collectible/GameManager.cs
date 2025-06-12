@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
                     if (vida != null)
                     {
                         Debug.Log("Chamando GanharVida()");
-                        vida.GanharVida(valor);
+                        vida.Heal(valor);
                     }
                 }
                 break;

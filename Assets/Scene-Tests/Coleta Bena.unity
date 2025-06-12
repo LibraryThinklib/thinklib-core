@@ -316,6 +316,17 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &171684601 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3324277849906762989, guid: 16276d80c4417034187e537db72126c7, type: 3}
+  m_PrefabInstance: {fileID: 806564792}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &247322802
 GameObject:
   m_ObjectHideFlags: 0
@@ -807,10 +818,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48c37a60e353f7a459942bb0b3548f6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pontoA: {fileID: 492508881}
-  pontoB: {fileID: 1657406358}
-  velocidade: 2
-  tolerancia: 0.5
+  pointA: {fileID: 0}
+  pointB: {fileID: 0}
+  speed: 2
+  tolerance: 0.5
 --- !u!95 &399447536
 Animator:
   serializedVersion: 5
@@ -1122,6 +1133,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &548730615 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2732405291951138038, guid: 1a33ab4901fb26742b0558379b3e8632, type: 3}
+  m_PrefabInstance: {fileID: 1542770844}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &616146765
 GameObject:
   m_ObjectHideFlags: 0
@@ -1503,7 +1525,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1867263121}
         m_TargetAssemblyTypeName: LifeSystemController, Assembly-CSharp
-        m_MethodName: PerderVida
+        m_MethodName: TakeDamage
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1651,6 +1673,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7089874022986577426, guid: 16276d80c4417034187e537db72126c7, type: 3}
+      propertyPath: activeIcon
+      value: 
+      objectReference: {fileID: 21300000, guid: 4976e26256495cf49ad58e9bfb8bbe66, type: 3}
+    - target: {fileID: 7089874022986577426, guid: 16276d80c4417034187e537db72126c7, type: 3}
+      propertyPath: inactiveIcon
+      value: 
+      objectReference: {fileID: 21300000, guid: 3c8d6ba87e782cd419667d9bcc1ee416, type: 3}
+    - target: {fileID: 7089874022986577426, guid: 16276d80c4417034187e537db72126c7, type: 3}
+      propertyPath: originalIcon
+      value: 
+      objectReference: {fileID: 171684601}
     - target: {fileID: 7595592806025144024, guid: 16276d80c4417034187e537db72126c7, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2151,6 +2185,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7825181948938814455, guid: 1a33ab4901fb26742b0558379b3e8632, type: 3}
+      propertyPath: healthFill
+      value: 
+      objectReference: {fileID: 548730615}
     - target: {fileID: 8147500741346020887, guid: 1a33ab4901fb26742b0558379b3e8632, type: 3}
       propertyPath: m_Name
       value: Ui_BarraVida
@@ -2562,15 +2600,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1867263111}
-  raioDeDisparo: 5
-  tempoEntreTiros: 1.5
-  mirarNoAlvo: 0
-  isEstatico: 0
-  isPatrulheiro: 0
-  pontoA: {fileID: 492508881}
-  pontoB: {fileID: 1657406358}
-  velocidadePatrulha: 2
-  tolerancia: 0.5
+  shootingRadius: 5
+  timeBetweenShots: 1.5
+  aimAtTarget: 0
+  isStatic: 1
+  isPatroller: 0
+  pointA: {fileID: 0}
+  pointB: {fileID: 0}
+  patrolSpeed: 2
+  patrolTolerance: 0.1
 --- !u!114 &1679487846
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3139,14 +3177,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42ccd337ba3ae1241a5939d0a344618d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vidaMaxima: 5
-  aoMorrer:
+  maxHealth: 5
+  onDeath:
     m_PersistentCalls:
       m_Calls: []
-  barraDeVida: {fileID: 2057821912}
-  iconesDeVida: {fileID: 2007644380}
-  ativarTremor: 1
-  intensidadeTremor: 0.05
+  healthBar: {fileID: 2057821912}
+  healthIcons: {fileID: 2007644380}
+  enableShake: 0
+  shakeIntensity: 0.05
 --- !u!114 &2007644380 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7089874022986577426, guid: 16276d80c4417034187e537db72126c7, type: 3}
