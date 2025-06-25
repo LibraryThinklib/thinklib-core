@@ -12,9 +12,8 @@ GameObject:
   - component: {fileID: 2186246292828511271}
   - component: {fileID: 5211057225199110495}
   - component: {fileID: 8796407416087484785}
-  - component: {fileID: -6543011545205858619}
   m_Layer: 0
-  m_Name: Shoot
+  m_Name: ShootPlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -149,17 +148,3 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &-6543011545205858619
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1840044498542721038}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72db66a43212b004a9d0572f8f96297c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 1
-  targetTag: Enemy
