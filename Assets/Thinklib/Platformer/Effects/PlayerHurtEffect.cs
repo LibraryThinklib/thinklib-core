@@ -3,7 +3,7 @@
 [RequireComponent(typeof(SpriteRenderer))]
 public class PlayerHurtEffect : MonoBehaviour
 {
-    [Header("Tempo de Invulnerabilidade")]
+    [Header("Invulnerability Time")]
     public float invulnerabilityDuration = 1.5f;
     public float blinkInterval = 0.1f;
 
@@ -19,7 +19,7 @@ public class PlayerHurtEffect : MonoBehaviour
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        originalLayer = gameObject.layer; // salva a layer original
+        originalLayer = gameObject.layer; // store original layer
     }
 
     private void Update()
@@ -39,7 +39,7 @@ public class PlayerHurtEffect : MonoBehaviour
             {
                 isInvulnerable = false;
                 spriteRenderer.enabled = true;
-                gameObject.layer = originalLayer; // volta à layer normal
+                gameObject.layer = originalLayer; // restore original layer
             }
         }
     }
@@ -59,7 +59,7 @@ public class PlayerHurtEffect : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("⚠️ Layer 'PlayerInvulnerable' não encontrada. Certifique-se de que ela foi criada.");
+            Debug.LogWarning("⚠️ Layer 'PlayerInvulnerable' not found. Make sure it exists in the project.");
         }
     }
 }

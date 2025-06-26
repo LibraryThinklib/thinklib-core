@@ -20,6 +20,11 @@ public class EnemyShooterAIEditor : Editor
 
         EditorGUILayout.Space(8);
 
+        EditorGUILayout.LabelField("Damage Settings", EditorStyles.boldLabel);
+        ai.projectileDamage = EditorGUILayout.IntField("Projectile Damage", ai.projectileDamage);
+
+        EditorGUILayout.Space(8);
+
         EditorGUILayout.LabelField("Shooting Mode", EditorStyles.boldLabel);
         ai.aimAtTarget = EditorGUILayout.Toggle("Aim at Target", ai.aimAtTarget);
 

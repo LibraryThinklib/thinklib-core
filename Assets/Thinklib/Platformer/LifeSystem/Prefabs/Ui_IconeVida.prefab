@@ -151,6 +151,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17c2d4680ac10d5478cc3a6d452fe42a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  iconeOriginal: {fileID: 3324277849906762989}
-  iconeAtivo: {fileID: 21300000, guid: 4976e26256495cf49ad58e9bfb8bbe66, type: 3}
-  iconeInativo: {fileID: 21300000, guid: 3c8d6ba87e782cd419667d9bcc1ee416, type: 3}
+  originalIcon: {fileID: 0}
+  activeIcon: {fileID: 0}
+  inactiveIcon: {fileID: 0}

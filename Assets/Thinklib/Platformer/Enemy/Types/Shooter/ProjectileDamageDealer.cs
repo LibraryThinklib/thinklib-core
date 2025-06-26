@@ -21,12 +21,10 @@ public class ProjectileDamageDealer : MonoBehaviour
                 life.TakeDamage(damage);
 
                 if (hurtEffect != null)
-                {
                     hurtEffect.TriggerInvulnerability();
-                }
             }
 
-            Destroy(gameObject); // destrói o projétil ao colidir
+            Destroy(gameObject);
         }
     }
 }

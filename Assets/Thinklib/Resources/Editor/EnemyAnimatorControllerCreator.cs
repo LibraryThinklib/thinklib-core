@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class EnemyAnimatorControllerCreator : MonoBehaviour
 {
-    [MenuItem("Tools/Create Enemy Animator Controller")]
+    [MenuItem("Platformer/Create Enemy Animator Controller")]
     public static void CreateEnemyAnimatorController()
     {
-        string folderPath = "Assets/Thinklib/Animator Controller/Platformer";
+        string folderPath = "Assets/Thinklib/Platformer/Enemy/Animations";
 
         if (!AssetDatabase.IsValidFolder(folderPath))
         {
@@ -64,7 +64,9 @@ public class EnemyAnimatorControllerCreator : MonoBehaviour
 
         var anyHurt = root.AddAnyStateTransition(hurt);
         anyHurt.AddCondition(AnimatorConditionMode.If, 0, "IsHurt");
+        anyHurt.AddCondition(AnimatorConditionMode.IfNot, 0, "IsDead"); // impede se já estiver morto
         anyHurt.hasExitTime = false;
+
 
         var hurtToIdle = hurt.AddTransition(idle);
         hurtToIdle.hasExitTime = true;

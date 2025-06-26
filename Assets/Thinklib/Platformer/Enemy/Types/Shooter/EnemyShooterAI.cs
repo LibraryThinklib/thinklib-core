@@ -16,6 +16,9 @@ namespace Thinklib.Platformer.Enemy.Types
         [Header("Shooting Mode")]
         public bool aimAtTarget = false;
 
+        [Header("Damage Settings")]
+        public int projectileDamage = 1;
+
         [Header("Behavior Mode")]
         public bool isStatic = true;
         public bool isPatroller = false;
@@ -30,7 +33,6 @@ namespace Thinklib.Platformer.Enemy.Types
         private Animator animator;
         private Transform currentTarget;
         private float currentCooldown;
-        private bool goingToA = false;
 
         private void Awake()
         {
@@ -56,7 +58,15 @@ namespace Thinklib.Platformer.Enemy.Types
                     else
                         direction = new Vector2(player.position.x > transform.position.x ? 1 : -1, 0);
 
-                    shooter.ShootProjectile(direction);
+                    // Dispara e configura o dano do projétil
+                    GameObject proj = shooter.ShootProjectile(direction);
+                    if (proj != null)
+                    {
+                        var damageDealer = proj.GetComponent<ProjectileDamageDealer>();
+                        if (damageDealer != null)
+                            damageDealer.damage = projectileDamage;
+                    }
+
                     currentCooldown = timeBetweenShots;
                 }
 

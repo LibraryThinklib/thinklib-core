@@ -1,15 +1,14 @@
-using UnityEditor;
+ï»¿using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
 
 public class PlayerAnimatorControllerCreator : MonoBehaviour
 {
-    [MenuItem("Tools/Create Player Animator Controller")]
+    [MenuItem("Platformer/Create Player Animator Controller")]
     public static void CreateFunctionalAnimatorController()
     {
-        string folderPath = "Assets/Thinklib/Animator Controller/Platformer";
+        string folderPath = "Assets/Thinklib/Platformer/Player/Animations";
 
-        // Garantir que o diretório exista
         if (!AssetDatabase.IsValidFolder(folderPath))
         {
             AssetDatabase.CreateFolder("Assets/Thinklib/Platformer/Movement", "Animations");
@@ -18,71 +17,103 @@ public class PlayerAnimatorControllerCreator : MonoBehaviour
         string controllerPath = $"{folderPath}/PlayerAnimatorController.controller";
         var controller = AnimatorController.CreateAnimatorControllerAtPath(controllerPath);
 
-        // Adicionando parâmetros ao Animator
+        // ParÃ¢metros
         controller.AddParameter("IsMoving", AnimatorControllerParameterType.Bool);
         controller.AddParameter("IsJumping", AnimatorControllerParameterType.Bool);
         controller.AddParameter("IsFalling", AnimatorControllerParameterType.Bool);
         controller.AddParameter("MoveSpeed", AnimatorControllerParameterType.Float);
-        controller.AddParameter("IsShooting", AnimatorControllerParameterType.Bool); // Parâmetro para disparo
+        controller.AddParameter("IsShooting", AnimatorControllerParameterType.Bool);
+        controller.AddParameter("IsHurt", AnimatorControllerParameterType.Trigger);
+        controller.AddParameter("IsDead", AnimatorControllerParameterType.Bool);
+        controller.AddParameter("IsAttacking", AnimatorControllerParameterType.Trigger); // novo parÃ¢metro
 
-        var rootStateMachine = controller.layers[0].stateMachine;
+        var root = controller.layers[0].stateMachine;
 
-        // Estados do Animator
-        var idleState = rootStateMachine.AddState("Idle");
-        var walkState = rootStateMachine.AddState("Walking");
-        var jumpState = rootStateMachine.AddState("Jumping");
-        var fallState = rootStateMachine.AddState("Falling");
-        var shootProjectileState = rootStateMachine.AddState("ShootProjectile");
+        // Estados
+        var idle = root.AddState("Idle");
+        var walk = root.AddState("Walking");
+        var jump = root.AddState("Jumping");
+        var fall = root.AddState("Falling");
+        var shoot = root.AddState("ShootProjectile");
+        var hurt = root.AddState("Hurt");
+        var dead = root.AddState("Dead");
+        var meleeAttack = root.AddState("MeleeAttack"); // novo estado
 
-        rootStateMachine.defaultState = idleState;
+        root.defaultState = idle;
 
-        // Transições entre estados principais
-        var idleToWalk = idleState.AddTransition(walkState);
+        // MovimentaÃ§Ã£o
+        var idleToWalk = idle.AddTransition(walk);
         idleToWalk.AddCondition(AnimatorConditionMode.If, 0, "IsMoving");
         idleToWalk.hasExitTime = false;
 
-        var walkToIdle = walkState.AddTransition(idleState);
+        var walkToIdle = walk.AddTransition(idle);
         walkToIdle.AddCondition(AnimatorConditionMode.IfNot, 0, "IsMoving");
         walkToIdle.hasExitTime = false;
 
-        var walkToJump = walkState.AddTransition(jumpState);
+        var walkToJump = walk.AddTransition(jump);
         walkToJump.AddCondition(AnimatorConditionMode.If, 0, "IsJumping");
         walkToJump.hasExitTime = false;
 
-        var idleToJump = idleState.AddTransition(jumpState);
+        var idleToJump = idle.AddTransition(jump);
         idleToJump.AddCondition(AnimatorConditionMode.If, 0, "IsJumping");
         idleToJump.hasExitTime = false;
 
-        var jumpToFall = jumpState.AddTransition(fallState);
+        var jumpToFall = jump.AddTransition(fall);
         jumpToFall.AddCondition(AnimatorConditionMode.If, 0, "IsFalling");
         jumpToFall.hasExitTime = false;
 
-        var fallToIdle = fallState.AddTransition(idleState);
+        var fallToIdle = fall.AddTransition(idle);
         fallToIdle.AddCondition(AnimatorConditionMode.IfNot, 0, "IsFalling");
         fallToIdle.AddCondition(AnimatorConditionMode.IfNot, 0, "IsJumping");
         fallToIdle.hasExitTime = false;
 
-        // Configuração de transições para ShootProjectile a partir de cada estado principal
-        ConfigureShootProjectileTransitions(idleState, shootProjectileState);
-        ConfigureShootProjectileTransitions(walkState, shootProjectileState);
-        ConfigureShootProjectileTransitions(jumpState, shootProjectileState);
-        ConfigureShootProjectileTransitions(fallState, shootProjectileState);
+        // Shoot
+        ConfigureShootProjectileTransitions(idle, shoot);
+        ConfigureShootProjectileTransitions(walk, shoot);
+        ConfigureShootProjectileTransitions(jump, shoot);
+        ConfigureShootProjectileTransitions(fall, shoot);
 
-        Debug.Log("Animator Controller criado com sucesso em: " + controllerPath);
+        // Hurt
+        var anyHurt = root.AddAnyStateTransition(hurt);
+        anyHurt.AddCondition(AnimatorConditionMode.If, 0, "IsHurt");
+        anyHurt.AddCondition(AnimatorConditionMode.IfNot, 0, "IsDead");
+        anyHurt.hasExitTime = false;
+
+        var hurtToIdle = hurt.AddTransition(idle);
+        hurtToIdle.hasExitTime = true;
+        hurtToIdle.exitTime = 1f;
+        hurtToIdle.duration = 0.1f;
+
+        // Dead
+        var anyDead = root.AddAnyStateTransition(dead);
+        anyDead.AddCondition(AnimatorConditionMode.If, 0, "IsDead");
+        anyDead.hasExitTime = false;
+
+        // MeleeAttack (de qualquer estado, exceto se morto)
+        var anyAttack = root.AddAnyStateTransition(meleeAttack);
+        anyAttack.AddCondition(AnimatorConditionMode.If, 0, "IsAttacking");
+        anyAttack.AddCondition(AnimatorConditionMode.IfNot, 0, "IsDead");
+        anyAttack.hasExitTime = false;
+
+        var meleeToIdle = meleeAttack.AddTransition(idle);
+        meleeToIdle.hasExitTime = true;
+        meleeToIdle.exitTime = 1f;
+        meleeToIdle.duration = 0.1f;
+
+        Debug.Log("âœ… Player Animator Controller criado com sucesso em: " + controllerPath);
     }
 
     private static void ConfigureShootProjectileTransitions(AnimatorState fromState, AnimatorState shootProjectileState)
     {
-        // Transição do estado principal para o estado de disparo
-        var toShootTransition = fromState.AddTransition(shootProjectileState);
-        toShootTransition.AddCondition(AnimatorConditionMode.If, 1, "IsShooting");
-        toShootTransition.hasExitTime = false;
-        toShootTransition.duration = 0;
+        var toShoot = fromState.AddTransition(shootProjectileState);
+        toShoot.AddCondition(AnimatorConditionMode.If, 1, "IsShooting");
+        toShoot.hasExitTime = false;
+        toShoot.duration = 0f;
 
-        // Transição do estado de disparo de volta ao estado principal
-        var fromShootTransition = shootProjectileState.AddTransition(fromState);
-        fromShootTransition.AddCondition(AnimatorConditionMode.IfNot, 0, "IsShooting");
-        fromShootTransition.hasExitTime = true;
-        fromShootTransition.exitTime = 1.0f; // Tempo necessário para concluir a animação
+        var fromShoot = shootProjectileState.AddTransition(fromState);
+        fromShoot.AddCondition(AnimatorConditionMode.IfNot, 0, "IsShooting");
+        fromShoot.hasExitTime = true;
+        fromShoot.exitTime = 1f;
+        fromShoot.duration = 0.1f;
     }
 }

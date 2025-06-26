@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 namespace Thinklib.Platformer.Enemy.Core
@@ -17,20 +17,20 @@ namespace Thinklib.Platformer.Enemy.Core
         /// <summary>
         /// Shoots a projectile in horizontal direction (1 = right, -1 = left)
         /// </summary>
-        public void ShootProjectile(int direction)
+        public GameObject ShootProjectile(int direction)
         {
-            ShootProjectile(new Vector2(direction, 0));
+            return ShootProjectile(new Vector2(direction, 0));
         }
 
         /// <summary>
-        /// Shoots a projectile in the given direction (normalized or not).
+        /// Shoots a projectile in the given direction and returns the instance.
         /// </summary>
-        public void ShootProjectile(Vector2 direction)
+        public GameObject ShootProjectile(Vector2 direction)
         {
             if (projectilePrefab == null || launchPosition == null)
             {
                 Debug.LogWarning("ProjectileShooterBase: Projectile prefab or launch position not assigned.");
-                return;
+                return null;
             }
 
             if (animator != null)
@@ -45,7 +45,7 @@ namespace Thinklib.Platformer.Enemy.Core
                 rb.velocity = direction * projectileSpeed;
             }
 
-            // Adjust the scale to match the horizontal direction
+            // Ajusta a escala do projétil de acordo com a direção
             Vector3 scale = proj.transform.localScale;
             if (Mathf.Abs(direction.x) > 0.01f)
                 scale.x = Mathf.Abs(scale.x) * Mathf.Sign(direction.x);
@@ -53,13 +53,19 @@ namespace Thinklib.Platformer.Enemy.Core
 
             Destroy(proj, maxProjectileLifetime);
             StartCoroutine(ResetShootAnimation());
+
+            return proj;
         }
 
         private IEnumerator ResetShootAnimation()
         {
-            yield return new WaitForSeconds(0.1f);
             if (animator != null)
+            {
+                AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
+                float duration = state.length;
+                yield return new WaitForSeconds(Mathf.Max(0.1f, duration));
                 animator.SetBool("IsShooting", false);
+            }
         }
     }
 }
