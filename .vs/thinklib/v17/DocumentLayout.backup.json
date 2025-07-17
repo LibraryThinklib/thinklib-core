@@ -1,42 +1,17 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\walde\\thinklib\\",
+  "WorkspaceRootPath": "C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{448BDFFF-F7FA-D31F-6947-0BDD1FBA652D}|Assembly-CSharp.csproj|c:\\users\\walde\\thinklib\\assets\\thinklib\\platformer\\combat\\platformerprojectileattackcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{448BDFFF-F7FA-D31F-6947-0BDD1FBA652D}|Assembly-CSharp.csproj|solutionrelative:assets\\thinklib\\platformer\\combat\\platformerprojectileattackcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{34DFB440-6782-F738-751D-6F2082844D4F}|Assembly-CSharp.csproj|c:\\users\\endre\\onedrive\\documentos\\github\\thinklib\\assets\\thinklib\\towerdefense\\towers\\buildmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34DFB440-6782-F738-751D-6F2082844D4F}|Assembly-CSharp.csproj|solutionrelative:assets\\thinklib\\towerdefense\\towers\\buildmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|c:\\users\\walde\\thinklib\\assets\\thinklib\\platformer\\combat\\projectileattackcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:assets\\thinklib\\platformer\\combat\\projectileattackcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{34DFB440-6782-F738-751D-6F2082844D4F}|Assembly-CSharp.csproj|c:\\users\\endre\\onedrive\\documentos\\github\\thinklib\\assets\\thinklib\\towerdefense\\enemy\\enemypath.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34DFB440-6782-F738-751D-6F2082844D4F}|Assembly-CSharp.csproj|solutionrelative:assets\\thinklib\\towerdefense\\enemy\\enemypath.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{448BDFFF-F7FA-D31F-6947-0BDD1FBA652D}|Assembly-CSharp.csproj|C:\\Users\\walde\\thinklib\\assets\\thinklib\\platformer\\movement\\platformermovementcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{448BDFFF-F7FA-D31F-6947-0BDD1FBA652D}|Assembly-CSharp.csproj|solutionrelative:assets\\thinklib\\platformer\\movement\\platformermovementcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{448BDFFF-F7FA-D31F-6947-0BDD1FBA652D}|Assembly-CSharp.csproj|C:\\Users\\walde\\thinklib\\assets\\thinklib\\platformer\\movement\\inputhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{448BDFFF-F7FA-D31F-6947-0BDD1FBA652D}|Assembly-CSharp.csproj|solutionrelative:assets\\thinklib\\platformer\\movement\\inputhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{448BDFFF-F7FA-D31F-6947-0BDD1FBA652D}|Assembly-CSharp.csproj|C:\\Users\\walde\\thinklib\\assets\\thinklib\\platformer\\movement\\movementcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{448BDFFF-F7FA-D31F-6947-0BDD1FBA652D}|Assembly-CSharp.csproj|solutionrelative:assets\\thinklib\\platformer\\movement\\movementcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:1:0:{3A42A39A-19EB-2BC9-E7CA-7CAD046C700E}|Assembly-CSharp-Editor.csproj|c:\\users\\walde\\thinklib\\assets\\thinklib\\editor\\animationcontrollercreator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:1:0:{3A42A39A-19EB-2BC9-E7CA-7CAD046C700E}|Assembly-CSharp-Editor.csproj|solutionrelative:assets\\thinklib\\editor\\animationcontrollercreator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:2:0:{3A42A39A-19EB-2BC9-E7CA-7CAD046C700E}|Assembly-CSharp-Editor.csproj|c:\\users\\walde\\thinklib\\assets\\thinklib\\editor\\animationcontrollercreator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:2:0:{3A42A39A-19EB-2BC9-E7CA-7CAD046C700E}|Assembly-CSharp-Editor.csproj|solutionrelative:assets\\thinklib\\editor\\animationcontrollercreator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\walde\\thinklib\\Assets\\Thinklib\\Platformer\\Movement\\PlayerJump.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Thinklib\\Platformer\\Movement\\PlayerJump.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{448BDFFF-F7FA-D31F-6947-0BDD1FBA652D}|Assembly-CSharp.csproj|C:\\Users\\walde\\thinklib\\assets\\thinklib\\platformer\\movement\\platformerjump controller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{448BDFFF-F7FA-D31F-6947-0BDD1FBA652D}|Assembly-CSharp.csproj|solutionrelative:assets\\thinklib\\platformer\\movement\\platformerjump controller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\walde\\thinklib\\Assets\\Thinklib\\Platformer\\Movement\\PlayerJump.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -51,112 +26,40 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "PlatformerProjectileAttackController.cs",
-              "DocumentMoniker": "C:\\Users\\walde\\thinklib\\Assets\\Thinklib\\Platformer\\Combat\\PlatformerProjectileAttackController.cs",
-              "RelativeDocumentMoniker": "Assets\\Thinklib\\Platformer\\Combat\\PlatformerProjectileAttackController.cs",
-              "ToolTip": "C:\\Users\\walde\\thinklib\\Assets\\Thinklib\\Platformer\\Combat\\PlatformerProjectileAttackController.cs",
-              "RelativeToolTip": "Assets\\Thinklib\\Platformer\\Combat\\PlatformerProjectileAttackController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Title": "BuildManager.cs",
+              "DocumentMoniker": "C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\Assets\\Thinklib\\TowerDefense\\Towers\\BuildManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Thinklib\\TowerDefense\\Towers\\BuildManager.cs",
+              "ToolTip": "C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\Assets\\Thinklib\\TowerDefense\\Towers\\BuildManager.cs",
+              "RelativeToolTip": "Assets\\Thinklib\\TowerDefense\\Towers\\BuildManager.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAiwDUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-21T19:55:38.57Z",
+              "WhenOpened": "2025-07-17T02:09:18.906Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "AnimationControllerCreator.cs",
-              "DocumentMoniker": "C:\\Users\\walde\\thinklib\\Assets\\Thinklib\\Editor\\AnimationControllerCreator.cs",
-              "RelativeDocumentMoniker": "Assets\\Thinklib\\Editor\\AnimationControllerCreator.cs",
-              "ToolTip": "C:\\Users\\walde\\thinklib\\Assets\\Thinklib\\Editor\\AnimationControllerCreator.cs",
-              "RelativeToolTip": "Assets\\Thinklib\\Editor\\AnimationControllerCreator.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEIAAABNAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-10T19:04:15.485Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "PlayerJump.cs",
-              "DocumentMoniker": "C:\\Users\\walde\\thinklib\\Assets\\Thinklib\\Platformer\\Movement\\PlayerJump.cs",
-              "RelativeDocumentMoniker": "Assets\\Thinklib\\Platformer\\Movement\\PlayerJump.cs",
-              "ToolTip": "C:\\Users\\walde\\thinklib\\Assets\\Thinklib\\Platformer\\Movement\\PlayerJump.cs",
-              "RelativeToolTip": "Assets\\Thinklib\\Platformer\\Movement\\PlayerJump.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-10T19:01:23.669Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "AnimationControllerCreator.cs",
-              "DocumentMoniker": "C:\\Users\\walde\\thinklib\\Assets\\Thinklib\\Editor\\AnimationControllerCreator.cs",
-              "RelativeDocumentMoniker": "Assets\\Thinklib\\Editor\\AnimationControllerCreator.cs",
-              "ToolTip": "C:\\Users\\walde\\thinklib\\Assets\\Thinklib\\Editor\\AnimationControllerCreator.cs",
-              "RelativeToolTip": "Assets\\Thinklib\\Editor\\AnimationControllerCreator.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEIAAABNAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-10T19:04:15.485Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "ProjectileAttackController.cs",
-              "DocumentMoniker": "C:\\Users\\walde\\thinklib\\Assets\\Thinklib\\Platformer\\Combat\\ProjectileAttackController.cs",
-              "RelativeDocumentMoniker": "Assets\\Thinklib\\Platformer\\Combat\\ProjectileAttackController.cs",
-              "ToolTip": "C:\\Users\\walde\\thinklib\\Assets\\Thinklib\\Platformer\\Combat\\ProjectileAttackController.cs",
-              "RelativeToolTip": "Assets\\Thinklib\\Platformer\\Combat\\ProjectileAttackController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAxAAAAAAAAAA==",
+              "Title": "EnemyPath.cs",
+              "DocumentMoniker": "C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\Assets\\Thinklib\\TowerDefense\\Enemy\\EnemyPath.cs",
+              "RelativeDocumentMoniker": "Assets\\Thinklib\\TowerDefense\\Enemy\\EnemyPath.cs",
+              "ToolTip": "C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\Assets\\Thinklib\\TowerDefense\\Enemy\\EnemyPath.cs",
+              "RelativeToolTip": "Assets\\Thinklib\\TowerDefense\\Enemy\\EnemyPath.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-17T17:44:30.861Z",
+              "WhenOpened": "2025-07-17T02:02:27.007Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "PlatformerJump Controller.cs",
-              "DocumentMoniker": "C:\\Users\\walde\\thinklib\\Assets\\Thinklib\\Platformer\\Movement\\PlatformerJump Controller.cs",
-              "RelativeDocumentMoniker": "Assets\\Thinklib\\Platformer\\Movement\\PlatformerJump Controller.cs",
-              "ToolTip": "C:\\Users\\walde\\thinklib\\Assets\\Thinklib\\Platformer\\Movement\\PlatformerJump Controller.cs",
-              "RelativeToolTip": "Assets\\Thinklib\\Platformer\\Movement\\PlatformerJump Controller.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAVAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-21T19:47:53.263Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "PlatformerMovementController.cs",
-              "DocumentMoniker": "C:\\Users\\walde\\thinklib\\Assets\\Thinklib\\Platformer\\Movement\\PlatformerMovementController.cs",
-              "RelativeDocumentMoniker": "Assets\\Thinklib\\Platformer\\Movement\\PlatformerMovementController.cs",
-              "ToolTip": "C:\\Users\\walde\\thinklib\\Assets\\Thinklib\\Platformer\\Movement\\PlatformerMovementController.cs",
-              "RelativeToolTip": "Assets\\Thinklib\\Platformer\\Movement\\PlatformerMovementController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAApAAAAAAAAAA==",
+              "Title": "PlayerJump.cs",
+              "DocumentMoniker": "C:\\Users\\walde\\thinklib\\Assets\\Thinklib\\Platformer\\Movement\\PlayerJump.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\walde\\thinklib\\Assets\\Thinklib\\Platformer\\Movement\\PlayerJump.cs",
+              "ToolTip": "C:\\Users\\walde\\thinklib\\Assets\\Thinklib\\Platformer\\Movement\\PlayerJump.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\walde\\thinklib\\Assets\\Thinklib\\Platformer\\Movement\\PlayerJump.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-10T18:59:42.634Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "InputHandler.cs",
-              "DocumentMoniker": "C:\\Users\\walde\\thinklib\\Assets\\Thinklib\\Platformer\\Movement\\InputHandler.cs",
-              "RelativeDocumentMoniker": "Assets\\Thinklib\\Platformer\\Movement\\InputHandler.cs",
-              "ToolTip": "C:\\Users\\walde\\thinklib\\Assets\\Thinklib\\Platformer\\Movement\\InputHandler.cs",
-              "RelativeToolTip": "Assets\\Thinklib\\Platformer\\Movement\\InputHandler.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-10T19:01:26.1Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "MovementController.cs",
-              "DocumentMoniker": "C:\\Users\\walde\\thinklib\\Assets\\Thinklib\\Platformer\\Movement\\MovementController.cs",
-              "RelativeDocumentMoniker": "Assets\\Thinklib\\Platformer\\Movement\\MovementController.cs",
-              "ToolTip": "C:\\Users\\walde\\thinklib\\Assets\\Thinklib\\Platformer\\Movement\\MovementController.cs",
-              "RelativeToolTip": "Assets\\Thinklib\\Platformer\\Movement\\MovementController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAuAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-10T19:01:20.588Z"
+              "WhenOpened": "2025-01-10T19:01:23.669Z"
             }
           ]
         }
