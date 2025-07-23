@@ -49,3 +49,4 @@ Packages/*
 # Permaneça com:
 # Assets/ (incluindo *.unity, *.cs, *.meta, etc)
 # ProjectSettings/
+".vs/" 
