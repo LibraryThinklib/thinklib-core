@@ -30,6 +30,9 @@ public class InventoryManager : MonoBehaviour
     // NEW: Public variable to choose the mode in the Unity Inspector.
     public InteractionMode currentMode = InteractionMode.ClickToSelect;
 
+    [Header("Combination Settings")]
+    public bool combinationsEnabled = true;
+    public List<CombinationRecipe> availableRecipes;
 
     [Header("Initial Setup")]
     public List<Item> initialItems;
@@ -73,6 +76,64 @@ public class InventoryManager : MonoBehaviour
             
             draggedItemIcon.rectTransform.localPosition = localPoint;
         }
+    }
+
+    /// <summary>
+    /// Attempts to combine two items based on the list of available recipes.
+    /// </summary>
+    /// <returns>True if the combination was successful.</returns>
+    public bool TryCombineItems(Item itemA, Item itemB)
+    {
+        if (!combinationsEnabled) return false;
+
+        foreach (CombinationRecipe recipe in availableRecipes)
+        {
+            bool matches = (recipe.item1 == itemA && recipe.item2 == itemB) ||
+                           (recipe.item1 == itemB && recipe.item2 == itemA);
+
+            if (matches)
+            {
+                Debug.Log($"Combination successful! Created {recipe.resultingItem.name}");
+                
+                // First, remove the ingredients from the inventory
+                RemoveItem(itemA);
+                RemoveItem(itemB);
+
+                // --- NEW LOGIC FOR ADDING THE RESULTING ITEM ---
+
+                // Check if we should sum the values for this specific recipe
+                if (recipe.sumIngredientValues)
+                {
+                    // Create a new temporary instance of the resulting item in memory
+                    Item itemInstance = ScriptableObject.CreateInstance<Item>();
+                    
+                    // Copy all properties from the recipe's template to our new instance
+                    itemInstance.name = recipe.resultingItem.name; // Keep the same name
+                    itemInstance.description = recipe.resultingItem.description;
+                    itemInstance.icon = recipe.resultingItem.icon;
+                    
+                    // Calculate and set the new combined value
+                    itemInstance.value = itemA.value + itemB.value;
+                    
+                    // Add the new INSTANCE to the inventory
+                    AddItem(itemInstance);
+                    Debug.Log($"New value for {itemInstance.name} is {itemInstance.value}");
+                }
+                else
+                {
+                    // If not summing, just add the predefined item from the recipe (old behavior)
+                    AddItem(recipe.resultingItem);
+                }
+
+                DeselectItem();
+                EndItemDrag();
+
+                return true;
+            }
+        }
+
+        Debug.Log("These items cannot be combined.");
+        return false;
     }
     
     public void AddItem(Item item)

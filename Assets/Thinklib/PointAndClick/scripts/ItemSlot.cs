@@ -1,9 +1,9 @@
-// ItemSlot.cs
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using TMPro; // NEW: Add this line to use TextMeshPro
 
-public class ItemSlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
+public class ItemSlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDragHandler, IDropHandler
 {
     [Header("Item Data")]
     private Item item;
@@ -11,35 +11,30 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
     [Header("UI Components")]
     [SerializeField]
     private Image iconImage;
-    
-    // NEW: Reference to the slot's background image
     [SerializeField]
     private Image slotBackground;
+    [SerializeField]
+    private TextMeshProUGUI valueText;
 
     [Header("Visual Selection Feedback")]
-    // NEW: Colors we can customize in the Inspector
     [SerializeField]
     private Color normalColor = Color.white;
     [SerializeField]
-    private Color selectedColor = new Color(0.8f, 0.8f, 0.8f, 1f); // A light gray
+    private Color selectedColor = new Color(0.8f, 0.8f, 0.8f, 1f);
 
-    public static Item itemBeingDragged;
+    // CORRECT: Only one static variable for the dragged item.
+    public static Item draggedItem;
     
-    // NEW: Update method to check the selection state
     void Update()
     {
-        // Ensures we only run the logic if we have an item and a background defined
         if (item == null || slotBackground == null) return;
         
-        // Checks if the item in this slot is the same as the one selected in the InventoryManager
         if (InventoryManager.instance.selectedItem == this.item)
         {
-            // If so, applies the selected color
             slotBackground.color = selectedColor;
         }
         else
         {
-            // If not, applies the normal color
             slotBackground.color = normalColor;
         }
     }
@@ -49,7 +44,6 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
         item = newItem;
         if (item != null)
         {
-            // Assuming your 'Item' class has an 'icon' property
             iconImage.sprite = item.icon; 
             iconImage.enabled = true;
         }
@@ -57,28 +51,52 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
         {
             iconImage.enabled = false;
         }
+
+        if (item != null && item.value > 0)
+        {
+            valueText.gameObject.SetActive(true); // Show the text object
+            valueText.text = item.value.ToString(); // Set the text to the item's value
+        }
+        else
+        {
+            valueText.gameObject.SetActive(false); // Hide the text object if there's no item or value
+        }
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        // Using the translated enum and property from the previous script
-        if (InventoryManager.instance.currentMode == InteractionMode.ClickToSelect)
+        if (InventoryManager.instance.currentMode != InteractionMode.ClickToSelect) return;
+        if (eventData.button != PointerEventData.InputButton.Left) return;
+
+        Item currentlySelectedItem = InventoryManager.instance.selectedItem;
+
+        if (currentlySelectedItem != null && currentlySelectedItem != this.item)
         {
-            if (eventData.button == PointerEventData.InputButton.Left)
+            InventoryManager.instance.TryCombineItems(currentlySelectedItem, this.item);
+        }
+        else
+        {
+            if (currentlySelectedItem == this.item)
             {
-                if (itemBeingDragged == null)
-                {
-                    // If the item is already selected, clicking it again deselects it
-                    if(InventoryManager.instance.selectedItem == item)
-                    {
-                        InventoryManager.instance.DeselectItem();
-                    }
-                    else
-                    {
-                        InventoryManager.instance.SelectItem(item);
-                    }
-                }
+                InventoryManager.instance.DeselectItem();
             }
+            else
+            {
+                InventoryManager.instance.SelectItem(this.item);
+            }
+        }
+    }
+    
+    public void OnDrop(PointerEventData eventData)
+    {
+        if (InventoryManager.instance.currentMode != InteractionMode.DragAndDrop) return;
+        
+        // This will now correctly read from the variable set in OnBeginDrag
+        Item itemToCombineWith = ItemSlot.draggedItem; 
+        
+        if(itemToCombineWith != null && itemToCombineWith != this.item)
+        {
+            InventoryManager.instance.TryCombineItems(itemToCombineWith, this.item);
         }
     }
 
@@ -88,7 +106,8 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
         {
             if (item != null)
             {
-                itemBeingDragged = item;
+                // CORRECTED: Use the single 'draggedItem' variable
+                draggedItem = item; 
                 InventoryManager.instance.StartItemDrag(item);
                 iconImage.enabled = false;
             }
@@ -105,9 +124,10 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
         if (InventoryManager.instance.currentMode == InteractionMode.DragAndDrop)
         {
             InventoryManager.instance.EndItemDrag();
-            // Assuming your 'Item' class has a 'name' property
             Debug.Log($"Finished dragging item {item.name} at position {eventData.position}");
-            itemBeingDragged = null;
+            
+            // CORRECTED: Use the single 'draggedItem' variable
+            draggedItem = null;
             iconImage.enabled = true;
         }
     }
