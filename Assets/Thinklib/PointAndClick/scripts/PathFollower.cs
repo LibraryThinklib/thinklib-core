@@ -4,45 +4,65 @@ using UnityEngine;
 public class PathFollower : MonoBehaviour
 {
     public float speed = 5.0f;
-    public int currentNodeIndex = 0; // The index of the node where the pawn currently is.
+    
+    [Header("Runtime State")]
+    public int currentNodeIndex = 0;
+    public int currentValue; // The item's current value, which decreases.
 
     private Node targetNode = null;
     private bool isMoving = false;
+    private bool isBlocked = false; // "Game Over" state flag.
 
-    // Call this to set the initial position without moving.
-    public void SetCurrentNode(int nodeIndex)
+    // This method is now called by the InventoryManager to setup the pawn.
+    public void Initialize(int startNodeIndex, int initialValue)
     {
         if (GraphManager.instance == null) return;
-        currentNodeIndex = nodeIndex;
+        
+        currentNodeIndex = startNodeIndex;
+        currentValue = initialValue;
+        
+        // Place the pawn at the start node position.
         transform.position = GraphManager.instance.nodes[currentNodeIndex].position;
-        isMoving = false;
-        targetNode = null;
+        Debug.Log($"Pawn initialized at node {currentNodeIndex} with value {currentValue}.");
     }
 
-    // Call this to command the pawn to move to a new node.
+    // This method has the new core logic.
     public void MoveToNode(int targetNodeIndex)
     {
-        if (isMoving) return; // Don't accept new commands while already moving.
+        // If pawn is blocked or already moving, do nothing.
+        if (isBlocked || isMoving) return;
 
-        // Get the data for the current and target nodes.
         Node startNode = GraphManager.instance.nodes[currentNodeIndex];
-        Node destinationNode = GraphManager.instance.nodes[targetNodeIndex];
-
-        // Check if there is a valid edge from the current node to the target node.
-        bool pathExists = false;
+        
+        // Find the edge connecting the current node to the target node.
+        Edge edgeToTarget = null;
         foreach (Edge edge in startNode.edges)
         {
             if (edge.targetNodeIndex == targetNodeIndex)
             {
-                pathExists = true;
+                edgeToTarget = edge;
                 break;
             }
         }
 
-        if (pathExists)
+        if (edgeToTarget != null) // If a path exists...
         {
-            Debug.Log($"Valid path found! Moving from node {currentNodeIndex} to {targetNodeIndex}");
-            targetNode = destinationNode;
+            int moveCost = (int)edgeToTarget.weight; // Get the cost of the move.
+
+            // RULE 4: Check if the move is too expensive.
+            if (moveCost > currentValue)
+            {
+                isBlocked = true; // Block the pawn.
+                Debug.LogError($"GAME OVER: Move cost ({moveCost}) is greater than current value ({currentValue}). Pawn is blocked.");
+                return;
+            }
+            
+            // RULE 1: Subtract the value BEFORE moving.
+            currentValue -= moveCost;
+            Debug.Log($"Pawn moving. Cost: {moveCost}. New value: {currentValue}.");
+            
+            // Set the target and start moving.
+            targetNode = GraphManager.instance.nodes[targetNodeIndex];
             isMoving = true;
         }
         else
@@ -55,17 +75,26 @@ public class PathFollower : MonoBehaviour
     {
         if (isMoving && targetNode != null)
         {
-            // Move our position a step closer to the target.
             transform.position = Vector3.MoveTowards(transform.position, targetNode.position, speed * Time.deltaTime);
 
-            // Check if the position of the pawn and target node are approximately equal.
+            // When the pawn arrives at the destination...
             if (Vector3.Distance(transform.position, targetNode.position) < 0.001f)
             {
-                // We've reached the destination.
+                // Update its current node index.
                 currentNodeIndex = GraphManager.instance.nodes.IndexOf(targetNode);
                 isMoving = false;
                 targetNode = null;
-                Debug.Log($"Arrived at node {currentNodeIndex}");
+                Debug.Log($"Arrived at node {currentNodeIndex}.");
+
+                // RULE 2: Check if the item's value is depleted.
+                if (currentValue <= 0)
+                {
+                    Debug.Log("Item value depleted. Destroying pawn and unlocking inventory.");
+                    // Notify the manager that the inventory can be unlocked.
+                    InventoryManager.instance.PawnDepleted();
+                    // Destroy this pawn object.
+                    Destroy(this.gameObject);
+                }
             }
         }
     }

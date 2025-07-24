@@ -47,8 +47,9 @@ public class InventoryManager : MonoBehaviour
     public Item selectedItem { get; private set; }
     
     private GameObject activePawnObject;
+    private bool isPawnActive = false; // The inventory lock flag
     private bool isDragging = false;
-
+    
     void Start()
     {
         if (draggedItemIcon != null)
@@ -100,7 +101,6 @@ public class InventoryManager : MonoBehaviour
                     itemInstance.icon = recipe.resultingItem.icon;
                     itemInstance.value = itemA.value + itemB.value;
                     AddItem(itemInstance);
-                    Debug.Log($"New value for {itemInstance.name} is {itemInstance.value}");
                 }
                 else
                 {
@@ -131,9 +131,10 @@ public class InventoryManager : MonoBehaviour
     {
         if (item != null && inventory.Contains(item))
         {
+            // Do not call DeselectItem here as it can cause issues with the pawn lock
             if (selectedItem == item)
             {
-                DeselectItem();
+                selectedItem = null;
             }
             inventory.Remove(item);
             UpdateUI();
@@ -158,53 +159,62 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+    // MODIFIED: SelectItem handles the new rules and inventory lock.
     public void SelectItem(Item item)
     {
-        // First, deselect any previous item and destroy its pawn.
-        DeselectItem();
-
-        selectedItem = item;
-        Debug.Log($"Item selected: {item.name}");
-
-        // If the selected item has an associated pawn prefab...
-        if (item.pathFollowerPrefab != null)
+        // If a pawn is already active in the world, block selecting new items.
+        if (isPawnActive)
         {
-            // ...and we have a graph...
-            if (GraphManager.instance != null && GraphManager.instance.nodes.Count > 0)
+            Debug.Log("Cannot select a new item while a pawn is active on the graph.");
+            return;
+        }
+
+        // If the item doesn't have a pawn, it's a regular selection.
+        if (item.pathFollowerPrefab == null)
+        {
+            DeselectItem(); // Deselect previous regular item if any
+            selectedItem = item;
+            Debug.Log($"Item '{item.name}' selected (no pawn).");
+            return;
+        }
+        
+        // --- Logic for placing a pawn on the graph ---
+        
+        selectedItem = item;
+        Debug.Log($"Placing item '{item.name}' on the graph.");
+
+        if (GraphManager.instance != null && GraphManager.instance.nodes.Count > 0)
+        {
+            // Spawn the pawn.
+            Node startNode = GraphManager.instance.nodes[0];
+            activePawnObject = Instantiate(item.pathFollowerPrefab, startNode.position, Quaternion.identity);
+
+            // Setup the pawn with its starting values.
+            PathFollower follower = activePawnObject.GetComponent<PathFollower>();
+            if (follower != null)
             {
-                // ...spawn the pawn at the starting node's position (e.g., node 0).
-                Node startNode = GraphManager.instance.nodes[0];
-                activePawnObject = Instantiate(item.pathFollowerPrefab, startNode.position, Quaternion.identity);
-
-                // --- THIS IS THE NEW LOGIC ---
-                // Get the SpriteRenderer component of the instantiated pawn.
-                SpriteRenderer pawnRenderer = activePawnObject.GetComponent<SpriteRenderer>();
-
-                // Check if the pawn has a SpriteRenderer and the item has an icon.
-                if (pawnRenderer != null && item.icon != null)
-                {
-                    // Set the sprite of the pawn to be the icon of the selected item.
-                    pawnRenderer.sprite = item.icon;
-                }
-                else if (pawnRenderer == null)
-                {
-                    Debug.LogWarning($"The PathFollower prefab '{item.pathFollowerPrefab.name}' does not have a SpriteRenderer component!");
-                }
-                // --- END OF NEW LOGIC ---
-
-                // Initialize the pawn's state.
-                PathFollower follower = activePawnObject.GetComponent<PathFollower>();
-                if (follower != null)
-                {
-                    follower.SetCurrentNode(0); // Set its starting node index
-                }
+                follower.Initialize(0, item.value);
             }
+            
+            // Setup the pawn's sprite.
+            SpriteRenderer pawnRenderer = activePawnObject.GetComponent<SpriteRenderer>();
+            if (pawnRenderer != null && item.icon != null)
+            {
+                pawnRenderer.sprite = item.icon;
+            }
+
+            // Lock the inventory and remove the item now that it's in play.
+            isPawnActive = true;
+            RemoveItem(item);
         }
     }
 
+    // MODIFIED: DeselectItem now also considers the inventory lock.
     public void DeselectItem()
     {
-        // If there is an active pawn in the world, destroy it.
+        // Don't do anything if a pawn is active. The lock is only released via PawnDepleted().
+        if (isPawnActive) return; 
+        
         if (activePawnObject != null)
         {
             Destroy(activePawnObject);
@@ -214,12 +224,22 @@ public class InventoryManager : MonoBehaviour
         selectedItem = null;
         Debug.Log("No item selected.");
     }
+    
+    // NEW: A public method that the PathFollower can call when its value is depleted.
+    public void PawnDepleted()
+    {
+        isPawnActive = false; // Unlock the inventory.
+        activePawnObject = null;
+        selectedItem = null; // Clear the selected item reference.
+        Debug.Log("Pawn depleted. Inventory unlocked.");
+    }
 
     public void StartItemDrag(Item item)
     {
         if (draggedItemIcon != null)
         {
-            DeselectItem();
+            // We don't call DeselectItem() here anymore to avoid conflicts with the pawn lock
+            selectedItem = null; 
             isDragging = true;
             draggedItemIcon.sprite = item.icon; 
             draggedItemIcon.gameObject.SetActive(true);
