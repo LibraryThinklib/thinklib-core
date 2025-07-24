@@ -386,8 +386,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a17207704c8ca384ba5dbb03f93e1dc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentMode: 1
-  combinationsEnabled: 1
+  currentMode: 0
+  combinationsEnabled: 0
   availableRecipes:
   - {fileID: 11400000, guid: 8307eebab8f66d3459fa844258fef409, type: 2}
   initialItems:
@@ -516,11 +516,15 @@ MonoBehaviour:
     edges:
     - targetNodeIndex: 2
       weight: 4
+    - targetNodeIndex: 3
+      weight: 6
   - name: C
-    position: {x: -4, y: -4, z: 0}
-    edges: []
-  - name: B
-    position: {x: 250, y: 130, z: 0}
+    position: {x: -2.2768493, y: -2.14333, z: 0}
+    edges:
+    - targetNodeIndex: 3
+      weight: 2
+  - name: D
+    position: {x: 1.8075781, y: -3.7821913, z: 0}
     edges: []
 --- !u!4 &959034022
 Transform:
