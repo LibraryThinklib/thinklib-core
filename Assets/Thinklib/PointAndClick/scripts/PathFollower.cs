@@ -1,5 +1,6 @@
 // PathFollower.cs
 using UnityEngine;
+using TMPro; // Add this to control TextMeshPro
 
 public class PathFollower : MonoBehaviour
 {
@@ -7,13 +8,15 @@ public class PathFollower : MonoBehaviour
     
     [Header("Runtime State")]
     public int currentNodeIndex = 0;
-    public int currentValue; // The item's current value, which decreases.
+    public int currentValue;
+
+    [Header("Visuals")]
+    [SerializeField] private TextMeshPro valueText; // Reference to the text component on the pawn
 
     private Node targetNode = null;
     private bool isMoving = false;
-    private bool isBlocked = false; // "Game Over" state flag.
+    private bool isBlocked = false;
 
-    // This method is now called by the InventoryManager to setup the pawn.
     public void Initialize(int startNodeIndex, int initialValue)
     {
         if (GraphManager.instance == null) return;
@@ -21,53 +24,52 @@ public class PathFollower : MonoBehaviour
         currentNodeIndex = startNodeIndex;
         currentValue = initialValue;
         
-        // Place the pawn at the start node position.
         transform.position = GraphManager.instance.nodes[currentNodeIndex].position;
-        Debug.Log($"Pawn initialized at node {currentNodeIndex} with value {currentValue}.");
+        
+        // Update the text when initialized
+        UpdateValueText();
     }
 
-    // This method has the new core logic.
     public void MoveToNode(int targetNodeIndex)
     {
-        // If pawn is blocked or already moving, do nothing.
         if (isBlocked || isMoving) return;
 
         Node startNode = GraphManager.instance.nodes[currentNodeIndex];
         
-        // Find the edge connecting the current node to the target node.
         Edge edgeToTarget = null;
         foreach (Edge edge in startNode.edges)
         {
-            if (edge.targetNodeIndex == targetNodeIndex)
-            {
-                edgeToTarget = edge;
-                break;
-            }
+            if (edge.targetNodeIndex == targetNodeIndex) { edgeToTarget = edge; break; }
         }
 
-        if (edgeToTarget != null) // If a path exists...
+        if (edgeToTarget != null)
         {
-            int moveCost = (int)edgeToTarget.weight; // Get the cost of the move.
+            int moveCost = (int)edgeToTarget.weight;
 
-            // RULE 4: Check if the move is too expensive.
             if (moveCost > currentValue)
             {
-                isBlocked = true; // Block the pawn.
-                Debug.LogError($"GAME OVER: Move cost ({moveCost}) is greater than current value ({currentValue}). Pawn is blocked.");
+                isBlocked = true;
+                Debug.LogError($"GAME OVER: Move cost ({moveCost}) > current value ({currentValue}).");
+                // Optionally hide text on game over
+                if (valueText != null) valueText.gameObject.SetActive(false);
                 return;
             }
             
-            // RULE 1: Subtract the value BEFORE moving.
             currentValue -= moveCost;
-            Debug.Log($"Pawn moving. Cost: {moveCost}. New value: {currentValue}.");
+            UpdateValueText(); // Update the text after value changes
             
-            // Set the target and start moving.
             targetNode = GraphManager.instance.nodes[targetNodeIndex];
             isMoving = true;
         }
-        else
+    }
+    
+    // NEW Helper Method
+    void UpdateValueText()
+    {
+        // Only try to update text if the component is assigned
+        if (valueText != null)
         {
-            Debug.Log($"No direct path from node {currentNodeIndex} to {targetNodeIndex}!");
+            valueText.text = currentValue.ToString();
         }
     }
 
@@ -86,13 +88,30 @@ public class PathFollower : MonoBehaviour
                 targetNode = null;
                 Debug.Log($"Arrived at node {currentNodeIndex}.");
 
-                // RULE 2: Check if the item's value is depleted.
+                // --- NEW LOGIC: Check if the destination is a final node ---
+                Node arrivedNode = GraphManager.instance.nodes[currentNodeIndex];
+                if (arrivedNode.isFinalNode)
+                {
+                    Debug.Log($"<color=lime>SUCCESS! Reached final node {currentNodeIndex}.</color>");
+                    
+                    // Trigger the global success event from the GraphManager.
+                    if (GraphManager.instance.onFinalNodeReached != null)
+                    {
+                        GraphManager.instance.onFinalNodeReached.Invoke();
+                    }
+                    
+                    // The puzzle is solved, so we can clean up.
+                    InventoryManager.instance.PawnDepleted(); // Unlock inventory
+                    Destroy(this.gameObject); // Destroy the pawn
+                    return; // Stop further checks in this frame.
+                }
+                // --- END OF NEW LOGIC ---
+
+                // Check if the item's value is depleted (only if it wasn't a final node).
                 if (currentValue <= 0)
                 {
                     Debug.Log("Item value depleted. Destroying pawn and unlocking inventory.");
-                    // Notify the manager that the inventory can be unlocked.
                     InventoryManager.instance.PawnDepleted();
-                    // Destroy this pawn object.
                     Destroy(this.gameObject);
                 }
             }

@@ -397,6 +397,7 @@ MonoBehaviour:
   itemSlotPrefab: {fileID: 8888051152771493799, guid: 31c759a5d927e364792f40c9b682affa, type: 3}
   mainCanvas: {fileID: 1619061716}
   draggedItemIcon: {fileID: 773430304}
+  pawnValueDisplayMode: 1
 --- !u!4 &862750468
 Transform:
   m_ObjectHideFlags: 0
@@ -556,6 +557,7 @@ MonoBehaviour:
   graphManager: {fileID: 959034021}
   nodePrefab: {fileID: 1675271469217893638, guid: 190a50f4198ce874a8480d6efb4d6922, type: 3}
   edgePrefab: {fileID: 6431704925874327355, guid: 08913ea1121766145a5c93191a2f9f2d, type: 3}
+  showEdgeWeights: 1
 --- !u!1 &1172529418
 GameObject:
   m_ObjectHideFlags: 0

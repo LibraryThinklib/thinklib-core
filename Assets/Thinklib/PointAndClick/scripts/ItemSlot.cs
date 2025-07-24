@@ -19,9 +19,12 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
     
     public static Item draggedItem;
     
+    // MODIFIED Update method in ItemSlot.cs
     void Update()
     {
         if (item == null || slotBackground == null) return;
+
+        // --- Visual Feedback for Selection (same as before) ---
         if (InventoryManager.instance.selectedItem == this.item)
         {
             slotBackground.color = selectedColor;
@@ -30,8 +33,37 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
         {
             slotBackground.color = normalColor;
         }
-    }
 
+        // --- NEW LOGIC: Live value update for the active pawn ---
+        // Check if the chosen mechanic is "UpdateValueInInventory"
+        if (InventoryManager.instance.pawnValueDisplayMode == PawnValueDisplayMode.UpdateValueInInventory)
+        {
+            // Check if this slot represents the item whose pawn is currently active
+            if (InventoryManager.instance.isPawnActive && InventoryManager.instance.selectedItem == this.item)
+            {
+                // Get the active pawn
+                PathFollower activePawn = InventoryManager.instance.GetActivePawnFollower();
+                if (activePawn != null)
+                {
+                    // Update the text with the pawn's CURRENT value in real-time
+                    valueText.text = activePawn.currentValue.ToString();
+                    valueText.gameObject.SetActive(true);
+                    return; // Skip the default value display logic
+                }
+            }
+        }
+        
+        // Default value display logic (for all other cases)
+        if (item.value > 0)
+        {
+            valueText.text = item.value.ToString();
+            valueText.gameObject.SetActive(true);
+        }
+        else
+        {
+            valueText.gameObject.SetActive(false);
+        }
+    }
     public void Initialize(Item newItem)
     {
         item = newItem;
