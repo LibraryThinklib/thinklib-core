@@ -2,8 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-// NEW: Defining the possible interaction modes.
-// Placing this outside the class allows other scripts to access it easily.
 public enum InteractionMode
 {
     ClickToSelect,
@@ -27,7 +25,6 @@ public class InventoryManager : MonoBehaviour
     // --- End of Singleton ---
 
     [Header("Interaction Settings")]
-    // NEW: Public variable to choose the mode in the Unity Inspector.
     public InteractionMode currentMode = InteractionMode.ClickToSelect;
 
     [Header("Combination Settings")]
@@ -49,6 +46,7 @@ public class InventoryManager : MonoBehaviour
     private List<Item> inventory = new List<Item>();
     public Item selectedItem { get; private set; }
     
+    private GameObject activePawnObject;
     private bool isDragging = false;
 
     void Start()
@@ -78,10 +76,6 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Attempts to combine two items based on the list of available recipes.
-    /// </summary>
-    /// <returns>True if the combination was successful.</returns>
     public bool TryCombineItems(Item itemA, Item itemB)
     {
         if (!combinationsEnabled) return false;
@@ -95,33 +89,21 @@ public class InventoryManager : MonoBehaviour
             {
                 Debug.Log($"Combination successful! Created {recipe.resultingItem.name}");
                 
-                // First, remove the ingredients from the inventory
                 RemoveItem(itemA);
                 RemoveItem(itemB);
 
-                // --- NEW LOGIC FOR ADDING THE RESULTING ITEM ---
-
-                // Check if we should sum the values for this specific recipe
                 if (recipe.sumIngredientValues)
                 {
-                    // Create a new temporary instance of the resulting item in memory
                     Item itemInstance = ScriptableObject.CreateInstance<Item>();
-                    
-                    // Copy all properties from the recipe's template to our new instance
-                    itemInstance.name = recipe.resultingItem.name; // Keep the same name
+                    itemInstance.name = recipe.resultingItem.name;
                     itemInstance.description = recipe.resultingItem.description;
                     itemInstance.icon = recipe.resultingItem.icon;
-                    
-                    // Calculate and set the new combined value
                     itemInstance.value = itemA.value + itemB.value;
-                    
-                    // Add the new INSTANCE to the inventory
                     AddItem(itemInstance);
                     Debug.Log($"New value for {itemInstance.name} is {itemInstance.value}");
                 }
                 else
                 {
-                    // If not summing, just add the predefined item from the recipe (old behavior)
                     AddItem(recipe.resultingItem);
                 }
 
@@ -171,7 +153,6 @@ public class InventoryManager : MonoBehaviour
             var slotScript = slotObj.GetComponent<ItemSlot>();
             if (slotScript != null)
             {
-                // Assuming ItemSlot has an "Initialize" method.
                 slotScript.Initialize(item); 
             }
         }
@@ -179,13 +160,57 @@ public class InventoryManager : MonoBehaviour
 
     public void SelectItem(Item item)
     {
+        // First, deselect any previous item and destroy its pawn.
+        DeselectItem();
+
         selectedItem = item;
-        // Assuming your 'Item' class has a 'name' property.
-        Debug.Log($"Item selected: {item.name}"); 
+        Debug.Log($"Item selected: {item.name}");
+
+        // If the selected item has an associated pawn prefab...
+        if (item.pathFollowerPrefab != null)
+        {
+            // ...and we have a graph...
+            if (GraphManager.instance != null && GraphManager.instance.nodes.Count > 0)
+            {
+                // ...spawn the pawn at the starting node's position (e.g., node 0).
+                Node startNode = GraphManager.instance.nodes[0];
+                activePawnObject = Instantiate(item.pathFollowerPrefab, startNode.position, Quaternion.identity);
+
+                // --- THIS IS THE NEW LOGIC ---
+                // Get the SpriteRenderer component of the instantiated pawn.
+                SpriteRenderer pawnRenderer = activePawnObject.GetComponent<SpriteRenderer>();
+
+                // Check if the pawn has a SpriteRenderer and the item has an icon.
+                if (pawnRenderer != null && item.icon != null)
+                {
+                    // Set the sprite of the pawn to be the icon of the selected item.
+                    pawnRenderer.sprite = item.icon;
+                }
+                else if (pawnRenderer == null)
+                {
+                    Debug.LogWarning($"The PathFollower prefab '{item.pathFollowerPrefab.name}' does not have a SpriteRenderer component!");
+                }
+                // --- END OF NEW LOGIC ---
+
+                // Initialize the pawn's state.
+                PathFollower follower = activePawnObject.GetComponent<PathFollower>();
+                if (follower != null)
+                {
+                    follower.SetCurrentNode(0); // Set its starting node index
+                }
+            }
+        }
     }
 
     public void DeselectItem()
     {
+        // If there is an active pawn in the world, destroy it.
+        if (activePawnObject != null)
+        {
+            Destroy(activePawnObject);
+            activePawnObject = null;
+        }
+        
         selectedItem = null;
         Debug.Log("No item selected.");
     }
@@ -196,7 +221,6 @@ public class InventoryManager : MonoBehaviour
         {
             DeselectItem();
             isDragging = true;
-            // Assuming your 'Item' class has an 'icon' property.
             draggedItemIcon.sprite = item.icon; 
             draggedItemIcon.gameObject.SetActive(true);
         }

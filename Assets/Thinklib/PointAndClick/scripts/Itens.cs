@@ -12,6 +12,10 @@ public class Item : ScriptableObject
     [TextArea(3, 5)] // To give the description field more space in the Inspector
     public string description;
 
+    [Header("Game World Representation")]
+    [Tooltip("If this item can be placed on the graph, assign its 3D prefab here.")]
+    public GameObject pathFollowerPrefab; // This will hold our pawn prefab
+
     [Header("Inventory Visuals")]
     public Sprite icon;
 }
