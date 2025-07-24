@@ -504,29 +504,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6928039809747ac45924521b2c87f2db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onFinalNodeReached:
+    m_PersistentCalls:
+      m_Calls: []
   nodes:
   - name: A
     position: {x: -2, y: 2, z: 0}
     edges:
     - targetNodeIndex: 1
-      weight: 8
+      weight: 2
     - targetNodeIndex: 2
-      weight: 6
+      weight: 2
+    isFinalNode: 0
   - name: B
     position: {x: 4, y: -1, z: 0}
     edges:
     - targetNodeIndex: 2
-      weight: 4
-    - targetNodeIndex: 3
       weight: 6
+    isFinalNode: 1
   - name: C
     position: {x: -2.2768493, y: -2.14333, z: 0}
     edges:
     - targetNodeIndex: 3
-      weight: 2
+      weight: 1
+    isFinalNode: 0
   - name: D
     position: {x: 1.8075781, y: -3.7821913, z: 0}
-    edges: []
+    edges:
+    - targetNodeIndex: 1
+      weight: 6
+    isFinalNode: 1
 --- !u!4 &959034022
 Transform:
   m_ObjectHideFlags: 0
