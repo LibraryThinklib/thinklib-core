@@ -2,10 +2,11 @@ using UnityEngine;
 
 public class EnemyPath : MonoBehaviour
 {
-    public Transform[] waypoints; // pontos do caminho
+    public Transform[] waypoints;  // pontos do caminho
     public float speed = 2f;
-
     private int currentWaypointIndex = 0;
+
+    public int damageAmount = 1;  // Dano causado ao jogador ao atingir o fim do caminho
 
     void Update()
     {
@@ -25,8 +26,14 @@ public class EnemyPath : MonoBehaviour
         }
         else
         {
-            // Chegou ao fim do caminho
-            Destroy(gameObject); // Destrói o inimigo (poderia chamar um sistema de dano aqui)
+            // Chegou ao fim do caminho e causa dano ao jogador
+            PlayerHealth playerHealth = FindObjectOfType<PlayerHealth>(); // Encontrar o objeto PlayerHealth
+            if (playerHealth != null)
+            {
+                playerHealth.TakeDamage(damageAmount);  // Causa dano ao jogador
+            }
+
+            Destroy(gameObject);  // Destrói o inimigo
         }
     }
 }
