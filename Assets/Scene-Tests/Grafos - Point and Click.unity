@@ -397,6 +397,7 @@ MonoBehaviour:
   itemSlotPrefab: {fileID: 8888051152771493799, guid: 31c759a5d927e364792f40c9b682affa, type: 3}
   mainCanvas: {fileID: 1619061716}
   draggedItemIcon: {fileID: 773430304}
+  pawnValueDisplayMode: 1
 --- !u!4 &862750468
 Transform:
   m_ObjectHideFlags: 0
@@ -503,29 +504,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6928039809747ac45924521b2c87f2db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onFinalNodeReached:
+    m_PersistentCalls:
+      m_Calls: []
   nodes:
   - name: A
     position: {x: -2, y: 2, z: 0}
     edges:
     - targetNodeIndex: 1
-      weight: 8
+      weight: 2
     - targetNodeIndex: 2
-      weight: 6
+      weight: 2
+    isFinalNode: 0
   - name: B
     position: {x: 4, y: -1, z: 0}
     edges:
     - targetNodeIndex: 2
-      weight: 4
-    - targetNodeIndex: 3
       weight: 6
+    isFinalNode: 1
   - name: C
     position: {x: -2.2768493, y: -2.14333, z: 0}
     edges:
     - targetNodeIndex: 3
-      weight: 2
+      weight: 1
+    isFinalNode: 0
   - name: D
     position: {x: 1.8075781, y: -3.7821913, z: 0}
-    edges: []
+    edges:
+    - targetNodeIndex: 1
+      weight: 6
+    isFinalNode: 1
 --- !u!4 &959034022
 Transform:
   m_ObjectHideFlags: 0
@@ -556,6 +564,7 @@ MonoBehaviour:
   graphManager: {fileID: 959034021}
   nodePrefab: {fileID: 1675271469217893638, guid: 190a50f4198ce874a8480d6efb4d6922, type: 3}
   edgePrefab: {fileID: 6431704925874327355, guid: 08913ea1121766145a5c93191a2f9f2d, type: 3}
+  showEdgeWeights: 1
 --- !u!1 &1172529418
 GameObject:
   m_ObjectHideFlags: 0

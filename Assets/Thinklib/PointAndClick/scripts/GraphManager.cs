@@ -1,6 +1,7 @@
 // GraphManager.cs
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Events;
 
 public class GraphManager : MonoBehaviour
 {
@@ -21,7 +22,12 @@ public class GraphManager : MonoBehaviour
     }
     // --- End of Singleton ---
 
+    // NEW: This event will be triggered when a pawn reaches a final node.
+    [Header("Game Events")]
+    public UnityEvent onFinalNodeReached;
+
     // This list will hold all the nodes in our graph.
+    [Header("Graph Data")]
     public List<Node> nodes = new List<Node>();
 
     // This function draws debug visuals in the Scene view, even during Play mode.
@@ -33,11 +39,11 @@ public class GraphManager : MonoBehaviour
         for (int i = 0; i < nodes.Count; i++)
         {
             Node node = nodes[i];
-            
+
             // Draw the node as a sphere
             Gizmos.color = Color.cyan;
             Gizmos.DrawSphere(node.position, 0.3f);
-            
+
             // Draw all edges originating from this node
             foreach (Edge edge in node.edges)
             {

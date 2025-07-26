@@ -1,53 +1,69 @@
-// PathFollower.cs
 using UnityEngine;
+using TMPro;
 
 public class PathFollower : MonoBehaviour
 {
     public float speed = 5.0f;
-    public int currentNodeIndex = 0; // The index of the node where the pawn currently is.
+    
+    [Header("Runtime State")]
+    public int currentNodeIndex = 0;
+    public int currentValue;
+
+    [Header("Visuals")]
+    [SerializeField] private TextMeshPro valueText;
 
     private Node targetNode = null;
     private bool isMoving = false;
+    private bool isBlocked = false;
 
-    // Call this to set the initial position without moving.
-    public void SetCurrentNode(int nodeIndex)
+    public void Initialize(int startNodeIndex, int initialValue)
     {
         if (GraphManager.instance == null) return;
-        currentNodeIndex = nodeIndex;
+        
+        currentNodeIndex = startNodeIndex;
+        currentValue = initialValue;
+        
         transform.position = GraphManager.instance.nodes[currentNodeIndex].position;
-        isMoving = false;
-        targetNode = null;
+        UpdateValueText();
     }
 
-    // Call this to command the pawn to move to a new node.
     public void MoveToNode(int targetNodeIndex)
     {
-        if (isMoving) return; // Don't accept new commands while already moving.
+        if (isBlocked || isMoving) return;
 
-        // Get the data for the current and target nodes.
         Node startNode = GraphManager.instance.nodes[currentNodeIndex];
-        Node destinationNode = GraphManager.instance.nodes[targetNodeIndex];
-
-        // Check if there is a valid edge from the current node to the target node.
-        bool pathExists = false;
+        
+        Edge edgeToTarget = null;
         foreach (Edge edge in startNode.edges)
         {
-            if (edge.targetNodeIndex == targetNodeIndex)
-            {
-                pathExists = true;
-                break;
-            }
+            if (edge.targetNodeIndex == targetNodeIndex) { edgeToTarget = edge; break; }
         }
 
-        if (pathExists)
+        if (edgeToTarget != null)
         {
-            Debug.Log($"Valid path found! Moving from node {currentNodeIndex} to {targetNodeIndex}");
-            targetNode = destinationNode;
+            int moveCost = (int)edgeToTarget.weight;
+
+            if (moveCost > currentValue)
+            {
+                isBlocked = true;
+                Debug.LogError($"GAME OVER: Move cost ({moveCost}) > current value ({currentValue}).");
+                if (valueText != null) valueText.gameObject.SetActive(false);
+                return;
+            }
+            
+            currentValue -= moveCost;
+            UpdateValueText();
+            
+            targetNode = GraphManager.instance.nodes[targetNodeIndex];
             isMoving = true;
         }
-        else
+    }
+    
+    void UpdateValueText()
+    {
+        if (valueText != null)
         {
-            Debug.Log($"No direct path from node {currentNodeIndex} to {targetNodeIndex}!");
+            valueText.text = currentValue.ToString();
         }
     }
 
@@ -55,17 +71,41 @@ public class PathFollower : MonoBehaviour
     {
         if (isMoving && targetNode != null)
         {
-            // Move our position a step closer to the target.
             transform.position = Vector3.MoveTowards(transform.position, targetNode.position, speed * Time.deltaTime);
 
-            // Check if the position of the pawn and target node are approximately equal.
             if (Vector3.Distance(transform.position, targetNode.position) < 0.001f)
             {
-                // We've reached the destination.
                 currentNodeIndex = GraphManager.instance.nodes.IndexOf(targetNode);
                 isMoving = false;
                 targetNode = null;
-                Debug.Log($"Arrived at node {currentNodeIndex}");
+                Debug.Log($"Arrived at node {currentNodeIndex}.");
+
+                Node arrivedNode = GraphManager.instance.nodes[currentNodeIndex];
+                
+                if (arrivedNode.isFinalNode)
+                {
+                    Debug.Log($"<color=lime>SUCCESS! Reached final node {currentNodeIndex}.</color>");
+                    
+                    // Deactivate this node as a final node for subsequent pawns
+                    arrivedNode.isFinalNode = false;
+                    Debug.Log($"Node {currentNodeIndex} is no longer a final node.");
+
+                    if (GraphManager.instance.onFinalNodeReached != null)
+                    {
+                        GraphManager.instance.onFinalNodeReached.Invoke();
+                    }
+                    
+                    InventoryManager.instance.PawnDepleted();
+                    Destroy(this.gameObject);
+                    return; 
+                }
+
+                if (currentValue <= 0)
+                {
+                    Debug.Log("Item value depleted. Destroying pawn and unlocking inventory.");
+                    InventoryManager.instance.PawnDepleted();
+                    Destroy(this.gameObject);
+                }
             }
         }
     }
