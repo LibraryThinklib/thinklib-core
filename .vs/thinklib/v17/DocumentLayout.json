@@ -3,24 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{34DFB440-6782-F738-751D-6F2082844D4F}|Assembly-CSharp.csproj|C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\assets\\thinklib\\towerdefense\\towers\\towershooter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{34DFB440-6782-F738-751D-6F2082844D4F}|Assembly-CSharp.csproj|solutionrelative:assets\\thinklib\\towerdefense\\towers\\towershooter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{34DFB440-6782-F738-751D-6F2082844D4F}|Assembly-CSharp.csproj|c:\\users\\endre\\onedrive\\documentos\\github\\thinklib\\assets\\thinklib\\towerdefense\\game scripts\\towershop.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34DFB440-6782-F738-751D-6F2082844D4F}|Assembly-CSharp.csproj|solutionrelative:assets\\thinklib\\towerdefense\\game scripts\\towershop.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{34DFB440-6782-F738-751D-6F2082844D4F}|Assembly-CSharp.csproj|C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\assets\\thinklib\\towerdefense\\towers\\bullet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{34DFB440-6782-F738-751D-6F2082844D4F}|Assembly-CSharp.csproj|solutionrelative:assets\\thinklib\\towerdefense\\towers\\bullet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{34DFB440-6782-F738-751D-6F2082844D4F}|Assembly-CSharp.csproj|C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\assets\\thinklib\\towerdefense\\game scripts\\towerplacement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34DFB440-6782-F738-751D-6F2082844D4F}|Assembly-CSharp.csproj|solutionrelative:assets\\thinklib\\towerdefense\\game scripts\\towerplacement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{34DFB440-6782-F738-751D-6F2082844D4F}|Assembly-CSharp.csproj|C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\assets\\thinklib\\towerdefense\\enemy\\enemyhealth.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{34DFB440-6782-F738-751D-6F2082844D4F}|Assembly-CSharp.csproj|solutionrelative:assets\\thinklib\\towerdefense\\enemy\\enemyhealth.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{34DFB440-6782-F738-751D-6F2082844D4F}|Assembly-CSharp.csproj|C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\assets\\thinklib\\towerdefense\\enemy scripts\\enemyhealth.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34DFB440-6782-F738-751D-6F2082844D4F}|Assembly-CSharp.csproj|solutionrelative:assets\\thinklib\\towerdefense\\enemy scripts\\enemyhealth.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{34DFB440-6782-F738-751D-6F2082844D4F}|Assembly-CSharp.csproj|C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\assets\\thinklib\\towerdefense\\enemy\\enemyspawner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{34DFB440-6782-F738-751D-6F2082844D4F}|Assembly-CSharp.csproj|solutionrelative:assets\\thinklib\\towerdefense\\enemy\\enemyspawner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{34DFB440-6782-F738-751D-6F2082844D4F}|Assembly-CSharp.csproj|C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\assets\\thinklib\\towerdefense\\enemy\\enemypath.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{34DFB440-6782-F738-751D-6F2082844D4F}|Assembly-CSharp.csproj|solutionrelative:assets\\thinklib\\towerdefense\\enemy\\enemypath.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|c:\\users\\endre\\onedrive\\documentos\\github\\thinklib\\assets\\thinklib\\towerdefense\\game scripts\\gridmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:assets\\thinklib\\towerdefense\\game scripts\\gridmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -35,67 +31,52 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "TowerShooter.cs",
-              "DocumentMoniker": "C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\Assets\\Thinklib\\TowerDefense\\Towers\\TowerShooter.cs",
-              "RelativeDocumentMoniker": "Assets\\Thinklib\\TowerDefense\\Towers\\TowerShooter.cs",
-              "ToolTip": "C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\Assets\\Thinklib\\TowerDefense\\Towers\\TowerShooter.cs",
-              "RelativeToolTip": "Assets\\Thinklib\\TowerDefense\\Towers\\TowerShooter.cs",
-              "ViewState": "AgIAACAAAAAAAAAAAADwv0UAAAAAAAAAAAAAAA==",
+              "Title": "TowerShop.cs",
+              "DocumentMoniker": "C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\Assets\\Thinklib\\TowerDefense\\Game Scripts\\TowerShop.cs",
+              "RelativeDocumentMoniker": "Assets\\Thinklib\\TowerDefense\\Game Scripts\\TowerShop.cs",
+              "ToolTip": "C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\Assets\\Thinklib\\TowerDefense\\Game Scripts\\TowerShop.cs",
+              "RelativeToolTip": "Assets\\Thinklib\\TowerDefense\\Game Scripts\\TowerShop.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAAwCgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-23T19:12:36.915Z",
+              "WhenOpened": "2025-07-28T01:28:23.649Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Bullet.cs",
-              "DocumentMoniker": "C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\Assets\\Thinklib\\TowerDefense\\Towers\\Bullet.cs",
-              "RelativeDocumentMoniker": "Assets\\Thinklib\\TowerDefense\\Towers\\Bullet.cs",
-              "ToolTip": "C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\Assets\\Thinklib\\TowerDefense\\Towers\\Bullet.cs",
-              "RelativeToolTip": "Assets\\Thinklib\\TowerDefense\\Towers\\Bullet.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAwCsAAAAAAAAAAAAAAA==",
+              "Title": "TowerPlacement.cs",
+              "DocumentMoniker": "C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\Assets\\Thinklib\\TowerDefense\\Game Scripts\\TowerPlacement.cs",
+              "RelativeDocumentMoniker": "Assets\\Thinklib\\TowerDefense\\Game Scripts\\TowerPlacement.cs",
+              "ToolTip": "C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\Assets\\Thinklib\\TowerDefense\\Game Scripts\\TowerPlacement.cs",
+              "RelativeToolTip": "Assets\\Thinklib\\TowerDefense\\Game Scripts\\TowerPlacement.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAuwC4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-23T19:12:16.992Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "EnemyHealth.cs",
-              "DocumentMoniker": "C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\Assets\\Thinklib\\TowerDefense\\Enemy\\EnemyHealth.cs",
-              "RelativeDocumentMoniker": "Assets\\Thinklib\\TowerDefense\\Enemy\\EnemyHealth.cs",
-              "ToolTip": "C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\Assets\\Thinklib\\TowerDefense\\Enemy\\EnemyHealth.cs",
-              "RelativeToolTip": "Assets\\Thinklib\\TowerDefense\\Enemy\\EnemyHealth.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-23T18:56:30.616Z",
+              "WhenOpened": "2025-07-28T01:28:11.312Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "EnemySpawner.cs",
-              "DocumentMoniker": "C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\Assets\\Thinklib\\TowerDefense\\Enemy\\EnemySpawner.cs",
-              "RelativeDocumentMoniker": "Assets\\Thinklib\\TowerDefense\\Enemy\\EnemySpawner.cs",
-              "ToolTip": "C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\Assets\\Thinklib\\TowerDefense\\Enemy\\EnemySpawner.cs",
-              "RelativeToolTip": "Assets\\Thinklib\\TowerDefense\\Enemy\\EnemySpawner.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA==",
+              "Title": "GridManager.cs",
+              "DocumentMoniker": "C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\Assets\\Thinklib\\TowerDefense\\Game Scripts\\GridManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Thinklib\\TowerDefense\\Game Scripts\\GridManager.cs",
+              "ToolTip": "C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\Assets\\Thinklib\\TowerDefense\\Game Scripts\\GridManager.cs",
+              "RelativeToolTip": "Assets\\Thinklib\\TowerDefense\\Game Scripts\\GridManager.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAAwDUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-17T02:21:40.075Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-28T01:27:40.629Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "EnemyPath.cs",
-              "DocumentMoniker": "C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\Assets\\Thinklib\\TowerDefense\\Enemy\\EnemyPath.cs",
-              "RelativeDocumentMoniker": "Assets\\Thinklib\\TowerDefense\\Enemy\\EnemyPath.cs",
-              "ToolTip": "C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\Assets\\Thinklib\\TowerDefense\\Enemy\\EnemyPath.cs",
-              "RelativeToolTip": "Assets\\Thinklib\\TowerDefense\\Enemy\\EnemyPath.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "EnemyHealth.cs",
+              "DocumentMoniker": "C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\Assets\\Thinklib\\TowerDefense\\Enemy Scripts\\EnemyHealth.cs",
+              "RelativeDocumentMoniker": "Assets\\Thinklib\\TowerDefense\\Enemy Scripts\\EnemyHealth.cs",
+              "ToolTip": "C:\\Users\\endre\\OneDrive\\Documentos\\GitHub\\ThinkLib\\Assets\\Thinklib\\TowerDefense\\Enemy Scripts\\EnemyHealth.cs",
+              "RelativeToolTip": "Assets\\Thinklib\\TowerDefense\\Enemy Scripts\\EnemyHealth.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-17T02:02:27.007Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-27T23:17:48.256Z"
             }
           ]
         }
