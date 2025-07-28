@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System.Collections;
 
 public class DropZone : MonoBehaviour, IDropHandler
 {
@@ -13,93 +14,73 @@ public class DropZone : MonoBehaviour, IDropHandler
 
     private Item storedItem = null;
 
-    // Helper methods for the manager to check the state of this zone
-    public bool HasItem() 
-    { 
-        return storedItem != null; 
+    public bool HasItem()
+    {
+        return storedItem != null;
     }
-    
-    public Item GetStoredItem() 
-    { 
-        return storedItem; 
+
+    public Item GetStoredItem()
+    {
+        return storedItem;
     }
 
     private void Start()
     {
-        // Ensure the item display is hidden at the beginning
-        if (displaySprite != null) 
-        { 
-            displaySprite.enabled = false; 
+        if (displaySprite != null)
+        {
+            displaySprite.enabled = false;
         }
     }
-    
-    // This is the main logic function to place an item in the zone
-    public void PlaceItem(Item itemToPlace)
+
+    public void PlaceItem(Item newItem)
     {
-        // Ask the manager for permission.
-        if (itemToPlace == null || !DropZoneManager.instance.IsValidPlacement(itemToPlace, this.zoneID))
+        if (newItem == null || HasItem())
         {
-            Debug.Log("Placement denied by DropZoneManager.");
             return;
         }
 
-        // If permission is granted, proceed.
-        storedItem = itemToPlace;
+        storedItem = newItem;
+        if (displaySprite != null) { displaySprite.sprite = storedItem.icon; displaySprite.enabled = true; }
         
-        if (displaySprite != null)
-        {
-            displaySprite.sprite = storedItem.icon;
-            displaySprite.enabled = true;
-        }
-        
-        // Remove the item from the player's inventory
-        InventoryManager.instance.RemoveItem(itemToPlace);
-        
-        // --- THIS IS THE FIX ---
-        // Manually end the drag operation to hide the mouse icon immediately.
+        InventoryManager.instance.RemoveItem(newItem);
+        if (ItemSlot.draggedItem == newItem) { ItemSlot.dragWasSuccessful = true; }
         InventoryManager.instance.EndItemDrag();
-        
-        // If this was a drag-and-drop action, set the success flag
-        if (ItemSlot.draggedItem != null)
-        {
-            ItemSlot.dragWasSuccessful = true;
-        }
         
         Debug.Log($"Item '{storedItem.name}' placed in Zone {zoneID}.");
 
-        // Tell the manager to check if the puzzle is complete.
         DropZoneManager.instance.CheckForPuzzleCompletion();
     }
 
-    // --- Interaction Handlers ---
+    private IEnumerator RejectItem(Item itemToReturn, float delay = 0.5f)
+    {
+        yield return new WaitForSeconds(delay);
+        
+        if (storedItem == itemToReturn)
+        {
+            InventoryManager.instance.AddItem(itemToReturn);
+            ClearZone();
+        }
+    }
 
-    // This handles the CLICK-TO-SELECT interaction mode
     private void OnMouseDown()
     {
-        // Case 1: The player has an item selected from the inventory, trying to PLACE it
         if (InventoryManager.instance.selectedItem != null)
         {
             PlaceItem(InventoryManager.instance.selectedItem);
         }
-        // Case 2: The player has NO item selected and this zone is full, trying to RETURN it
         else if (HasItem())
         {
             ReturnItemToInventory();
         }
     }
 
-    // This handles the DRAG-AND-DROP interaction mode
-    public void OnDrop(PointerEventData eventData) 
-    { 
-        PlaceItem(ItemSlot.draggedItem); 
+    public void OnDrop(PointerEventData eventData)
+    {
+        PlaceItem(ItemSlot.draggedItem);
     }
 
-    // --- Private Helper Methods ---
-
-    // New method to handle returning the item to the inventory
     private void ReturnItemToInventory()
     {
-        // Ask the manager for permission to return the item from this specific zone
         if (DropZoneManager.instance.CanReturnItem(this.zoneID))
         {
             Debug.Log($"Returning item '{storedItem.name}' from Zone {zoneID} to inventory.");
@@ -112,7 +93,6 @@ public class DropZone : MonoBehaviour, IDropHandler
         }
     }
 
-    // New helper method to clear the zone's state and visuals
     private void ClearZone()
     {
         storedItem = null;

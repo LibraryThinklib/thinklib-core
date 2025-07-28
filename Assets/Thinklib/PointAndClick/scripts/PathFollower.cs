@@ -3,8 +3,15 @@ using TMPro;
 
 public class PathFollower : MonoBehaviour
 {
+    [Header("Movement Settings")]
     public float speed = 5.0f;
-    
+
+    [Header("Rotation Settings")]
+    [Tooltip("Should the pawn rotate to face its movement direction?")]
+    public bool shouldRotateToDirection = true;
+    [Tooltip("How quickly the pawn turns to face the new direction.")]
+    public float rotationSpeed = 10f;
+
     [Header("Runtime State")]
     public int currentNodeIndex = 0;
     public int currentValue;
@@ -19,20 +26,20 @@ public class PathFollower : MonoBehaviour
     public void Initialize(int startNodeIndex, int initialValue)
     {
         if (GraphManager.instance == null) return;
-        
         currentNodeIndex = startNodeIndex;
         currentValue = initialValue;
-        
         transform.position = GraphManager.instance.nodes[currentNodeIndex].position;
         UpdateValueText();
+        isBlocked = false;
+        isMoving = false;
     }
 
     public void MoveToNode(int targetNodeIndex)
     {
         if (isBlocked || isMoving) return;
-
-        Node startNode = GraphManager.instance.nodes[currentNodeIndex];
+        if (GraphManager.instance == null || GraphManager.instance.nodes.Count <= currentNodeIndex) return;
         
+        Node startNode = GraphManager.instance.nodes[currentNodeIndex];
         Edge edgeToTarget = null;
         foreach (Edge edge in startNode.edges)
         {
@@ -42,69 +49,61 @@ public class PathFollower : MonoBehaviour
         if (edgeToTarget != null)
         {
             int moveCost = (int)edgeToTarget.weight;
-
             if (moveCost > currentValue)
             {
                 isBlocked = true;
-                Debug.LogError($"GAME OVER: Move cost ({moveCost}) > current value ({currentValue}).");
                 if (valueText != null) valueText.gameObject.SetActive(false);
                 return;
             }
-            
             currentValue -= moveCost;
             UpdateValueText();
-            
             targetNode = GraphManager.instance.nodes[targetNodeIndex];
             isMoving = true;
         }
     }
-    
+
     void UpdateValueText()
     {
-        if (valueText != null)
-        {
-            valueText.text = currentValue.ToString();
-        }
+        if (valueText != null) { valueText.text = currentValue.ToString(); }
     }
 
     void Update()
     {
         if (isMoving && targetNode != null)
         {
+            if (shouldRotateToDirection)
+            {
+                Vector3 direction = targetNode.position - transform.position;
+                if (direction != Vector3.zero)
+                {
+                    float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                    Quaternion targetRotation = Quaternion.Euler(0f, 0f, angle - 0f);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+                }
+            }
+            
             transform.position = Vector3.MoveTowards(transform.position, targetNode.position, speed * Time.deltaTime);
 
             if (Vector3.Distance(transform.position, targetNode.position) < 0.001f)
             {
-                currentNodeIndex = GraphManager.instance.nodes.IndexOf(targetNode);
                 isMoving = false;
+                currentNodeIndex = GraphManager.instance.nodes.IndexOf(targetNode);
                 targetNode = null;
-                Debug.Log($"Arrived at node {currentNodeIndex}.");
-
                 Node arrivedNode = GraphManager.instance.nodes[currentNodeIndex];
-                
                 if (arrivedNode.isFinalNode)
                 {
-                    Debug.Log($"<color=lime>SUCCESS! Reached final node {currentNodeIndex}.</color>");
-                    
-                    // Deactivate this node as a final node for subsequent pawns
                     arrivedNode.isFinalNode = false;
-                    Debug.Log($"Node {currentNodeIndex} is no longer a final node.");
-
-                    if (GraphManager.instance.onFinalNodeReached != null)
-                    {
-                        GraphManager.instance.onFinalNodeReached.Invoke();
-                    }
-                    
+                    GraphManager.instance.lastKnownPawnNodeIndex = currentNodeIndex;
                     InventoryManager.instance.PawnDepleted();
-                    Destroy(this.gameObject);
+                    if (GraphManager.instance.onFinalNodeReached != null) { GraphManager.instance.onFinalNodeReached.Invoke(); }
+                    if (this.gameObject != InventoryManager.instance.fixedPawn?.gameObject) { Destroy(this.gameObject); }
                     return; 
                 }
-
                 if (currentValue <= 0)
                 {
-                    Debug.Log("Item value depleted. Destroying pawn and unlocking inventory.");
+                    GraphManager.instance.lastKnownPawnNodeIndex = currentNodeIndex;
                     InventoryManager.instance.PawnDepleted();
-                    Destroy(this.gameObject);
+                    if (this.gameObject != InventoryManager.instance.fixedPawn?.gameObject) { Destroy(this.gameObject); }
                 }
             }
         }

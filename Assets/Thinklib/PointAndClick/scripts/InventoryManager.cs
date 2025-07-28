@@ -14,10 +14,21 @@ public enum PawnValueDisplayMode
     ShowValueOnPawn
 }
 
+public enum PawnSpawnMode
+{
+    SpawnPawnFromItem,
+    UseFixedPawnInScene
+}
+
+public enum PawnStartPositionMode
+{
+    AlwaysStartAtHomeNode,
+    ContinueFromLastNode
+}
+
 
 public class InventoryManager : MonoBehaviour
 {
-    // --- Singleton Pattern ---
     public static InventoryManager instance;
 
     void Awake()
@@ -29,7 +40,6 @@ public class InventoryManager : MonoBehaviour
         }
         instance = this;
     }
-    // --- End of Singleton ---
 
     [Header("Interaction Settings")]
     public InteractionMode currentMode = InteractionMode.ClickToSelect;
@@ -53,15 +63,20 @@ public class InventoryManager : MonoBehaviour
     private List<Item> inventory = new List<Item>();
     public Item selectedItem { get; private set; }
 
-    // Add this variable inside the InventoryManager class
     [Header("Pawn Logic Settings")]
+
+    public PawnStartPositionMode startPositionMode = PawnStartPositionMode.AlwaysStartAtHomeNode;
     public PawnValueDisplayMode pawnValueDisplayMode = PawnValueDisplayMode.UpdateValueInInventory;
-    
-    // ...
 
     private GameObject activePawnObject;
-    public bool isPawnActive { get; private set; } = false; // The inventory lock flag
+    public bool isPawnActive { get; private set; } = false;
     private bool isDragging = false;
+
+    [Tooltip("Determines how the pawn is created and used in the scene.")]
+    public PawnSpawnMode pawnMode = PawnSpawnMode.SpawnPawnFromItem;
+    [Tooltip("Assign the single, fixed pawn from the scene here. Used only in 'UseFixedPawnInScene' mode.")]
+    public PathFollower fixedPawn;
+
 
     void Start()
     {
@@ -100,17 +115,17 @@ public class InventoryManager : MonoBehaviour
     }
     public bool TryCombineItems(Item itemA, Item itemB)
     {
-        if (!combinationsEnabled) return false;
+        if (!combinationsEnabled || itemA == null || itemB == null) return false;
 
         foreach (CombinationRecipe recipe in availableRecipes)
         {
-            bool matches = (recipe.item1 == itemA && recipe.item2 == itemB) ||
-                           (recipe.item1 == itemB && recipe.item2 == itemA);
+            bool matches = (recipe.item1.name == itemA.name && recipe.item2.name == itemB.name) ||
+                           (recipe.item1.name == itemB.name && recipe.item2.name == itemA.name);
 
             if (matches)
             {
                 Debug.Log($"Combination successful! Created {recipe.resultingItem.name}");
-
+                
                 RemoveItem(itemA);
                 RemoveItem(itemB);
 
@@ -120,6 +135,7 @@ public class InventoryManager : MonoBehaviour
                     itemInstance.name = recipe.resultingItem.name;
                     itemInstance.description = recipe.resultingItem.description;
                     itemInstance.icon = recipe.resultingItem.icon;
+                    itemInstance.pathFollowerPrefab = recipe.resultingItem.pathFollowerPrefab;
                     itemInstance.value = itemA.value + itemB.value;
                     AddItem(itemInstance);
                 }
@@ -130,7 +146,6 @@ public class InventoryManager : MonoBehaviour
 
                 DeselectItem();
                 EndItemDrag();
-
                 return true;
             }
         }
@@ -152,7 +167,6 @@ public class InventoryManager : MonoBehaviour
     {
         if (item != null && inventory.Contains(item))
         {
-            // Do not call DeselectItem here as it can cause issues with the pawn lock
             if (selectedItem == item)
             {
                 selectedItem = null;
@@ -180,64 +194,67 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    // MODIFIED: SelectItem handles the new rules and inventory lock.
     public void SelectItem(Item item)
     {
-        if (isPawnActive)
+        if (isPawnActive) { Debug.Log("Cannot select a new item while a pawn is active."); return; }
+
+        int startNodeIndex = 0;
+        if (startPositionMode == PawnStartPositionMode.ContinueFromLastNode)
         {
-            Debug.Log("Cannot select a new item while a pawn is active.");
-            return;
+            startNodeIndex = GraphManager.instance.lastKnownPawnNodeIndex;
         }
 
-        if (item.pathFollowerPrefab == null)
+        if (pawnMode == PawnSpawnMode.SpawnPawnFromItem)
         {
-            DeselectItem();
+            if (item.pathFollowerPrefab == null) { DeselectItem(); selectedItem = item; UpdateUI(); return; }
             selectedItem = item;
-            Debug.Log($"Item '{item.name}' selected (no pawn).");
-            return;
-        }
-        
-        selectedItem = item;
-        Debug.Log($"Placing item '{item.name}' on the graph.");
 
-        if (GraphManager.instance != null && GraphManager.instance.nodes.Count > 0)
-        {
-            Node startNode = GraphManager.instance.nodes[0];
-            activePawnObject = Instantiate(item.pathFollowerPrefab, startNode.position, Quaternion.identity);
-
-            PathFollower follower = activePawnObject.GetComponent<PathFollower>();
-            if (follower != null) { follower.Initialize(0, item.value); }
-            
-            SpriteRenderer pawnRenderer = activePawnObject.GetComponent<SpriteRenderer>();
-            if (pawnRenderer != null && item.icon != null) { pawnRenderer.sprite = item.icon; }
-
-            isPawnActive = true;
-            
-            // The item is only removed from inventory in this specific mode
-            if (pawnValueDisplayMode == PawnValueDisplayMode.ShowValueOnPawn)
+            if (GraphManager.instance != null && GraphManager.instance.nodes.Count > startNodeIndex)
             {
-                RemoveItem(item);
+                Node startNode = GraphManager.instance.nodes[startNodeIndex];
+                activePawnObject = Instantiate(item.pathFollowerPrefab, startNode.position, Quaternion.identity);
+                PathFollower follower = activePawnObject.GetComponent<PathFollower>();
+                if (follower != null) follower.Initialize(startNodeIndex, item.value);
+                SpriteRenderer pawnRenderer = activePawnObject.GetComponent<SpriteRenderer>();
+                if (pawnRenderer != null && item.icon != null) pawnRenderer.sprite = item.icon;
             }
         }
+        else
+        {
+            if (fixedPawn == null) { Debug.LogError("Fixed Pawn mode is selected, but no pawn is assigned!"); return; }
+            if (item.value <= 0) { Debug.Log($"Item '{item.name}' has no value and cannot be used as fuel."); return; }
+            selectedItem = item;
+            activePawnObject = fixedPawn.gameObject;
+            activePawnObject.SetActive(true);
+            fixedPawn.Initialize(startNodeIndex, item.value);
+        }
+
+        isPawnActive = true;
+
+        if (pawnValueDisplayMode == PawnValueDisplayMode.ShowValueOnPawn)
+        {
+            RemoveItem(item);
+        }
+        UpdateUI();
     }
 
-    // MODIFIED: DeselectItem now also considers the inventory lock.
-    public void DeselectItem()
-    {
-        if (isPawnActive) return; 
-        
-        if (activePawnObject != null) { Destroy(activePawnObject); activePawnObject = null; }
-        
-        selectedItem = null;
-    }
+    public void DeselectItem() {
+        if (isPawnActive) return;
+        if (activePawnObject != null) { Destroy(activePawnObject);
+            activePawnObject = null; } selectedItem = null;
+        UpdateUI(); }
 
-    // NEW: A public method that the PathFollower can call when its value is depleted.
+
     public void PawnDepleted()
     {
-        // If the item was kept in inventory, we remove it now.
         if (pawnValueDisplayMode == PawnValueDisplayMode.UpdateValueInInventory && selectedItem != null)
         {
             RemoveItem(selectedItem);
+        }
+        
+        if (pawnMode == PawnSpawnMode.UseFixedPawnInScene && activePawnObject != null)
+        {
+            activePawnObject.SetActive(false);
         }
 
         isPawnActive = false;
@@ -250,7 +267,6 @@ public class InventoryManager : MonoBehaviour
     {
         if (draggedItemIcon != null)
         {
-            // We don't call DeselectItem() here anymore to avoid conflicts with the pawn lock
             selectedItem = null;
             isDragging = true;
             draggedItemIcon.sprite = item.icon;
