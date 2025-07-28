@@ -99,6 +99,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
+  shouldRotateToDirection: 1
+  rotationSpeed: 1
   currentNodeIndex: 0
   currentValue: 0
   valueText: {fileID: 7568466165118883875}

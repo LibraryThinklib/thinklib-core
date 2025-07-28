@@ -14,6 +14,18 @@ public enum PawnValueDisplayMode
     ShowValueOnPawn
 }
 
+public enum PawnSpawnMode
+{
+    SpawnPawnFromItem,
+    UseFixedPawnInScene
+}
+
+public enum PawnStartPositionMode
+{
+    AlwaysStartAtHomeNode,
+    ContinueFromLastNode
+}
+
 
 public class InventoryManager : MonoBehaviour
 {
@@ -52,11 +64,19 @@ public class InventoryManager : MonoBehaviour
     public Item selectedItem { get; private set; }
 
     [Header("Pawn Logic Settings")]
+
+    public PawnStartPositionMode startPositionMode = PawnStartPositionMode.AlwaysStartAtHomeNode;
     public PawnValueDisplayMode pawnValueDisplayMode = PawnValueDisplayMode.UpdateValueInInventory;
 
     private GameObject activePawnObject;
     public bool isPawnActive { get; private set; } = false;
     private bool isDragging = false;
+
+    [Tooltip("Determines how the pawn is created and used in the scene.")]
+    public PawnSpawnMode pawnMode = PawnSpawnMode.SpawnPawnFromItem;
+    [Tooltip("Assign the single, fixed pawn from the scene here. Used only in 'UseFixedPawnInScene' mode.")]
+    public PathFollower fixedPawn;
+
 
     void Start()
     {
@@ -176,57 +196,65 @@ public class InventoryManager : MonoBehaviour
 
     public void SelectItem(Item item)
     {
-        if (isPawnActive)
+        if (isPawnActive) { Debug.Log("Cannot select a new item while a pawn is active."); return; }
+
+        int startNodeIndex = 0;
+        if (startPositionMode == PawnStartPositionMode.ContinueFromLastNode)
         {
-            Debug.Log("Cannot select a new item while a pawn is active.");
-            return;
+            startNodeIndex = GraphManager.instance.lastKnownPawnNodeIndex;
         }
 
-        if (item.pathFollowerPrefab == null)
+        if (pawnMode == PawnSpawnMode.SpawnPawnFromItem)
         {
-            DeselectItem();
+            if (item.pathFollowerPrefab == null) { DeselectItem(); selectedItem = item; UpdateUI(); return; }
             selectedItem = item;
-            Debug.Log($"Item '{item.name}' selected (no pawn).");
-            return;
-        }
-        
-        selectedItem = item;
-        Debug.Log($"Placing item '{item.name}' on the graph.");
 
-        if (GraphManager.instance != null && GraphManager.instance.nodes.Count > 0)
-        {
-            Node startNode = GraphManager.instance.nodes[0];
-            activePawnObject = Instantiate(item.pathFollowerPrefab, startNode.position, Quaternion.identity);
-
-            PathFollower follower = activePawnObject.GetComponent<PathFollower>();
-            if (follower != null) { follower.Initialize(0, item.value); }
-            
-            SpriteRenderer pawnRenderer = activePawnObject.GetComponent<SpriteRenderer>();
-            if (pawnRenderer != null && item.icon != null) { pawnRenderer.sprite = item.icon; }
-
-            isPawnActive = true;
-            
-            if (pawnValueDisplayMode == PawnValueDisplayMode.ShowValueOnPawn)
+            if (GraphManager.instance != null && GraphManager.instance.nodes.Count > startNodeIndex)
             {
-                RemoveItem(item);
+                Node startNode = GraphManager.instance.nodes[startNodeIndex];
+                activePawnObject = Instantiate(item.pathFollowerPrefab, startNode.position, Quaternion.identity);
+                PathFollower follower = activePawnObject.GetComponent<PathFollower>();
+                if (follower != null) follower.Initialize(startNodeIndex, item.value);
+                SpriteRenderer pawnRenderer = activePawnObject.GetComponent<SpriteRenderer>();
+                if (pawnRenderer != null && item.icon != null) pawnRenderer.sprite = item.icon;
             }
         }
+        else
+        {
+            if (fixedPawn == null) { Debug.LogError("Fixed Pawn mode is selected, but no pawn is assigned!"); return; }
+            if (item.value <= 0) { Debug.Log($"Item '{item.name}' has no value and cannot be used as fuel."); return; }
+            selectedItem = item;
+            activePawnObject = fixedPawn.gameObject;
+            activePawnObject.SetActive(true);
+            fixedPawn.Initialize(startNodeIndex, item.value);
+        }
+
+        isPawnActive = true;
+
+        if (pawnValueDisplayMode == PawnValueDisplayMode.ShowValueOnPawn)
+        {
+            RemoveItem(item);
+        }
+        UpdateUI();
     }
 
-    public void DeselectItem()
-    {
-        if (isPawnActive) return; 
-        
-        if (activePawnObject != null) { Destroy(activePawnObject); activePawnObject = null; }
-        
-        selectedItem = null;
-    }
+    public void DeselectItem() {
+        if (isPawnActive) return;
+        if (activePawnObject != null) { Destroy(activePawnObject);
+            activePawnObject = null; } selectedItem = null;
+        UpdateUI(); }
+
 
     public void PawnDepleted()
     {
         if (pawnValueDisplayMode == PawnValueDisplayMode.UpdateValueInInventory && selectedItem != null)
         {
             RemoveItem(selectedItem);
+        }
+        
+        if (pawnMode == PawnSpawnMode.UseFixedPawnInScene && activePawnObject != null)
+        {
+            activePawnObject.SetActive(false);
         }
 
         isPawnActive = false;

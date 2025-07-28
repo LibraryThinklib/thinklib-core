@@ -22,6 +22,10 @@ public class GraphManager : MonoBehaviour
     [Header("Graph Data")]
     public List<Node> nodes = new List<Node>();
 
+    [Header("Runtime State")]
+    [Tooltip("The index of the node where the last pawn was. This is updated automatically.")]
+    public int lastKnownPawnNodeIndex = 0;
+
     private void OnDrawGizmos()
     {
         if (nodes == null) return;
