@@ -115,26 +115,31 @@ public class InventoryManager : MonoBehaviour
     }
     public bool TryCombineItems(Item itemA, Item itemB)
     {
-        if (!combinationsEnabled) return false;
+        if (!combinationsEnabled || itemA == null || itemB == null) return false;
 
         foreach (CombinationRecipe recipe in availableRecipes)
         {
-            bool matches = (recipe.item1 == itemA && recipe.item2 == itemB) ||
-                           (recipe.item1 == itemB && recipe.item2 == itemA);
+            // THE FIX: Compare by item name instead of by object reference.
+            // This works for both original assets and temporary instances.
+            bool matches = (recipe.item1.name == itemA.name && recipe.item2.name == itemB.name) ||
+                           (recipe.item1.name == itemB.name && recipe.item2.name == itemA.name);
 
             if (matches)
             {
                 Debug.Log($"Combination successful! Created {recipe.resultingItem.name}");
-
+                
                 RemoveItem(itemA);
                 RemoveItem(itemB);
 
                 if (recipe.sumIngredientValues)
                 {
                     Item itemInstance = ScriptableObject.CreateInstance<Item>();
-                    itemInstance.name = recipe.resultingItem.name;
+                    // Copy properties from the recipe's template
+                    itemInstance.name = recipe.resultingItem.name; // Crucial to copy the name
                     itemInstance.description = recipe.resultingItem.description;
                     itemInstance.icon = recipe.resultingItem.icon;
+                    itemInstance.pathFollowerPrefab = recipe.resultingItem.pathFollowerPrefab;
+                    // Calculate the new value
                     itemInstance.value = itemA.value + itemB.value;
                     AddItem(itemInstance);
                 }
@@ -145,7 +150,6 @@ public class InventoryManager : MonoBehaviour
 
                 DeselectItem();
                 EndItemDrag();
-
                 return true;
             }
         }
