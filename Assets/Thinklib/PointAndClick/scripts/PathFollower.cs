@@ -86,7 +86,6 @@ public class PathFollower : MonoBehaviour
                 {
                     Debug.Log($"<color=lime>SUCCESS! Reached final node {currentNodeIndex}.</color>");
                     
-                    // Deactivate this node as a final node for subsequent pawns
                     arrivedNode.isFinalNode = false;
                     Debug.Log($"Node {currentNodeIndex} is no longer a final node.");
 

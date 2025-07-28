@@ -17,7 +17,6 @@ public enum PawnValueDisplayMode
 
 public class InventoryManager : MonoBehaviour
 {
-    // --- Singleton Pattern ---
     public static InventoryManager instance;
 
     void Awake()
@@ -29,7 +28,6 @@ public class InventoryManager : MonoBehaviour
         }
         instance = this;
     }
-    // --- End of Singleton ---
 
     [Header("Interaction Settings")]
     public InteractionMode currentMode = InteractionMode.ClickToSelect;
@@ -53,14 +51,11 @@ public class InventoryManager : MonoBehaviour
     private List<Item> inventory = new List<Item>();
     public Item selectedItem { get; private set; }
 
-    // Add this variable inside the InventoryManager class
     [Header("Pawn Logic Settings")]
     public PawnValueDisplayMode pawnValueDisplayMode = PawnValueDisplayMode.UpdateValueInInventory;
-    
-    // ...
 
     private GameObject activePawnObject;
-    public bool isPawnActive { get; private set; } = false; // The inventory lock flag
+    public bool isPawnActive { get; private set; } = false;
     private bool isDragging = false;
 
     void Start()
@@ -152,7 +147,6 @@ public class InventoryManager : MonoBehaviour
     {
         if (item != null && inventory.Contains(item))
         {
-            // Do not call DeselectItem here as it can cause issues with the pawn lock
             if (selectedItem == item)
             {
                 selectedItem = null;
@@ -180,7 +174,6 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    // MODIFIED: SelectItem handles the new rules and inventory lock.
     public void SelectItem(Item item)
     {
         if (isPawnActive)
@@ -213,7 +206,6 @@ public class InventoryManager : MonoBehaviour
 
             isPawnActive = true;
             
-            // The item is only removed from inventory in this specific mode
             if (pawnValueDisplayMode == PawnValueDisplayMode.ShowValueOnPawn)
             {
                 RemoveItem(item);
@@ -221,7 +213,6 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    // MODIFIED: DeselectItem now also considers the inventory lock.
     public void DeselectItem()
     {
         if (isPawnActive) return; 
@@ -231,10 +222,8 @@ public class InventoryManager : MonoBehaviour
         selectedItem = null;
     }
 
-    // NEW: A public method that the PathFollower can call when its value is depleted.
     public void PawnDepleted()
     {
-        // If the item was kept in inventory, we remove it now.
         if (pawnValueDisplayMode == PawnValueDisplayMode.UpdateValueInInventory && selectedItem != null)
         {
             RemoveItem(selectedItem);
@@ -250,7 +239,6 @@ public class InventoryManager : MonoBehaviour
     {
         if (draggedItemIcon != null)
         {
-            // We don't call DeselectItem() here anymore to avoid conflicts with the pawn lock
             selectedItem = null;
             isDragging = true;
             draggedItemIcon.sprite = item.icon;
