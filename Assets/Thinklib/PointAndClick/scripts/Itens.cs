@@ -2,7 +2,7 @@ using UnityEngine;
 public class Item : ScriptableObject
 {
     [Header("Item Information")]
-    public string name;
+    // public string name;
     public int value;
     [TextArea(3, 5)]
     public string description;

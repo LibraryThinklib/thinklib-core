@@ -7,7 +7,7 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 {
     [Header("Item Data")]
     private Item item;
-    
+
     [Header("UI Components")]
     [SerializeField] private Image iconImage;
     [SerializeField] private Image slotBackground;
@@ -22,8 +22,10 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 
     void Update()
     {
+        if (InventoryManager.instance == null) return;
+
         if (item == null || slotBackground == null) return;
-        
+
         if (InventoryManager.instance.selectedItem == this.item)
         {
             slotBackground.color = selectedColor;
@@ -49,7 +51,7 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
                 }
             }
         }
-        
+
         if (valueText != null)
         {
             if (item != null && item.value > 0)
@@ -63,7 +65,7 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
             }
         }
     }
-    
+
     public void Initialize(Item newItem)
     {
         item = newItem;
@@ -81,10 +83,10 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (InventoryManager.instance.currentMode != InteractionMode.DragAndDrop || item == null) return;
-        
+
         draggedItem = item;
         dragWasSuccessful = false;
-        
+
         InventoryManager.instance.StartItemDrag(item);
         iconImage.enabled = false;
     }
@@ -94,7 +96,7 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
         if (InventoryManager.instance.currentMode != InteractionMode.DragAndDrop) return;
 
         InventoryManager.instance.EndItemDrag();
-        
+
         if (!dragWasSuccessful)
         {
             iconImage.enabled = true;
@@ -102,7 +104,7 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 
         draggedItem = null;
     }
-    
+
     public void OnPointerClick(PointerEventData eventData)
     {
         if (InventoryManager.instance.currentMode != InteractionMode.ClickToSelect) return;
@@ -116,17 +118,17 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
         }
         else
         {
-            if (currentlySelectedItem == this.item) 
+            if (currentlySelectedItem == this.item)
             {
-                InventoryManager.instance.DeselectItem(); 
+                InventoryManager.instance.DeselectItem();
             }
-            else 
+            else
             {
-                InventoryManager.instance.SelectItem(this.item); 
+                InventoryManager.instance.SelectItem(this.item);
             }
         }
     }
-    
+
     public void OnDrop(PointerEventData eventData)
     {
         if (InventoryManager.instance.currentMode != InteractionMode.DragAndDrop) return;

@@ -130,6 +130,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1224718840458614352, guid: bea7de56ad7a20b42b4ca9107cea5f2e, type: 3}
+      propertyPath: zoneID
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5234937919688798292, guid: bea7de56ad7a20b42b4ca9107cea5f2e, type: 3}
       propertyPath: m_Name
       value: DropZone_Prefab_Container (3)
@@ -199,6 +203,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1224718840458614352, guid: bea7de56ad7a20b42b4ca9107cea5f2e, type: 3}
+      propertyPath: zoneID
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5234937919688798292, guid: bea7de56ad7a20b42b4ca9107cea5f2e, type: 3}
       propertyPath: m_Name
       value: DropZone_Prefab_Container (2)
@@ -1180,12 +1188,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f195b3f3bf4f70449970cbfd5b2ad2d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  puzzleRule: 0
-  customSolution:
-  - {fileID: 11400000, guid: 44fb7855ed62eeb4e8287b2304b505f2, type: 2}
-  - {fileID: 11400000, guid: c93521954abb9df4790d2717114d57c8, type: 2}
-  - {fileID: 11400000, guid: 20b112c92e044ab48be4911e9bb123ae, type: 2}
-  - {fileID: 11400000, guid: fa509e5d058b85647bf79f7ee94ae3b5, type: 2}
+  puzzleRule: 1
+  customSolution: []
   onPuzzleCompleted:
     m_PersistentCalls:
       m_Calls: []

@@ -119,8 +119,6 @@ public class InventoryManager : MonoBehaviour
 
         foreach (CombinationRecipe recipe in availableRecipes)
         {
-            // THE FIX: Compare by item name instead of by object reference.
-            // This works for both original assets and temporary instances.
             bool matches = (recipe.item1.name == itemA.name && recipe.item2.name == itemB.name) ||
                            (recipe.item1.name == itemB.name && recipe.item2.name == itemA.name);
 
@@ -134,12 +132,10 @@ public class InventoryManager : MonoBehaviour
                 if (recipe.sumIngredientValues)
                 {
                     Item itemInstance = ScriptableObject.CreateInstance<Item>();
-                    // Copy properties from the recipe's template
-                    itemInstance.name = recipe.resultingItem.name; // Crucial to copy the name
+                    itemInstance.name = recipe.resultingItem.name;
                     itemInstance.description = recipe.resultingItem.description;
                     itemInstance.icon = recipe.resultingItem.icon;
                     itemInstance.pathFollowerPrefab = recipe.resultingItem.pathFollowerPrefab;
-                    // Calculate the new value
                     itemInstance.value = itemA.value + itemB.value;
                     AddItem(itemInstance);
                 }

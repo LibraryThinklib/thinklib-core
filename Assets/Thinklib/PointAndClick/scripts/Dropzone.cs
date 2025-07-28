@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System.Collections;
 
 public class DropZone : MonoBehaviour, IDropHandler
 {
@@ -31,34 +32,34 @@ public class DropZone : MonoBehaviour, IDropHandler
         }
     }
 
-    public void PlaceItem(Item itemToPlace)
+    public void PlaceItem(Item newItem)
     {
-        if (itemToPlace == null || !DropZoneManager.instance.IsValidPlacement(itemToPlace, this.zoneID))
+        if (newItem == null || HasItem())
         {
-            Debug.Log("Placement denied by DropZoneManager.");
             return;
         }
 
-        storedItem = itemToPlace;
-
-        if (displaySprite != null)
-        {
-            displaySprite.sprite = storedItem.icon;
-            displaySprite.enabled = true;
-        }
-
-        InventoryManager.instance.RemoveItem(itemToPlace);
-
+        storedItem = newItem;
+        if (displaySprite != null) { displaySprite.sprite = storedItem.icon; displaySprite.enabled = true; }
+        
+        InventoryManager.instance.RemoveItem(newItem);
+        if (ItemSlot.draggedItem == newItem) { ItemSlot.dragWasSuccessful = true; }
         InventoryManager.instance.EndItemDrag();
-
-        if (ItemSlot.draggedItem != null)
-        {
-            ItemSlot.dragWasSuccessful = true;
-        }
-
+        
         Debug.Log($"Item '{storedItem.name}' placed in Zone {zoneID}.");
 
         DropZoneManager.instance.CheckForPuzzleCompletion();
+    }
+
+    private IEnumerator RejectItem(Item itemToReturn, float delay = 0.5f)
+    {
+        yield return new WaitForSeconds(delay);
+        
+        if (storedItem == itemToReturn)
+        {
+            InventoryManager.instance.AddItem(itemToReturn);
+            ClearZone();
+        }
     }
 
     private void OnMouseDown()
