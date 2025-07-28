@@ -9,6 +9,12 @@ public class TowerShooter : MonoBehaviour
 
     private float fireCountdown = 0f;
     private Transform target;
+    private TowerUpgrade towerUpgrade;  // Referência para o script TowerUpgrade
+
+    void Start()
+    {
+        towerUpgrade = GetComponent<TowerUpgrade>();  // Encontra o script TowerUpgrade
+    }
 
     void Update()
     {
@@ -58,6 +64,7 @@ public class TowerShooter : MonoBehaviour
         if (bulletScript != null)
         {
             bulletScript.SetTarget(target);
+            bulletScript.damage = towerUpgrade.damage;  // Atualiza o dano da bala com base no nível da torre
         }
     }
 
