@@ -319,6 +319,7 @@ MonoBehaviour:
   shootingRadius: 5
   timeBetweenShots: 1.5
   aimAtTarget: 1
+  projectileDamage: 1
   isStatic: 0
   isPatroller: 1
   pointA: {fileID: 0}
