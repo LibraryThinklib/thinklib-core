@@ -2,19 +2,20 @@
 using UnityEditor.Animations;
 using UnityEngine;
 
-public class TopdownPlayerAnimatorControllerCreator : MonoBehaviour
+public class TopdownEnemyAnimatorControllerCreator : MonoBehaviour
 {
-    [MenuItem("Topdown/Create Topdown Player Animator Controller")]
-    public static void CreateTopdownAnimatorController()
+    [MenuItem("Topdown/Create Topdown Enemy Animator Controller")]
+    public static void CreateTopdownEnemyAnimatorController()
     {
-        string folderPath = "Assets/Thinklib/Topdown/Player/Animations";
+        string folderPath = "Assets/Thinklib/Topdown/Enemy/Animations";
 
         if (!AssetDatabase.IsValidFolder(folderPath))
         {
-            AssetDatabase.CreateFolder("Assets/Thinklib/Topdown/Player", "Animations");
+            AssetDatabase.CreateFolder("Assets/Thinklib/Topdown", "Enemy");
+            AssetDatabase.CreateFolder("Assets/Thinklib/Topdown/Enemy", "Animations");
         }
 
-        string controllerPath = $"{folderPath}/TopdownPlayerAnimatorController.controller";
+        string controllerPath = $"{folderPath}/TopdownEnemyAnimatorController.controller";
         var controller = AnimatorController.CreateAnimatorControllerAtPath(controllerPath);
 
         // Parameters
@@ -48,11 +49,11 @@ public class TopdownPlayerAnimatorControllerCreator : MonoBehaviour
 
         // Transitions: Idle <-> Walking
         var idleToWalk = idle.AddTransition(walk);
-        idleToWalk.AddCondition(AnimatorConditionMode.If, 0, "IsMoving");
+        idleToWalk.AddCondition(AnimatorConditionMode.If, 0f, "IsMoving");
         idleToWalk.hasExitTime = false;
 
         var walkToIdle = walk.AddTransition(idle);
-        walkToIdle.AddCondition(AnimatorConditionMode.IfNot, 0, "IsMoving");
+        walkToIdle.AddCondition(AnimatorConditionMode.IfNot, 0f, "IsMoving");
         walkToIdle.hasExitTime = false;
 
         // Shoot
@@ -61,8 +62,8 @@ public class TopdownPlayerAnimatorControllerCreator : MonoBehaviour
 
         // Melee
         var anyAttack = root.AddAnyStateTransition(melee);
-        anyAttack.AddCondition(AnimatorConditionMode.If, 0, "IsAttacking");
-        anyAttack.AddCondition(AnimatorConditionMode.IfNot, 0, "IsDead");
+        anyAttack.AddCondition(AnimatorConditionMode.If, 0f, "IsAttacking");
+        anyAttack.AddCondition(AnimatorConditionMode.IfNot, 0f, "IsDead");
         anyAttack.hasExitTime = false;
 
         var meleeToIdle = melee.AddTransition(idle);
@@ -71,8 +72,8 @@ public class TopdownPlayerAnimatorControllerCreator : MonoBehaviour
 
         // Hurt
         var anyHurt = root.AddAnyStateTransition(hurt);
-        anyHurt.AddCondition(AnimatorConditionMode.If, 0, "IsHurt");
-        anyHurt.AddCondition(AnimatorConditionMode.IfNot, 0, "IsDead");
+        anyHurt.AddCondition(AnimatorConditionMode.If, 0f, "IsHurt");
+        anyHurt.AddCondition(AnimatorConditionMode.IfNot, 0f, "IsDead");
         anyHurt.hasExitTime = false;
 
         var hurtToIdle = hurt.AddTransition(idle);
@@ -81,10 +82,10 @@ public class TopdownPlayerAnimatorControllerCreator : MonoBehaviour
 
         // Dead
         var anyDead = root.AddAnyStateTransition(dead);
-        anyDead.AddCondition(AnimatorConditionMode.If, 0, "IsDead");
+        anyDead.AddCondition(AnimatorConditionMode.If, 0f, "IsDead");
         anyDead.hasExitTime = false;
 
-        Debug.Log("✅ Topdown Animator Controller criado com sucesso em: " + controllerPath);
+        Debug.Log("✅ Topdown Enemy Animator Controller criado com sucesso em: " + controllerPath);
     }
 
     private static BlendTree CreateDirectionalBlendTree(AnimatorController controller, string blendTreeName)
@@ -120,11 +121,11 @@ public class TopdownPlayerAnimatorControllerCreator : MonoBehaviour
     private static void ConfigureShootProjectileTransitions(AnimatorState fromState, AnimatorState shootProjectileState)
     {
         var toShoot = fromState.AddTransition(shootProjectileState);
-        toShoot.AddCondition(AnimatorConditionMode.If, 1, "IsShooting");
+        toShoot.AddCondition(AnimatorConditionMode.If, 1f, "IsShooting");
         toShoot.hasExitTime = false;
 
         var fromShoot = shootProjectileState.AddTransition(fromState);
-        fromShoot.AddCondition(AnimatorConditionMode.IfNot, 0, "IsShooting");
+        fromShoot.AddCondition(AnimatorConditionMode.IfNot, 0f, "IsShooting");
         fromShoot.hasExitTime = true;
         fromShoot.exitTime = 1f;
     }

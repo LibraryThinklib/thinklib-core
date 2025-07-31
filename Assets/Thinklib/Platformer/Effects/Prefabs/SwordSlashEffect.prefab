@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7885444547202316534}
   - component: {fileID: 3427583986800637897}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: SwordSlashEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
