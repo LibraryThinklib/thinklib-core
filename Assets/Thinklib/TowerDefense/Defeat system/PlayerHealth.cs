@@ -28,7 +28,7 @@ public class PlayerHealth : MonoBehaviour
 
     void UpdateHealthUI()
     {
-        healthText.text = "Vidas: " + currentHealth.ToString();  // Atualiza o texto de vidas
+        healthText.text = "Lifes: " + currentHealth.ToString();  // Atualiza o texto de vidas
     }
 
     void GameOver()

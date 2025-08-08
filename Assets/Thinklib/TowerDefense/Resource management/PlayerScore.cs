@@ -16,6 +16,6 @@ public class PlayerScore : MonoBehaviour
     // Atualiza a UI com a pontuação atual
     void UpdateScoreUI()
     {
-        scoreText.text = "Pontos: " + currentScore.ToString();
+        scoreText.text = "Points: " + currentScore.ToString();
     }
 }
