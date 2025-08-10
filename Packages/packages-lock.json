@@ -4,7 +4,10 @@
       "version": "file:com.thinklib.core",
       "depth": 0,
       "source": "embedded",
-      "dependencies": {}
+      "dependencies": {
+        "com.unity.textmeshpro": "3.0.6",
+        "com.unity.ugui": "1.0.0"
+      }
     },
     "com.unity.2d.animation": {
       "version": "9.1.2",
