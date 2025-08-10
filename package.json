@@ -1,16 +1,28 @@
 {
   "name": "com.thinklib.core",
-  "version": "1.0.0",
   "displayName": "Thinklib Core",
-  "description": "Biblioteca de mecânicas Thinklib para Unity.",
-  "unity": "2021.3",
+  "version": "0.1.0",
+  "unity": "2022.3",
+  "description": "Library of mechanics and utilities for games (Platformer, Topdown, and Point & Click).",
+  "keywords": [
+    "thinklib",
+    "platformer",
+    "topdown",
+    "point-and-click",
+    "mechanics"
+  ],
   "author": {
     "name": "Thinklib Team",
     "email": "contato@thinklib.com",
     "url": "https://github.com/LibraryThinklib"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LibraryThinklib/thinklib-core.git"
+  },
+  "license": "MIT",
   "dependencies": {
-    "com.unity.textmeshpro": "3.0.6",
+    "com.unity.textmeshpro": "3.0.9",
     "com.unity.ugui": "1.0.0"
   }
 }
