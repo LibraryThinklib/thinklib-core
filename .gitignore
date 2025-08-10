@@ -43,6 +43,8 @@ Desktop.ini
 Packages/*
 !Packages/manifest.json
 !Packages/packages-lock.json
+!Packages/com.thinklib.core/**
+
 
 # .meta files são essenciais – **não ignore!**
 
