@@ -1,0 +1,5 @@
+{
+  "name": "com.thinklib.core",
+  "references": ["Unity.TextMeshPro"],
+  "autoReferenced": true
+}

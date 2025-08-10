@@ -40,10 +40,11 @@ Thumbs.db
 Desktop.ini
 
 # Unity Packages
-Packages/*
-!Packages/manifest.json
-!Packages/packages-lock.json
-!Packages/com.thinklib.core/**
+/Packages/*
+!/Packages/manifest.json
+!/Packages/packages-lock.json
+!/Packages/com.thinklib.core/
+!/Packages/com.thinklib.core/**
 
 
 # .meta files são essenciais – **não ignore!**

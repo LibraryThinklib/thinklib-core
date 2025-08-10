@@ -1,0 +1,6 @@
+{
+  "name": "com.thinklib.core.Editor",
+  "references": ["com.thinklib.core", "Unity.TextMeshPro", "Unity.TextMeshPro.Editor"],
+  "includePlatforms": ["Editor"],
+  "autoReferenced": true
+}
