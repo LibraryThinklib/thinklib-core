@@ -1,0 +1,13 @@
+{
+  "name": "com.thinklib.core",
+  "version": "1.0.0",
+  "displayName": "Thinklib Core",
+  "description": "Biblioteca de mecânicas Thinklib para Unity.",
+  "unity": "2021.3",
+  "author": {
+    "name": "Thinklib Team",
+    "email": "contato@thinklib.com",
+    "url": "https://github.com/LibraryThinklib"
+  },
+  "dependencies": {}
+}
