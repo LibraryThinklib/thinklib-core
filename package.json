@@ -1,7 +1,7 @@
 {
   "name": "com.thinklib.core",
   "displayName": "Thinklib Core",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "unity": "2022.3",
   "description": "Library of mechanics and utilities for games (Platformer, Topdown, and Point & Click).",
   "keywords": [
