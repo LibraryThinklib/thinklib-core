@@ -4,6 +4,7 @@ using Thinklib.Platformer.Enemy.Core;
 using Thinklib.Topdown.Player.Core;
 using System.Collections;
 
+[AddComponentMenu("Thinklib/Topdown/Combat/Player Shooter Controller", -99)]
 [RequireComponent(typeof(ProjectileTopdownShooterBase))]
 public class PlayerTopdownShooterController : MonoBehaviour
 {
@@ -86,7 +87,7 @@ public class PlayerTopdownShooterController : MonoBehaviour
 
     private IEnumerator ResetIsShootingAfterAnimation()
     {
-        yield return null; // garante que a transição de estado ocorra
+        yield return null; // garante que a transiï¿½ï¿½o de estado ocorra
         AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
         float duration = state.length > 0 ? state.length : 0.5f;
         yield return new WaitForSeconds(duration);

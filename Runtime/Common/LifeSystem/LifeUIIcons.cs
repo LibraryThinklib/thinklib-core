@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
+[AddComponentMenu("Thinklib/Common/LifeSystem/Life UI Icons", -88)]
 public class LifeUIIcons : MonoBehaviour
 {
     [Header("Icon Configuration")]

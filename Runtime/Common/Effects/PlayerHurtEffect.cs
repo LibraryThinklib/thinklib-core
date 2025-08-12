@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+[AddComponentMenu("Thinklib/Common/Effects/Player Hurt Effect", -99)]
 [RequireComponent(typeof(SpriteRenderer))]
 public class PlayerHurtEffect : MonoBehaviour
 {

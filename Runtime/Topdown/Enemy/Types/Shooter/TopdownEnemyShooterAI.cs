@@ -1,6 +1,7 @@
 using UnityEngine;
 using Thinklib.Topdown.Player.Core;
 
+[AddComponentMenu("Thinklib/Topdown/Enemy/Shooter/Enemy Shooter AI", -90)]
 namespace Thinklib.Topdown.Enemy
 {
     [RequireComponent(typeof(ProjectileTopdownShooterBase))]

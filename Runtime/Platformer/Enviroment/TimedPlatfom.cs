@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+[AddComponentMenu("Thinklib/Platformer/Environment/Timed Platform", -99)]
 [RequireComponent(typeof(Collider2D), typeof(Rigidbody2D), typeof(SpriteRenderer))]
 public class TimedPlatform : MonoBehaviour
 {
@@ -12,11 +13,11 @@ public class TimedPlatform : MonoBehaviour
 
     public PlatformBehavior behavior = PlatformBehavior.Disappear;
 
-    public float delayBeforeAction = 1f;   // Tempo antes da ação ocorrer
+    public float delayBeforeAction = 1f;   // Tempo antes da aï¿½ï¿½o ocorrer
     public float fadeDuration = 1f;        // Tempo para desaparecer (fade out)
 
     public bool enableRespawn = false;     // Define se a plataforma reaparece
-    public float respawnDelay = 2f;        // Tempo até reaparecer
+    public float respawnDelay = 2f;        // Tempo atï¿½ reaparecer
 
     public string activatorTag = "Player"; // Quem pode ativar a plataforma
 
@@ -41,7 +42,7 @@ public class TimedPlatform : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Ativa a plataforma se colidir com o jogador e ainda não tiver sido ativada
+        // Ativa a plataforma se colidir com o jogador e ainda nï¿½o tiver sido ativada
         if (isTriggered) return;
 
         if (collision.gameObject.CompareTag(activatorTag))

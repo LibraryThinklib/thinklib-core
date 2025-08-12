@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[AddComponentMenu("Thinklib/Platformer/Movement/Platformer Movement Controller", -97)]
 [RequireComponent(typeof(Animator))]
 public class PlatformerMovementController : MovementController
 {

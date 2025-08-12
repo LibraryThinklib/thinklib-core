@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
+[AddComponentMenu("Thinklib/Common/LifeSystem/Life UI Bar", -89)]
 public class LifeUIBar : MonoBehaviour
 {
     [SerializeField] private Image healthFill;

@@ -1,17 +1,18 @@
 using UnityEngine;
 using UnityEngine.UI;  // Para utilizar o Button da UI
 
+[AddComponentMenu("Thinklib/TowerDefense/Resource Management/Tower Shop", -99)]
 public class TowerShop : MonoBehaviour
 {
     public int towerCost = 5;  // Custo da torre
-    public Button buyButton;   // Botão de compra
+    public Button buyButton;   // Botï¿½o de compra
     private PlayerScore playerScore;
-    private bool isPlacingTower = false;  // Para verificar se está no modo de construção
+    private bool isPlacingTower = false;  // Para verificar se estï¿½ no modo de construï¿½ï¿½o
 
     void Start()
     {
         playerScore = FindObjectOfType<PlayerScore>();  // Encontra o script PlayerScore
-        buyButton.onClick.AddListener(TryBuyTower);  // Adiciona o evento de clique no botão
+        buyButton.onClick.AddListener(TryBuyTower);  // Adiciona o evento de clique no botï¿½o
     }
 
     void TryBuyTower()
@@ -20,7 +21,7 @@ public class TowerShop : MonoBehaviour
         {
             playerScore.AddScore(-towerCost);  // Subtrai os pontos para comprar
             isPlacingTower = true;  // Ativa o modo de colocar a torre
-            Debug.Log("Modo de construção ativado! Escolha onde colocar a torre.");
+            Debug.Log("Modo de construï¿½ï¿½o ativado! Escolha onde colocar a torre.");
         }
         else
         {
@@ -28,12 +29,12 @@ public class TowerShop : MonoBehaviour
         }
     }
 
-    public bool IsPlacingTower()  // Método para permitir que outros scripts verifiquem o estado
+    public bool IsPlacingTower()  // Mï¿½todo para permitir que outros scripts verifiquem o estado
     {
         return isPlacingTower;
     }
 
-    public void StopPlacingTower()  // Desativa o modo de construção
+    public void StopPlacingTower()  // Desativa o modo de construï¿½ï¿½o
     {
         isPlacingTower = false;
     }

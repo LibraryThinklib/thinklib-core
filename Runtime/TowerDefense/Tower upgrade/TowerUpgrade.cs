@@ -1,9 +1,10 @@
 using UnityEngine;
 
+[AddComponentMenu("Thinklib/TowerDefense/Tower Upgrade/Tower Shop", -99)]
 public class TowerUpgrade : MonoBehaviour
 {
-    public int currentLevel = 1;  // Nível atual da torre
-    public int maxLevel = 3;      // Máximo de níveis que a torre pode alcançar
+    public int currentLevel = 1;  // Nï¿½vel atual da torre
+    public int maxLevel = 3;      // Mï¿½ximo de nï¿½veis que a torre pode alcanï¿½ar
 
     // Atributos da torre
     public int damage = 1;
@@ -19,45 +20,45 @@ public class TowerUpgrade : MonoBehaviour
         playerScore = FindObjectOfType<PlayerScore>();  // Encontra o script PlayerScore
     }
 
-    // Método para melhorar a torre
+    // Mï¿½todo para melhorar a torre
     public void UpgradeTower()
     {
         if (playerScore.currentScore >= upgradeCost && currentLevel < maxLevel)
         {
             playerScore.AddScore(-upgradeCost);  // Subtrai os pontos
-            currentLevel++;  // Aumenta o nível da torre
+            currentLevel++;  // Aumenta o nï¿½vel da torre
 
-            // Atualiza os atributos da torre conforme o nível
+            // Atualiza os atributos da torre conforme o nï¿½vel
             switch (currentLevel)
             {
                 case 2:
                     damage = 3;  // Novo valor para o dano
                     fireRate = 1.5f;  // Novo valor para a taxa de disparo
                     range = 4f;  // Novo valor para o alcance
-                    upgradeCost = 20;  // Aumenta o custo para o próximo nível
+                    upgradeCost = 20;  // Aumenta o custo para o prï¿½ximo nï¿½vel
                     break;
                 case 3:
                     damage = 5;  // Novo valor para o dano
                     fireRate = 2f;  // Novo valor para a taxa de disparo
                     range = 5f;  // Novo valor para o alcance
-                    upgradeCost = 30;  // Aumenta o custo para o próximo nível
+                    upgradeCost = 30;  // Aumenta o custo para o prï¿½ximo nï¿½vel
                     break;
                 default:
                     break;
             }
 
-            Debug.Log("Torre evoluída para o nível " + currentLevel);
+            Debug.Log("Torre evoluï¿½da para o nï¿½vel " + currentLevel);
         }
         else
         {
-            Debug.Log("Pontos insuficientes ou máximo de nível atingido.");
+            Debug.Log("Pontos insuficientes ou mï¿½ximo de nï¿½vel atingido.");
         }
     }
 
-    // Exibindo as informações da torre (opcional)
+    // Exibindo as informaï¿½ï¿½es da torre (opcional)
     void OnGUI()
     {
-        GUI.Label(new Rect(10, 10, 200, 20), "Nível da Torre: " + currentLevel);
+        GUI.Label(new Rect(10, 10, 200, 20), "Nï¿½vel da Torre: " + currentLevel);
         GUI.Label(new Rect(10, 30, 200, 20), "Dano: " + damage);
         GUI.Label(new Rect(10, 50, 200, 20), "Alcance: " + range);
         GUI.Label(new Rect(10, 70, 200, 20), "Taxa de Disparo: " + fireRate);

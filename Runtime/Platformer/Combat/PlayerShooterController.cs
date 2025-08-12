@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using Thinklib.Platformer.Enemy.Core;
 
+[AddComponentMenu("Thinklib/Platformer/Combat/Player Shooter Controller", -98)]
+
 [RequireComponent(typeof(ProjectileShooterBase))]
 public class PlayerShooterController : MonoBehaviour
 {

@@ -1,15 +1,16 @@
 using UnityEngine;
 
+[AddComponentMenu("Thinklib/Platformer/Environment/Moving Platform", -100)]
 public class MovingPlatform : MonoBehaviour
 {
-    [Header("Configuração de Movimentação")]
+    [Header("Configuraï¿½ï¿½o de Movimentaï¿½ï¿½o")]
     [SerializeField] private Transform pointA;
     [SerializeField] private Transform pointB;
     [SerializeField] private float speed = 2f;
     [SerializeField] private float waitTime = 1f;
     [SerializeField] private bool startActive = false;
 
-    [Header("Configuração de Ativação")]
+    [Header("Configuraï¿½ï¿½o de Ativaï¿½ï¿½o")]
     [SerializeField] private bool requirePlayerInput = false;
     [SerializeField] private KeyCode activationKey = KeyCode.E;
 
@@ -49,7 +50,7 @@ public class MovingPlatform : MonoBehaviour
     {
         transform.position = Vector2.MoveTowards(transform.position, targetPoint.position, speed * Time.deltaTime);
 
-        // Ao chegar no destino, inicia a troca após espera
+        // Ao chegar no destino, inicia a troca apï¿½s espera
         if (Vector2.Distance(transform.position, targetPoint.position) < 0.01f)
         {
             StartCoroutine(WaitAndSwitch());

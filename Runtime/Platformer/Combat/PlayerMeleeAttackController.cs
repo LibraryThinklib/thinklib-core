@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+[AddComponentMenu("Thinklib/Platformer/Combat/Player Melee Attack Controller", -99)]
 public class PlayerMeleeAttackController : MonoBehaviour
 {
     [Header("Input Settings")]
@@ -63,7 +64,7 @@ public class PlayerMeleeAttackController : MonoBehaviour
         if (animator != null)
             animator.SetTrigger("IsAttacking");
 
-        // Detecta inimigos na área de ataque
+        // Detecta inimigos na ï¿½rea de ataque
         Vector2 attackCenter = (Vector2)attackPoint.position + Vector2.right * direction * attackRange * 0.5f;
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackCenter, attackRange, enemyLayers);
 

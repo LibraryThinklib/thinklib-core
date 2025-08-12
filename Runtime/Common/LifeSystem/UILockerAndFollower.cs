@@ -1,11 +1,12 @@
 using UnityEngine;
 
+[AddComponentMenu("Thinklib/Common/LifeSystem/UI Locker And Follower", -87)]
 public class UILockerAndFollower : MonoBehaviour
 {
-    [Tooltip("Transform do alvo (objeto que será seguido)")]
+    [Tooltip("Transform do alvo (objeto que serï¿½ seguido)")]
     public Transform target;
 
-    [Tooltip("Offset da UI em relação ao alvo")]
+    [Tooltip("Offset da UI em relaï¿½ï¿½o ao alvo")]
     public Vector3 offset = new Vector3(0, 1.5f, 0);
 
     private Vector3 initialScale;
@@ -24,12 +25,12 @@ public class UILockerAndFollower : MonoBehaviour
         // Posicionar a UI no local desejado
         transform.position = target.position + offset;
 
-        // Manter rotação e escala originais (impede que a UI vire junto com o alvo)
+        // Manter rotaï¿½ï¿½o e escala originais (impede que a UI vire junto com o alvo)
         transform.rotation = initialRotation;
 
-        // Corrigir a escala para não flipar com o alvo
+        // Corrigir a escala para nï¿½o flipar com o alvo
         Vector3 correctedScale = initialScale;
-        correctedScale.x = Mathf.Abs(initialScale.x); // força a UI a manter X positivo
+        correctedScale.x = Mathf.Abs(initialScale.x); // forï¿½a a UI a manter X positivo
         transform.localScale = correctedScale;
     }
 }

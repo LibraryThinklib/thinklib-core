@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
+[AddComponentMenu("Thinklib/Common/LifeSystem/Life System Controller", -90)]
 public class LifeSystemController : MonoBehaviour
 {
     [Header("General Settings")]

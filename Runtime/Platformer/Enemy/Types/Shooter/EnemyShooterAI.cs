@@ -1,8 +1,11 @@
 using UnityEngine;
 using Thinklib.Platformer.Enemy.Core;
 
+[AddComponentMenu("Thinklib/Platformer/Enemy/Shooter/Enemy Shooter AI", -90)]
 namespace Thinklib.Platformer.Enemy.Types
 {
+
+
     [RequireComponent(typeof(ProjectileShooterBase))]
     public class EnemyShooterAI : MonoBehaviour
     {
@@ -58,7 +61,7 @@ namespace Thinklib.Platformer.Enemy.Types
                     else
                         direction = new Vector2(player.position.x > transform.position.x ? 1 : -1, 0);
 
-                    // Dispara e configura o dano do projétil
+                    // Dispara e configura o dano do projï¿½til
                     GameObject proj = shooter.ShootProjectile(direction);
                     if (proj != null)
                     {

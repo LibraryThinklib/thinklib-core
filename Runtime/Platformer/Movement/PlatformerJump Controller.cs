@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+[AddComponentMenu("Thinklib/Platformer/Movement/Platformer Jump Controller", -98)]
 public class PlatformerJumpController : MonoBehaviour
 {
     [Header("Jump Settings")]

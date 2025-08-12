@@ -1,10 +1,11 @@
 using UnityEngine;
 using System.Collections;
 
+[AddComponentMenu("Thinklib/TowerDefense/Enemy Progression/Enemy Spawner", -98)]
 public class EnemySpawner : MonoBehaviour
 {
     public GameObject enemyPrefab;          // Prefab do inimigo a ser instanciado
-    public Transform[] waypoints;           // Caminho que será passado para o inimigo
+    public Transform[] waypoints;           // Caminho que serï¿½ passado para o inimigo
     public int enemiesToSpawn = 5;          // Quantos inimigos criar
     public float spawnInterval = 2f;        // Intervalo entre cada inimigo
 

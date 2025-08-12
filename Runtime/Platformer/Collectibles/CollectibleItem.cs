@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[AddComponentMenu("Thinklib/Platformer/Collectibles/Collectible Item", -100)]
 [RequireComponent(typeof(Collider2D))]
 public class CollectibleItem : MonoBehaviour
 {

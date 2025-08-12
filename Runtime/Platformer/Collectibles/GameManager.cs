@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+[AddComponentMenu("Thinklib/Platformer/Collectibles/Collectibles Manager", -99)]
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;

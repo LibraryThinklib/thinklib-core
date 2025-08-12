@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[AddComponentMenu("Thinklib/TowerDefense/Enemy Progression/Enemy Health", -100)]
 public class EnemyHealth : MonoBehaviour
 {
     public int maxHealth = 3;
@@ -24,7 +25,7 @@ public class EnemyHealth : MonoBehaviour
                 playerScore.AddScore(pointsOnDeath);  // Adiciona pontos ao jogador
             }
 
-            Destroy(gameObject); // Destrói o inimigo
+            Destroy(gameObject); // Destrï¿½i o inimigo
         }
     }
 }

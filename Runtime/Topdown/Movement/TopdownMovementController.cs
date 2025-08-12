@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[AddComponentMenu("Thinklib/Topdown/Movement/Topdown Movement Controller", -100)]
 [RequireComponent(typeof(Animator))]
 public class TopdownMovementController : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class TopdownMovementController : MonoBehaviour
     private Animator animator;
     private InputHandler inputHandler;
 
-    // Salva a última direção válida (para idle direcional)
+    // Salva a ï¿½ltima direï¿½ï¿½o vï¿½lida (para idle direcional)
     private Vector2 lastMoveDirection = Vector2.down;
 
     public Vector2 GetLastMoveDirection()
@@ -68,7 +69,7 @@ public class TopdownMovementController : MonoBehaviour
         {
             transform.position += (Vector3)direction * moveSpeed * Time.deltaTime;
 
-            // Atualiza a última direção
+            // Atualiza a ï¿½ltima direï¿½ï¿½o
             lastMoveDirection = direction;
         }
     }
@@ -80,13 +81,13 @@ public class TopdownMovementController : MonoBehaviour
 
         if (isMoving)
         {
-            // Atualiza o blend para a direção atual
+            // Atualiza o blend para a direï¿½ï¿½o atual
             animator.SetFloat("Horizontal", direction.x);
             animator.SetFloat("Vertical", direction.y);
         }
         else
         {
-            // Continua usando a última direção salva para o Idle
+            // Continua usando a ï¿½ltima direï¿½ï¿½o salva para o Idle
             animator.SetFloat("Horizontal", lastMoveDirection.x);
             animator.SetFloat("Vertical", lastMoveDirection.y);
         }

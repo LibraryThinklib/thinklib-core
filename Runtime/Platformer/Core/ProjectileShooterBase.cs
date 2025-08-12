@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[AddComponentMenu("Thinklib/Core/Projectile Shooter Base", -100)]
 namespace Thinklib.Platformer.Enemy.Core
 {
+
+
     public class ProjectileShooterBase : MonoBehaviour
     {
         [Header("Projectile Settings")]

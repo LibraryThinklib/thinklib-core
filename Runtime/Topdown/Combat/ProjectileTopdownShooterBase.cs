@@ -1,5 +1,7 @@
 using UnityEngine;
 
+[AddComponentMenu("Thinklib/Topdown/Combat/Projectile Shooter (Base)", -98)]
+
 namespace Thinklib.Topdown.Player.Core
 {
     public class ProjectileTopdownShooterBase : MonoBehaviour
@@ -38,7 +40,7 @@ namespace Thinklib.Topdown.Player.Core
                 rb.velocity = direction * projectileSpeed;
             }
 
-            // Ajusta a escala do projétil de acordo com a direção
+            // Ajusta a escala do projï¿½til de acordo com a direï¿½ï¿½o
             Vector3 scale = proj.transform.localScale;
             if (Mathf.Abs(direction.x) > 0.01f)
                 scale.x = Mathf.Abs(scale.x) * Mathf.Sign(direction.x);

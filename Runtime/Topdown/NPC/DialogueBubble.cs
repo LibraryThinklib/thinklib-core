@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
+[AddComponentMenu("Thinklib/Topdown/NPC/Dialogue Bubble", -100)]
 public class DialogueBubble : MonoBehaviour
 {
     [Header("Campo de texto")]
@@ -10,21 +11,21 @@ public class DialogueBubble : MonoBehaviour
     private Coroutine typeCoroutine;
 
     /// <summary>
-    /// Indica se o texto ainda está sendo exibido letra por letra.
+    /// Indica se o texto ainda estï¿½ sendo exibido letra por letra.
     /// </summary>
     public bool IsTyping { get; private set; } = false;
 
     /// <summary>
-    /// Define o texto a ser exibido no balão, com ou sem efeito de digitação.
+    /// Define o texto a ser exibido no balï¿½o, com ou sem efeito de digitaï¿½ï¿½o.
     /// </summary>
     /// <param name="text">Texto completo da fala.</param>
-    /// <param name="useTypewriter">Se verdadeiro, ativa o efeito de digitação letra por letra.</param>
-    /// <param name="speed">Velocidade da digitação (tempo entre letras).</param>
+    /// <param name="useTypewriter">Se verdadeiro, ativa o efeito de digitaï¿½ï¿½o letra por letra.</param>
+    /// <param name="speed">Velocidade da digitaï¿½ï¿½o (tempo entre letras).</param>
     public void SetText(string text, bool useTypewriter = false, float speed = 0.05f)
     {
         if (textField == null)
         {
-            Debug.LogWarning("Campo 'textField' do balão de fala não está atribuído!");
+            Debug.LogWarning("Campo 'textField' do balï¿½o de fala nï¿½o estï¿½ atribuï¿½do!");
             return;
         }
 

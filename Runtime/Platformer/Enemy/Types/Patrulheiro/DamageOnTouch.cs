@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[AddComponentMenu("Thinklib/Platformer/Enemy/Patroller/Damage On Touch", -100)]
 [RequireComponent(typeof(Collider2D))]
 public class DamageOnTouch : MonoBehaviour
 {

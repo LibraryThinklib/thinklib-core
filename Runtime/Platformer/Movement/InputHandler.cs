@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[AddComponentMenu("Thinklib/Platformer/Movement/Input Handler", -100)]
 public class InputHandler : MonoBehaviour
 {
     public Vector2 GetKeyboardInput(List<KeyCode> rightKeys, List<KeyCode> leftKeys)

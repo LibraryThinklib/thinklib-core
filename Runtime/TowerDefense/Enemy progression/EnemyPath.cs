@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
+[AddComponentMenu("Thinklib/TowerDefense/Enemy Progression/Enemy Path", -99)]
 public class EnemyPath : MonoBehaviour
 {
     public Transform[] waypoints;  // pontos do caminho
@@ -13,12 +14,12 @@ public class EnemyPath : MonoBehaviour
     {
         if (currentWaypointIndex < waypoints.Length)
         {
-            // Move o inimigo na direção do waypoint atual
+            // Move o inimigo na direï¿½ï¿½o do waypoint atual
             Transform target = waypoints[currentWaypointIndex];
             Vector3 direction = (target.position - transform.position).normalized;
             transform.position += direction * speed * Time.deltaTime;
 
-            // Verifica se chegou perto o suficiente para mudar para o próximo ponto
+            // Verifica se chegou perto o suficiente para mudar para o prï¿½ximo ponto
             float distance = Vector3.Distance(transform.position, target.position);
             if (distance < 0.1f)
             {
@@ -34,7 +35,7 @@ public class EnemyPath : MonoBehaviour
                 playerHealth.TakeDamage(damageAmount);  // Causa dano ao jogador
             }
 
-            Destroy(gameObject);  // Destrói o inimigo
+            Destroy(gameObject);  // Destrï¿½i o inimigo
         }
     }
 }

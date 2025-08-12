@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+[AddComponentMenu("Thinklib/Common/Effects/Death Effect", -100)]
 [RequireComponent(typeof(SpriteRenderer))]
 public class DeathEffect : MonoBehaviour
 {

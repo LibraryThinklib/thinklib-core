@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+[AddComponentMenu("Thinklib/Topdown/NPC/NPC Controller", -99)]
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(Collider2D))]
 public class TopdownNPCController : MonoBehaviour
@@ -23,7 +24,7 @@ public class TopdownNPCController : MonoBehaviour
     public bool useTypewriterEffect = false;
     public float typeSpeed = 0.05f;
 
-    [Header("Configurações de interação")]
+    [Header("Configuraï¿½ï¿½es de interaï¿½ï¿½o")]
     public KeyCode interactionKey = KeyCode.E;
     public GameObject dialogueBubblePrefab;
     public Transform bubbleAnchor;
@@ -31,7 +32,7 @@ public class TopdownNPCController : MonoBehaviour
     [Header("Camadas que bloqueiam o caminho")]
     public LayerMask obstructionLayers;
 
-    [Header("Referência do jogador")]
+    [Header("Referï¿½ncia do jogador")]
     public Transform player;
     public MonoBehaviour playerMovementScript; // Ex: PlayerMovement (deve ser um MonoBehaviour com .enabled)
 

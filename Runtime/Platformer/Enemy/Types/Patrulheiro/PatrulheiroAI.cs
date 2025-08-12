@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[AddComponentMenu("Thinklib/Platformer/Enemy/Patroller/Patrulheiro AI", -99)]
 [RequireComponent(typeof(Animator))]
 public class PatrollerAI : MonoBehaviour
 {

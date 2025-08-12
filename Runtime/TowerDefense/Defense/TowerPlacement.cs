@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[AddComponentMenu("Thinklib/TowerDefense/Defense/Tower Placement", -99)]
 public class TowerPlacement : MonoBehaviour
 {
     public GameObject towerPrefab;
@@ -14,12 +15,12 @@ public class TowerPlacement : MonoBehaviour
     {
         if (towerShop.IsPlacingTower())
         {
-            if (Input.GetMouseButtonDown(0))  // Verifica se o jogador clicou com o botão esquerdo
+            if (Input.GetMouseButtonDown(0))  // Verifica se o jogador clicou com o botï¿½o esquerdo
             {
                 Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                mousePosition.z = 0;  // Garante que a torre será posicionada no plano 2D (z = 0)
+                mousePosition.z = 0;  // Garante que a torre serï¿½ posicionada no plano 2D (z = 0)
 
-                // Realiza um Raycast no local clicado para verificar se é uma área válida para colocar a torre
+                // Realiza um Raycast no local clicado para verificar se ï¿½ uma ï¿½rea vï¿½lida para colocar a torre
                 RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector2.zero);
 
                 if (hit.collider != null)
@@ -27,15 +28,15 @@ public class TowerPlacement : MonoBehaviour
                     // Verifica se o local tem a tag "Blocked"
                     if (hit.collider.CompareTag("Blocked"))
                     {
-                        Debug.Log("Área bloqueada! Não é possível colocar a torre aqui.");
+                        Debug.Log("ï¿½rea bloqueada! Nï¿½o ï¿½ possï¿½vel colocar a torre aqui.");
                     }
                     else
                     {
-                        // Coloca a torre onde o jogador clicou, se não for uma área bloqueada
+                        // Coloca a torre onde o jogador clicou, se nï¿½o for uma ï¿½rea bloqueada
                         Instantiate(towerPrefab, mousePosition, Quaternion.identity);
                         Debug.Log("Torre colocada!");
 
-                        towerShop.StopPlacingTower();  // Para o modo de construção após colocar a torre
+                        towerShop.StopPlacingTower();  // Para o modo de construï¿½ï¿½o apï¿½s colocar a torre
                     }
                 }
             }

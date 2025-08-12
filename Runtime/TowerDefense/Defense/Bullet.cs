@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[AddComponentMenu("Thinklib/TowerDefense/Defense/Bullet", -100)]
 public class Bullet : MonoBehaviour
 {
     public float speed = 5f;
@@ -15,14 +16,14 @@ public class Bullet : MonoBehaviour
     {
         if (target == null)
         {
-            Destroy(gameObject); // Destrói a bala se o alvo não existir
+            Destroy(gameObject); // Destrï¿½i a bala se o alvo nï¿½o existir
             return;
         }
 
-        // Direção do movimento (do centro da bala até o alvo)
+        // Direï¿½ï¿½o do movimento (do centro da bala atï¿½ o alvo)
         Vector3 direction = (target.position - transform.position).normalized;
 
-        // Movimenta a bala em direção ao alvo
+        // Movimenta a bala em direï¿½ï¿½o ao alvo
         transform.position += direction * speed * Time.deltaTime;
 
         // Rotaciona a bala para que a ponta esteja sempre voltada para o alvo
@@ -37,7 +38,7 @@ public class Bullet : MonoBehaviour
             if (eh != null)
                 eh.TakeDamage(damage);
 
-            Destroy(gameObject); // Destrói a bala
+            Destroy(gameObject); // Destrï¿½i a bala
         }
     }
 }

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+[AddComponentMenu("Thinklib/Topdown/Combat/Player Melee Attack Controller", -100)]
 [RequireComponent(typeof(Animator))]
 public class PlayerTopdownMeleeAttackController : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class PlayerTopdownMeleeAttackController : MonoBehaviour
     public float attackRange = 0.5f;
     public LayerMask enemyLayers;
 
-    [Header("Attack Points por Direção")]
+    [Header("Attack Points por Direï¿½ï¿½o")]
     public Transform attackPointUp;
     public Transform attackPointDown;
     public Transform attackPointLeft;

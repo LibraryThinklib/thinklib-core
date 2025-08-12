@@ -1,19 +1,20 @@
 using UnityEngine;
 using UnityEngine.UI;  // Para utilizar o Text da UI
 
+[AddComponentMenu("Thinklib/TowerDefense/Resource Management/Player Score", -100)]
 public class PlayerScore : MonoBehaviour
 {
-    public int currentScore = 0;  // Pontuação atual
-    public Text scoreText;        // Para exibir a pontuação na UI
+    public int currentScore = 0;  // Pontuaï¿½ï¿½o atual
+    public Text scoreText;        // Para exibir a pontuaï¿½ï¿½o na UI
 
-    // Método para adicionar pontos
+    // Mï¿½todo para adicionar pontos
     public void AddScore(int points)
     {
         currentScore += points;
         UpdateScoreUI();
     }
 
-    // Atualiza a UI com a pontuação atual
+    // Atualiza a UI com a pontuaï¿½ï¿½o atual
     void UpdateScoreUI()
     {
         scoreText.text = "Points: " + currentScore.ToString();

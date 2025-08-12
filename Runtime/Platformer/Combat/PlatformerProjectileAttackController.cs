@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+[AddComponentMenu("Thinklib/Platformer/Combat/Projectile Attack Controller", -100)]
 public class PlatformerProjectileAttackController : MonoBehaviour
 {
     [Header("Projectile Settings")]

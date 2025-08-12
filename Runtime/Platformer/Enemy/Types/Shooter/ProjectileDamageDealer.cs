@@ -1,12 +1,13 @@
 using UnityEngine;
 
+[AddComponentMenu("Thinklib/Platformer/Enemy/Shooter/Projectile Damage Dealer", -89)]
 [RequireComponent(typeof(Collider2D))]
 public class ProjectileDamageDealer : MonoBehaviour
 {
     [Header("Dano")]
     public int damage = 1;
 
-    [Header("Configuração de colisão")]
+    [Header("Configuraï¿½ï¿½o de colisï¿½o")]
     public string targetTag = "Player";
 
     private void OnTriggerEnter2D(Collider2D other)

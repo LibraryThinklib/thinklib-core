@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[AddComponentMenu("Thinklib/TowerDefense/Defense/Tower Shooter", -98)]
 public class TowerShooter : MonoBehaviour
 {
     public float range = 3f;
@@ -9,7 +10,7 @@ public class TowerShooter : MonoBehaviour
 
     private float fireCountdown = 0f;
     private Transform target;
-    private TowerUpgrade towerUpgrade;  // Referência para o script TowerUpgrade
+    private TowerUpgrade towerUpgrade;  // Referï¿½ncia para o script TowerUpgrade
 
     void Start()
     {
@@ -64,7 +65,7 @@ public class TowerShooter : MonoBehaviour
         if (bulletScript != null)
         {
             bulletScript.SetTarget(target);
-            bulletScript.damage = towerUpgrade.damage;  // Atualiza o dano da bala com base no nível da torre
+            bulletScript.damage = towerUpgrade.damage;  // Atualiza o dano da bala com base no nï¿½vel da torre
         }
     }
 

@@ -1,12 +1,13 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+[AddComponentMenu("Thinklib/TowerDefense/Defeat System/Player Health", -100)]
 public class PlayerHealth : MonoBehaviour
 {
     public int maxHealth = 10;  // Quantidade inicial de vidas
     private int currentHealth;
-    public Text healthText;  // Referência ao componente Text para exibir as vidas
-    public Text gameOverText;  // Referência ao componente Text para exibir "GAME OVER"
+    public Text healthText;  // Referï¿½ncia ao componente Text para exibir as vidas
+    public Text gameOverText;  // Referï¿½ncia ao componente Text para exibir "GAME OVER"
 
     void Start()
     {
@@ -34,6 +35,6 @@ public class PlayerHealth : MonoBehaviour
     void GameOver()
     {
         gameOverText.gameObject.SetActive(true);  // Exibe o texto "GAME OVER"
-        Time.timeScale = 0f;  // Pausa o jogo (para tudo, inclusive animações e física)
+        Time.timeScale = 0f;  // Pausa o jogo (para tudo, inclusive animaï¿½ï¿½es e fï¿½sica)
     }
 }

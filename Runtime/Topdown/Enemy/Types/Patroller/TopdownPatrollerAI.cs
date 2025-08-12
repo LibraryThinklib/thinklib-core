@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[AddComponentMenu("Thinklib/Topdown/Enemy/Patroller/Patroller AI", -99)]
 [RequireComponent(typeof(Animator))]
 public class TopdownPatrollerAI : MonoBehaviour
 {
@@ -35,7 +36,7 @@ public class TopdownPatrollerAI : MonoBehaviour
         // Mover inimigo
         transform.position = Vector2.MoveTowards(currentPosition, targetPosition, speed * Time.deltaTime);
 
-        // Atualizar parâmetros do Animator
+        // Atualizar parï¿½metros do Animator
         bool isMoving = direction.sqrMagnitude > 0.01f;
         animator.SetBool("IsMoving", isMoving);
 
