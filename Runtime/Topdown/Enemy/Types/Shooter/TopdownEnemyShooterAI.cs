@@ -1,9 +1,10 @@
 using UnityEngine;
 using Thinklib.Topdown.Player.Core;
 
-[AddComponentMenu("Thinklib/Topdown/Enemy/Shooter/Enemy Shooter AI", -90)]
+
 namespace Thinklib.Topdown.Enemy
 {
+    [AddComponentMenu("Thinklib/Topdown/Enemy/Shooter/Enemy Shooter AI", -90)]
     [RequireComponent(typeof(ProjectileTopdownShooterBase))]
     public class TopdownEnemyShooterAI : MonoBehaviour
     {

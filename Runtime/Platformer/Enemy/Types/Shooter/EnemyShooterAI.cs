@@ -1,10 +1,10 @@
 using UnityEngine;
 using Thinklib.Platformer.Enemy.Core;
 
-[AddComponentMenu("Thinklib/Platformer/Enemy/Shooter/Enemy Shooter AI", -90)]
+
 namespace Thinklib.Platformer.Enemy.Types
 {
-
+    [AddComponentMenu("Thinklib/Platformer/Enemy/Shooter/Enemy Shooter AI", -90)]
 
     [RequireComponent(typeof(ProjectileShooterBase))]
     public class EnemyShooterAI : MonoBehaviour

@@ -1,9 +1,10 @@
 using UnityEngine;
 
-[AddComponentMenu("Thinklib/Topdown/Combat/Projectile Shooter (Base)", -98)]
+
 
 namespace Thinklib.Topdown.Player.Core
 {
+    [AddComponentMenu("Thinklib/Topdown/Combat/Projectile Shooter (Base)", -98)]
     public class ProjectileTopdownShooterBase : MonoBehaviour
     {
         [Header("Projectile Settings")]
