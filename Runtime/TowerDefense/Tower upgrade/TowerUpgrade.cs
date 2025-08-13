@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[AddComponentMenu("Thinklib/TowerDefense/Tower Upgrade/Tower Shop", -99)]
+[AddComponentMenu("Thinklib/TowerDefense/Tower Upgrade/Tower Upgrade", -99)]
 public class TowerUpgrade : MonoBehaviour
 {
     public int currentLevel = 1;  // N�vel atual da torre
