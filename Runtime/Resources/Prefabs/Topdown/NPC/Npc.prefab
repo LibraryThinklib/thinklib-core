@@ -81,7 +81,7 @@ SpriteRenderer:
   m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &8502390457761193756
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 4366063867634764136}
   - component: {fileID: 72170706788987000}
   - component: {fileID: 1960795201600744543}
-  - component: {fileID: 6811314344786466455}
+  - component: {fileID: 277799254452826224}
   m_Layer: 11
   m_Name: Npc
   m_TagString: Untagged
@@ -266,7 +266,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &6811314344786466455
+--- !u!114 &277799254452826224
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -275,37 +275,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 8502390457761193756}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69155c70be364874fbd5d6dad41f7646, type: 3}
+  m_Script: {fileID: 11500000, guid: 8ae499a28109033499c071466aa0f5d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  npcType: 1
-  patrolPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  npcType: 0
+  patrolPoints: []
   patrolSpeed: 2
-  patrolTolerance: 0.05
-  hasDialogues: 1
-  dialogues:
-  - "Gohan, v\xEA se voc\xEA me escuta.."
-  - "n\xE3o \xE9 pecado lutar pela justi\xE7a"
-  - "ao contr\xE1rio"
-  - "\xE9 uma boa a\xE7\xE3o"
-  - Existem inimigos
-  - "que n\xE3o s\xE3o convencidos com palavras"
-  - "Voc\xEA s\xF3 tem que soltar a f\xFAria"
-  - "que est\xE1 dentro do seu esp\xEDrito"
-  - "Eu sei como voc\xEA se sente"
-  - "n\xE3o precisa mais suportar isso"
-  - Gohan, proteja os seres vivos
-  - e as plantas deste mundo
-  - que eu tanto amei
-  - "Conto com voc\xEA!"
-  useTypewriterEffect: 1
-  typeSpeed: 0.07
+  patrolTolerance: 0.1
+  hasDialogues: 0
+  dialogues: []
+  useTypewriterEffect: 0
+  typeSpeed: 0.05
   interactionKey: 101
-  dialogueBubblePrefab: {fileID: 8306867894961216909, guid: 772b0b6f1af261f41a298b72497329ca, type: 3}
-  bubbleAnchor: {fileID: 356424093776337524}
+  dialogueBubblePrefab: {fileID: 0}
+  bubbleAnchor: {fileID: 0}
   obstructionLayers:
     serializedVersion: 2
     m_Bits: 0

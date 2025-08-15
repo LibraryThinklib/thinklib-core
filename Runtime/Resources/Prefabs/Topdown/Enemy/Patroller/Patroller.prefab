@@ -81,7 +81,7 @@ SpriteRenderer:
   m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &3751994863331445713
@@ -165,7 +165,7 @@ SpriteRenderer:
   m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &6734992095488376494
@@ -214,10 +214,10 @@ GameObject:
   - component: {fileID: 6490091573850200224}
   - component: {fileID: 1667708527693743370}
   - component: {fileID: 4552129261623081964}
-  - component: {fileID: 5368304807864908680}
-  - component: {fileID: 7094483059915282040}
-  - component: {fileID: 8172348748228097341}
-  - component: {fileID: 8168390123141140172}
+  - component: {fileID: -4079435833125896267}
+  - component: {fileID: 8910376938407889491}
+  - component: {fileID: -1373015412293362077}
+  - component: {fileID: 1201829629769303139}
   m_Layer: 9
   m_Name: Patroller
   m_TagString: Enemy
@@ -386,7 +386,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &5368304807864908680
+--- !u!114 &-4079435833125896267
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -395,14 +395,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 7852356029702892215}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4012b96c6c564c4439361bfb59e5e98a, type: 3}
+  m_Script: {fileID: 11500000, guid: a71a6262966e2bf4798d01f73006407a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pointA: {fileID: 5900871057417813517}
-  pointB: {fileID: 3046475494442002528}
+  pointA: {fileID: 0}
+  pointB: {fileID: 0}
   speed: 2
   tolerance: 0.2
---- !u!114 &7094483059915282040
+--- !u!114 &8910376938407889491
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -411,12 +411,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7852356029702892215}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e12be75a0defc64ebeeee9a60f00b3b, type: 3}
+  m_Script: {fileID: 11500000, guid: d03ae32af5ca13c44b128e09f8f0d7e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 1
   targetTag: Player
---- !u!114 &8172348748228097341
+--- !u!114 &-1373015412293362077
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -425,13 +425,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 7852356029702892215}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7dd9a9b365345084cb89701cf7b74189, type: 3}
+  m_Script: {fileID: 11500000, guid: 8f3a5490998dd8a43851fb7487efb7c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   blinkDuration: 1.2
   blinkInterval: 0.1
   uiElementsToHide: []
---- !u!114 &8168390123141140172
+--- !u!114 &1201829629769303139
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -440,7 +440,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7852356029702892215}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8508aea63d05be841a96f17dd62f33dd, type: 3}
+  m_Script: {fileID: 11500000, guid: 28240b353b2f3114389939a4212d9972, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   invulnerabilityDuration: 1.5

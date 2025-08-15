@@ -12,10 +12,9 @@ GameObject:
   - component: {fileID: 7038308528005071265}
   - component: {fileID: 3619484013877477245}
   - component: {fileID: 3186820235456009585}
-  - component: {fileID: 4959213505894596952}
-  - component: {fileID: 8831883703387205393}
-  - component: {fileID: 298590171384442864}
-  - component: {fileID: 4112634841616334733}
+  - component: {fileID: 8738265449447589276}
+  - component: {fileID: 9106087651714040789}
+  - component: {fileID: 4653401272286385702}
   m_Layer: 9
   m_Name: Patrol Sniper
   m_TagString: Enemy
@@ -157,34 +156,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!50 &4959213505894596952
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7273400516324712138}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 4
---- !u!114 &8831883703387205393
+--- !u!114 &8738265449447589276
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -193,14 +165,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 7273400516324712138}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 332fa48f6c476c5428015aef22372a96, type: 3}
+  m_Script: {fileID: 11500000, guid: f62a6f4fb1d3e734e9f966cef8dce781, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectilePrefab: {fileID: 1840044498542721038, guid: a40e2f7bbdd267b478b73b585ce27a14, type: 3}
-  launchPosition: {fileID: 6277534387021616890}
+  projectilePrefab: {fileID: 0}
+  launchPosition: {fileID: 0}
   projectileSpeed: 10
   maxProjectileLifetime: 5
---- !u!114 &298590171384442864
+--- !u!114 &9106087651714040789
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -209,7 +181,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7273400516324712138}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc2d3a64b9fa31b449b1f96cba46f7a8, type: 3}
+  m_Script: {fileID: 11500000, guid: 3917df0183ffcc34dbbda11df3f1c6c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
@@ -217,13 +189,13 @@ MonoBehaviour:
   timeBetweenShots: 1.5
   aimAtTarget: 1
   projectileDamage: 1
-  isStatic: 0
-  isPatroller: 1
+  isStatic: 1
+  isPatroller: 0
   pointA: {fileID: 0}
   pointB: {fileID: 0}
   patrolSpeed: 2
   patrolTolerance: 0.1
---- !u!114 &4112634841616334733
+--- !u!114 &4653401272286385702
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -232,14 +204,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7273400516324712138}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7dd9a9b365345084cb89701cf7b74189, type: 3}
+  m_Script: {fileID: 11500000, guid: 8f3a5490998dd8a43851fb7487efb7c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   blinkDuration: 1.2
   blinkInterval: 0.1
-  uiElementsToHide:
-  - {fileID: 0}
-  - {fileID: 0}
+  uiElementsToHide: []
 --- !u!1 &7716994016615633623
 GameObject:
   m_ObjectHideFlags: 0
@@ -321,6 +291,6 @@ SpriteRenderer:
   m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
