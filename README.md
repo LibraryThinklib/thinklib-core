@@ -44,7 +44,7 @@ https://github.com/LibraryThinklib/thinklib-core.git#v0.1.13
 <div align="center">
 
 <!-- Card do repositório -->
-[![Repo Card](https://github-readme-stats.vercel.app/api/pin/?username=LibraryThinklib&repo=thinklib-core&theme=tokyonight&hide_border=true&border_radius=15)](https://github.com/LibraryThinklib/thinklib-core)
+[![Readme Card](https://github-readme-stats.vercel.app/api/pin/??username=LibraryThinklib&repo=thinklib-core)](https://github.com/LibraryThinklib/thinklib-core)
 
 <!-- Badges dinâmicas -->
 ![GitHub stars](https://img.shields.io/github/stars/LibraryThinklib/thinklib-core?style=for-the-badge&logo=github&color=FFD54F&labelColor=1b1b1b)
