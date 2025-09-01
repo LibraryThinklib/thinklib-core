@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 
+[AddComponentMenu("Thinklib/Point and Click/Dropzone/ItemSlot", -98)]
 public class ItemSlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDragHandler, IDropHandler
 {
     [Header("Item Data")]
@@ -23,17 +24,10 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
     void Update()
     {
         if (InventoryManager.instance == null) return;
-
         if (item == null || slotBackground == null) return;
 
-        if (InventoryManager.instance.selectedItem == this.item)
-        {
-            slotBackground.color = selectedColor;
-        }
-        else
-        {
-            slotBackground.color = normalColor;
-        }
+        slotBackground.color = (InventoryManager.instance.selectedItem == this.item)
+            ? selectedColor : normalColor;
 
         if (InventoryManager.instance.pawnValueDisplayMode == PawnValueDisplayMode.UpdateValueInInventory)
         {

@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 
 [System.Serializable]
+[AddComponentMenu("Thinklib/Point and Click/Graph/Node", -99)]
 public class Node
 {
     public string name;

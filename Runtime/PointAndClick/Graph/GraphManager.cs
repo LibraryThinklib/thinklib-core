@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Events;
 
+[AddComponentMenu("Thinklib/Point and Click/Graph/GraphManager", -100)]
 public class GraphManager : MonoBehaviour
 {
     public static GraphManager instance;

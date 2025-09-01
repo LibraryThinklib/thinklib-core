@@ -1,9 +1,10 @@
 using UnityEngine;
 
+[AddComponentMenu("Thinklib/Point and Click/Graph/VisualNodeClickHandler", -96)]
 public class VisualNodeClickHandler : MonoBehaviour
 {
     public int nodeIndex;
-    
+
     private void OnMouseDown()
     {
         PathFollower activePawn = FindObjectOfType<PathFollower>();

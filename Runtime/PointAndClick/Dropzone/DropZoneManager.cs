@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.Events;
 
+[AddComponentMenu("Thinklib/Point and Click/Dropzone/DropZoneManager", -99)]
 public class DropZoneManager : MonoBehaviour
 {
     public static DropZoneManager instance;
     void Awake() { if (instance != null && instance != this) { Destroy(this.gameObject); return; } instance = this; }
 
     public enum PuzzleOrderRule { AscendingValue, DescendingValue, Custom }
-    
+
     [Header("Puzzle Configuration")]
     public PuzzleOrderRule puzzleRule;
     public List<Item> customSolution;
@@ -24,7 +25,7 @@ public class DropZoneManager : MonoBehaviour
         orderedZones = new List<DropZone>(FindObjectsOfType<DropZone>());
         orderedZones = orderedZones.OrderBy(zone => zone.zoneID).ToList();
     }
-    
+
     public void CheckForPuzzleCompletion()
     {
         if (!orderedZones.All(z => z.HasItem()))
@@ -77,8 +78,8 @@ public class DropZoneManager : MonoBehaviour
         return false;
     }
 
-    public bool CanReturnItem(int zoneID) 
+    public bool CanReturnItem(int zoneID)
     {
-        return true; 
+        return true;
     }
 }

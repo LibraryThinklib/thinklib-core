@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections;
 
+[AddComponentMenu("Thinklib/Point and Click/Dropzone/DropZone", -100)]
 public class DropZone : MonoBehaviour, IDropHandler
 {
     [Header("Zone Configuration")]
@@ -41,11 +42,11 @@ public class DropZone : MonoBehaviour, IDropHandler
 
         storedItem = newItem;
         if (displaySprite != null) { displaySprite.sprite = storedItem.icon; displaySprite.enabled = true; }
-        
+
         InventoryManager.instance.RemoveItem(newItem);
         if (ItemSlot.draggedItem == newItem) { ItemSlot.dragWasSuccessful = true; }
         InventoryManager.instance.EndItemDrag();
-        
+
         Debug.Log($"Item '{storedItem.name}' placed in Zone {zoneID}.");
 
         DropZoneManager.instance.CheckForPuzzleCompletion();
@@ -54,7 +55,7 @@ public class DropZone : MonoBehaviour, IDropHandler
     private IEnumerator RejectItem(Item itemToReturn, float delay = 0.5f)
     {
         yield return new WaitForSeconds(delay);
-        
+
         if (storedItem == itemToReturn)
         {
             InventoryManager.instance.AddItem(itemToReturn);

@@ -27,6 +27,7 @@ public enum PawnStartPositionMode
 }
 
 
+[AddComponentMenu("Thinklib/Point and Click/Inventory/InventoryManager", -99)]
 public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager instance;
@@ -125,7 +126,7 @@ public class InventoryManager : MonoBehaviour
             if (matches)
             {
                 Debug.Log($"Combination successful! Created {recipe.resultingItem.name}");
-                
+
                 RemoveItem(itemA);
                 RemoveItem(itemB);
 
@@ -238,11 +239,17 @@ public class InventoryManager : MonoBehaviour
         UpdateUI();
     }
 
-    public void DeselectItem() {
+    public void DeselectItem()
+    {
         if (isPawnActive) return;
-        if (activePawnObject != null) { Destroy(activePawnObject);
-            activePawnObject = null; } selectedItem = null;
-        UpdateUI(); }
+        if (activePawnObject != null)
+        {
+            Destroy(activePawnObject);
+            activePawnObject = null;
+        }
+        selectedItem = null;
+        UpdateUI();
+    }
 
 
     public void PawnDepleted()
@@ -251,7 +258,7 @@ public class InventoryManager : MonoBehaviour
         {
             RemoveItem(selectedItem);
         }
-        
+
         if (pawnMode == PawnSpawnMode.UseFixedPawnInScene && activePawnObject != null)
         {
             activePawnObject.SetActive(false);

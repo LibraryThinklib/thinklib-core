@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
 
+[AddComponentMenu("Thinklib/Point and Click/Graph/VisualGraph", -97)]
 public class VisualGraph : MonoBehaviour
 {
     public GraphManager graphManager;
@@ -43,7 +44,7 @@ public class VisualGraph : MonoBehaviour
         for (int i = 0; i < graphManager.nodes.Count; i++)
         {
             Node sourceNode = graphManager.nodes[i];
-            
+
             if (sourceNode != null && nodeObjectMap.ContainsKey(sourceNode))
             {
                 foreach (Edge edge in sourceNode.edges)
@@ -51,7 +52,7 @@ public class VisualGraph : MonoBehaviour
                     if (edge.targetNodeIndex >= 0 && edge.targetNodeIndex < graphManager.nodes.Count)
                     {
                         Node targetNode = graphManager.nodes[edge.targetNodeIndex];
-                        
+
                         if (targetNode != null && nodeObjectMap.ContainsKey(targetNode))
                         {
                             GameObject edgeObject = Instantiate(edgePrefab, transform);
@@ -63,7 +64,7 @@ public class VisualGraph : MonoBehaviour
                                 lineRenderer.SetPosition(0, sourceNode.position);
                                 lineRenderer.SetPosition(1, targetNode.position);
                             }
-                            
+
                             TextMeshPro textComponent = edgeObject.GetComponentInChildren<TextMeshPro>();
 
                             if (textComponent != null)
@@ -72,7 +73,7 @@ public class VisualGraph : MonoBehaviour
                                 {
                                     Vector3 midpoint = (sourceNode.position + targetNode.position) / 2f;
                                     textComponent.transform.position = midpoint;
-                                    
+
                                     textComponent.text = edge.weight.ToString();
                                 }
                                 else

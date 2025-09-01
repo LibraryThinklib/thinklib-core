@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 
+[AddComponentMenu("Thinklib/Point and Click/Graph/PathFollower", -98)]
 public class PathFollower : MonoBehaviour
 {
     [Header("Movement Settings")]
@@ -38,7 +39,7 @@ public class PathFollower : MonoBehaviour
     {
         if (isBlocked || isMoving) return;
         if (GraphManager.instance == null || GraphManager.instance.nodes.Count <= currentNodeIndex) return;
-        
+
         Node startNode = GraphManager.instance.nodes[currentNodeIndex];
         Edge edgeToTarget = null;
         foreach (Edge edge in startNode.edges)
@@ -81,7 +82,7 @@ public class PathFollower : MonoBehaviour
                     transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
                 }
             }
-            
+
             transform.position = Vector3.MoveTowards(transform.position, targetNode.position, speed * Time.deltaTime);
 
             if (Vector3.Distance(transform.position, targetNode.position) < 0.001f)
@@ -97,7 +98,7 @@ public class PathFollower : MonoBehaviour
                     InventoryManager.instance.PawnDepleted();
                     if (GraphManager.instance.onFinalNodeReached != null) { GraphManager.instance.onFinalNodeReached.Invoke(); }
                     if (this.gameObject != InventoryManager.instance.fixedPawn?.gameObject) { Destroy(this.gameObject); }
-                    return; 
+                    return;
                 }
                 if (currentValue <= 0)
                 {

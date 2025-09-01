@@ -1,4 +1,6 @@
 using UnityEngine;
+
+[CreateAssetMenu(menuName = "Thinklib/Point and Click/Inventory/Item", -98)]
 public class Item : ScriptableObject
 {
     [Header("Item Information")]
