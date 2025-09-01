@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Thinklib/Point and Click/Inventory/CombinationRecipe", -100)]
+[CreateAssetMenu(menuName = "Thinklib/Point and Click/Inventory/CombinationRecipe", order = -100)]
 public class CombinationRecipe : ScriptableObject
 {
     [Header("Recipe Ingredients")]

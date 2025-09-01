@@ -26,7 +26,6 @@ public enum PawnStartPositionMode
     ContinueFromLastNode
 }
 
-
 [AddComponentMenu("Thinklib/Point and Click/Inventory/InventoryManager", -99)]
 public class InventoryManager : MonoBehaviour
 {

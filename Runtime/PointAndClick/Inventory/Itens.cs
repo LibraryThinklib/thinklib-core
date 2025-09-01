@@ -1,10 +1,9 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Thinklib/Point and Click/Inventory/Item", -98)]
+[CreateAssetMenu(menuName = "Thinklib/Point and Click/Inventory/Item", order = -98)]
 public class Item : ScriptableObject
 {
     [Header("Item Information")]
-    // public string name;
     public int value;
     [TextArea(3, 5)]
     public string description;
