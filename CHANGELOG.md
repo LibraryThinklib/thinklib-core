@@ -117,3 +117,5 @@
 * Point & Click menu items: Item and Combination Recipe (ScriptableObjects)
 * Auto-creation of asset folders under `Assets/Thinklib/...`
 * Dependencies via UPM: TextMesh Pro, UGUI
+
+* fork
