@@ -1,5 +1,8 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Thinklib.Telemetry;
 
 [AddComponentMenu("Thinklib/Platformer/Combat/Player Melee Attack Controller", -99)]
 public class PlayerMeleeAttackController : MonoBehaviour
@@ -23,10 +26,29 @@ public class PlayerMeleeAttackController : MonoBehaviour
     private Animator animator;
     private int direction = 1;
 
+    // Telemetry
+    private const string MechanicName = "Platformer/Combat/MeleeAttack";
+    private bool _sentUsed = false;
+    private string _lastInput = "unknown";
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
         ConfigureAttackButton();
+
+        // telemetry: componente instanciado
+        ThinklibTelemetry.Track(
+            "mechanic_instantiated",
+            MechanicName,
+            nameof(PlayerMeleeAttackController),
+            new Dictionary<string, object> {
+                { "timeBetweenAttacks", timeBetweenAttacks },
+                { "attackDamage", attackDamage },
+                { "attackRange", attackRange },
+                { "hasButton", attackButton != null },
+                { "enemyLayersMask", enemyLayers.value }
+            }
+        );
     }
 
     private void Update()
@@ -35,6 +57,7 @@ public class PlayerMeleeAttackController : MonoBehaviour
 
         if (Input.GetKeyDown(attackKey) && attackCooldown <= 0f)
         {
+            _lastInput = "keyboard";
             Attack();
         }
 
@@ -49,7 +72,10 @@ public class PlayerMeleeAttackController : MonoBehaviour
             attackButton.onClick.AddListener(() =>
             {
                 if (attackCooldown <= 0f)
+                {
+                    _lastInput = "button";
                     Attack();
+                }
             });
         }
     }
@@ -61,35 +87,68 @@ public class PlayerMeleeAttackController : MonoBehaviour
 
     private void Attack()
     {
-        if (animator != null)
-            animator.SetTrigger("IsAttacking");
-
-        // Detecta inimigos na �rea de ataque
-        Vector2 attackCenter = (Vector2)attackPoint.position + Vector2.right * direction * attackRange * 0.5f;
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackCenter, attackRange, enemyLayers);
-
-        foreach (Collider2D enemy in hitEnemies)
+        try
         {
-            LifeSystemController life = enemy.GetComponent<LifeSystemController>();
-            if (life != null)
-                life.TakeDamage(attackDamage);
-        }
+            if (animator != null)
+                animator.SetTrigger("IsAttacking");
 
-        // Instancia o efeito visual do ataque
-        if (slashEffectPrefab != null)
+            // Detecta inimigos na área de ataque
+            Vector2 attackCenter = (Vector2)attackPoint.position + Vector2.right * direction * attackRange * 0.5f;
+            Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackCenter, attackRange, enemyLayers);
+
+            foreach (Collider2D enemy in hitEnemies)
+            {
+                var life = enemy.GetComponent<LifeSystemController>();
+                if (life != null)
+                    life.TakeDamage(attackDamage);
+            }
+
+            // Efeito visual
+            if (slashEffectPrefab != null)
+            {
+                Vector3 effectPosition = attackPoint.position;
+                GameObject effect = Instantiate(slashEffectPrefab, effectPosition, Quaternion.identity);
+
+                // Inverte o efeito se estiver olhando para a esquerda
+                Vector3 scale = effect.transform.localScale;
+                scale.x = Mathf.Abs(scale.x) * direction;
+                effect.transform.localScale = scale;
+
+                Destroy(effect, slashEffectDuration);
+            }
+
+            // telemetry: primeiro uso efetivo (primeiro ataque)
+            if (!_sentUsed)
+            {
+                _sentUsed = true;
+                ThinklibTelemetry.Track(
+                    "mechanic_used",
+                    MechanicName,
+                    nameof(PlayerMeleeAttackController),
+                    new Dictionary<string, object> {
+                        { "input", _lastInput },
+                        { "attackRange", attackRange },
+                        { "damage", attackDamage }
+                    }
+                );
+            }
+
+            attackCooldown = timeBetweenAttacks;
+        }
+        catch (Exception ex)
         {
-            Vector3 effectPosition = attackPoint.position;
-            GameObject effect = Instantiate(slashEffectPrefab, effectPosition, Quaternion.identity);
-
-            // Inverte o efeito se estiver olhando para a esquerda
-            Vector3 scale = effect.transform.localScale;
-            scale.x = Mathf.Abs(scale.x) * direction;
-            effect.transform.localScale = scale;
-
-            Destroy(effect, slashEffectDuration);
+            ThinklibTelemetry.Track(
+                "mechanic_error",
+                MechanicName,
+                nameof(PlayerMeleeAttackController),
+                new Dictionary<string, object> {
+                    { "where", "Attack" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                }
+            );
+            throw;
         }
-
-        attackCooldown = timeBetweenAttacks;
     }
 
     private void OnDrawGizmosSelected()

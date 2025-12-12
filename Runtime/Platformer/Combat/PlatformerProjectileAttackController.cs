@@ -1,5 +1,8 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Thinklib.Telemetry;
 
 [AddComponentMenu("Thinklib/Platformer/Combat/Projectile Attack Controller", -100)]
 public class PlatformerProjectileAttackController : MonoBehaviour
@@ -21,16 +24,34 @@ public class PlatformerProjectileAttackController : MonoBehaviour
 
     private int direction = 1;
 
+    // Telemetry
+    private const string MechanicName = "Platformer/Combat/ProjectileAttack";
+    private bool _sentUsed = false;
+    private string _lastInput = "unknown";
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
         ConfigureShootButton();
+
+        // mechanic_instantiated
+        ThinklibTelemetry.Track(
+            "mechanic_instantiated",
+            MechanicName,
+            nameof(PlatformerProjectileAttackController),
+            new Dictionary<string, object> {
+                { "projectileSpeed", projectileSpeed },
+                { "maxProjectileLifetime", maxProjectileLifetime },
+                { "hasButton", shootButton != null }
+            }
+        );
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(shootKey))
         {
+            _lastInput = "keyboard";
             Debug.Log("ShootProjectile method will be called.");
             ShootProjectile();
         }
@@ -43,7 +64,11 @@ public class PlatformerProjectileAttackController : MonoBehaviour
         if (shootButton != null)
         {
             shootButton.onClick.RemoveAllListeners();
-            shootButton.onClick.AddListener(ShootProjectile);
+            shootButton.onClick.AddListener(() =>
+            {
+                _lastInput = "button";
+                ShootProjectile();
+            });
         }
     }
 
@@ -51,47 +76,79 @@ public class PlatformerProjectileAttackController : MonoBehaviour
     {
         direction = Mathf.Clamp(newDirection, -1, 1);
         Debug.Log($"Projectile direction set to: {(direction == 1 ? "Right" : "Left")} ({direction})");
-
         UpdateDirectionDebug();
     }
 
     private void UpdateDirectionDebug()
     {
         isFacingRight = direction == 1;
-        isFacingLeft = direction == -1;
+        isFacingLeft  = direction == -1;
     }
 
     public void ShootProjectile()
     {
-        if (animator != null)
+        try
         {
-            Debug.Log($"Before: IsShooting = {animator.GetBool("IsShooting")}");
-            animator.SetBool("IsShooting", true);
-            Debug.Log($"After: IsShooting = {animator.GetBool("IsShooting")}");
-            StartCoroutine(ResetShootingState());
-        }
+            if (animator != null)
+            {
+                Debug.Log($"Before: IsShooting = {animator.GetBool("IsShooting")}");
+                animator.SetBool("IsShooting", true);
+                Debug.Log($"After: IsShooting = {animator.GetBool("IsShooting")}");
+                StartCoroutine(ResetShootingState());
+            }
 
-        if (projectilePrefab == null || launchPosition == null)
+            if (projectilePrefab == null || launchPosition == null)
+            {
+                Debug.LogWarning("Projectile prefab or launch position not assigned!");
+                return;
+            }
+
+            GameObject projectile = Instantiate(projectilePrefab, launchPosition.position, Quaternion.identity);
+            Rigidbody2D rb = projectile.GetComponent<Rigidbody2D>();
+
+            if (rb != null)
+            {
+                Vector2 velocity = new Vector2(projectileSpeed * direction, 0);
+                rb.velocity = velocity;
+                Debug.Log($"Projectile velocity: {velocity}");
+            }
+
+            Vector3 scale = projectile.transform.localScale;
+            scale.x = Mathf.Abs(scale.x) * direction;
+            projectile.transform.localScale = scale;
+
+            // mechanic_used (primeiro disparo)
+            if (!_sentUsed)
+            {
+                _sentUsed = true;
+                ThinklibTelemetry.Track(
+                    "mechanic_used",
+                    MechanicName,
+                    nameof(PlatformerProjectileAttackController),
+                    new Dictionary<string, object> {
+                        { "input", _lastInput },
+                        { "direction", direction },
+                        { "projectileSpeed", projectileSpeed }
+                    }
+                );
+            }
+
+            Destroy(projectile, maxProjectileLifetime);
+        }
+        catch (Exception ex)
         {
-            Debug.LogWarning("Projectile prefab or launch position not assigned!");
-            return;
+            ThinklibTelemetry.Track(
+                "mechanic_error",
+                MechanicName,
+                nameof(PlatformerProjectileAttackController),
+                new Dictionary<string, object> {
+                    { "where", "ShootProjectile" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                }
+            );
+            throw;
         }
-
-        GameObject projectile = Instantiate(projectilePrefab, launchPosition.position, Quaternion.identity);
-        Rigidbody2D rb = projectile.GetComponent<Rigidbody2D>();
-
-        if (rb != null)
-        {
-            Vector2 velocity = new Vector2(projectileSpeed * direction, 0);
-            rb.velocity = velocity;
-            Debug.Log($"Projectile velocity: {velocity}");
-        }
-
-        Vector3 scale = projectile.transform.localScale;
-        scale.x = Mathf.Abs(scale.x) * direction;
-        projectile.transform.localScale = scale;
-
-        Destroy(projectile, maxProjectileLifetime);
     }
 
     private System.Collections.IEnumerator ResetShootingState()

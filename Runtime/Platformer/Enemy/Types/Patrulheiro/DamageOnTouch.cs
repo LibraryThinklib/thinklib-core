@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+using Thinklib.Telemetry;
 
 [AddComponentMenu("Thinklib/Platformer/Enemy/Patroller/Damage On Touch", -100)]
 [RequireComponent(typeof(Collider2D))]
@@ -10,12 +13,31 @@ public class DamageOnTouch : MonoBehaviour
     [Header("Tag do jogador")]
     public string targetTag = "Player";
 
+    // Telemetry
+    private const string MechanicName = "Platformer/Enemy/DamageOnTouch";
+    private bool _sentUsed = false;
+
+    private void Awake()
+    {
+        ThinklibTelemetry.Track(
+            "mechanic_instantiated",
+            MechanicName,
+            nameof(DamageOnTouch),
+            new Dictionary<string, object> {
+                { "damage", damage },
+                { "targetTag", targetTag }
+            }
+        );
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.CompareTag(targetTag))
+        if (!collision.collider.CompareTag(targetTag)) return;
+
+        try
         {
-            LifeSystemController life = collision.collider.GetComponent<LifeSystemController>();
-            PlayerHurtEffect hurt = collision.collider.GetComponent<PlayerHurtEffect>();
+            var life = collision.collider.GetComponent<LifeSystemController>();
+            var hurt = collision.collider.GetComponent<PlayerHurtEffect>();
 
             if (life != null && (hurt == null || !hurt.IsInvulnerable))
             {
@@ -23,7 +45,35 @@ public class DamageOnTouch : MonoBehaviour
 
                 if (hurt != null)
                     hurt.TriggerInvulnerability();
+
+                if (!_sentUsed)
+                {
+                    _sentUsed = true;
+                    ThinklibTelemetry.Track(
+                        "mechanic_used",
+                        MechanicName,
+                        nameof(DamageOnTouch),
+                        new Dictionary<string, object> {
+                            { "firstHit", true },
+                            { "damage", damage }
+                        }
+                    );
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            ThinklibTelemetry.Track(
+                "mechanic_error",
+                MechanicName,
+                nameof(DamageOnTouch),
+                new Dictionary<string, object> {
+                    { "where", "OnCollisionEnter2D" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                }
+            );
+            throw;
         }
     }
 }

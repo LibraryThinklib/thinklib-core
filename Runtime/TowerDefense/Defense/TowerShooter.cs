@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+using Thinklib.Telemetry;
 
 [AddComponentMenu("Thinklib/TowerDefense/Defense/Tower Shooter", -98)]
 public class TowerShooter : MonoBehaviour
@@ -10,29 +13,69 @@ public class TowerShooter : MonoBehaviour
 
     private float fireCountdown = 0f;
     private Transform target;
-    private TowerUpgrade towerUpgrade;  // Refer�ncia para o script TowerUpgrade
+    private TowerUpgrade towerUpgrade;  // Referência para o script TowerUpgrade
 
-    void Start()
+    // === Telemetry ===
+    private const string MechanicName = "TowerDefense/Defense/TowerShooter";
+    private bool _sentInstantiated = false;
+    private bool _sentFirstShot   = false;
+
+    private void Start()
     {
         towerUpgrade = GetComponent<TowerUpgrade>();  // Encontra o script TowerUpgrade
-    }
 
-    void Update()
-    {
-        UpdateTarget();
-
-        if (target == null) return;
-
-        if (fireCountdown <= 0f)
+        // mechanic_instantiated (1x)
+        if (!_sentInstantiated)
         {
-            Shoot();
-            fireCountdown = 1f / fireRate;
+            _sentInstantiated = true;
+            ThinklibTelemetry.Track(
+                "mechanic_instantiated",
+                MechanicName,
+                nameof(TowerShooter),
+                new Dictionary<string, object> {
+                    { "range", range },
+                    { "fireRate", fireRate },
+                    { "hasBulletPrefab", bulletPrefab != null },
+                    { "hasFirePoint", firePoint != null },
+                    { "hasUpgrade", towerUpgrade != null },
+                    { "upgradeDamage", towerUpgrade != null ? towerUpgrade.damage : 0 }
+                }
+            );
         }
-
-        fireCountdown -= Time.deltaTime;
     }
 
-    void UpdateTarget()
+    private void Update()
+    {
+        try
+        {
+            UpdateTarget();
+            if (target == null) return;
+
+            if (fireCountdown <= 0f)
+            {
+                Shoot();
+                fireCountdown = 1f / Mathf.Max(0.0001f, fireRate);
+            }
+
+            fireCountdown -= Time.deltaTime;
+        }
+        catch (Exception ex)
+        {
+            ThinklibTelemetry.Track(
+                "mechanic_error",
+                MechanicName,
+                nameof(TowerShooter),
+                new Dictionary<string, object> {
+                    { "where", "Update" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                }
+            );
+            throw;
+        }
+    }
+
+    private void UpdateTarget()
     {
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         float shortestDistance = Mathf.Infinity;
@@ -48,28 +91,59 @@ public class TowerShooter : MonoBehaviour
             }
         }
 
-        if (nearestEnemy != null)
-        {
-            target = nearestEnemy.transform;
-        }
-        else
-        {
-            target = null;
-        }
+        target = nearestEnemy != null ? nearestEnemy.transform : null;
     }
 
-    void Shoot()
+    private void Shoot()
     {
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
-        Bullet bulletScript = bullet.GetComponent<Bullet>();
-        if (bulletScript != null)
+        try
         {
-            bulletScript.SetTarget(target);
-            bulletScript.damage = towerUpgrade.damage;  // Atualiza o dano da bala com base no n�vel da torre
+            if (bulletPrefab == null || firePoint == null) return;
+
+            GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
+            Bullet bulletScript = bullet.GetComponent<Bullet>();
+            if (bulletScript != null)
+            {
+                bulletScript.SetTarget(target);
+                if (towerUpgrade != null)
+                    bulletScript.damage = towerUpgrade.damage;  // Dano baseado no nível da torre
+            }
+
+            // mechanic_used: primeira vez que a torre atira
+            if (!_sentFirstShot)
+            {
+                _sentFirstShot = true;
+                ThinklibTelemetry.Track(
+                    "mechanic_used",
+                    MechanicName,
+                    nameof(TowerShooter),
+                    new Dictionary<string, object> {
+                        { "action", "shoot" },
+                        { "range", range },
+                        { "fireRate", fireRate },
+                        { "hasUpgrade", towerUpgrade != null },
+                        { "damageNow", towerUpgrade != null ? towerUpgrade.damage : (bulletScript != null ? bulletScript.damage : 0) }
+                    }
+                );
+            }
+        }
+        catch (Exception ex)
+        {
+            ThinklibTelemetry.Track(
+                "mechanic_error",
+                MechanicName,
+                nameof(TowerShooter),
+                new Dictionary<string, object> {
+                    { "where", "Shoot" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                }
+            );
+            throw;
         }
     }
 
-    void OnDrawGizmosSelected()
+    private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, range);

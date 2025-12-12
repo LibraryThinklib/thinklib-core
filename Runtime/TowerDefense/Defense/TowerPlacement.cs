@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+using Thinklib.Telemetry;
 
 [AddComponentMenu("Thinklib/TowerDefense/Defense/Tower Placement", -99)]
 public class TowerPlacement : MonoBehaviour
@@ -6,40 +9,98 @@ public class TowerPlacement : MonoBehaviour
     public GameObject towerPrefab;
     private TowerShop towerShop;
 
-    void Start()
+    // === Telemetry ===
+    private const string MechanicName = "TowerDefense/Defense/TowerPlacement";
+    private bool _sentInstantiated = false;
+
+    private void Start()
     {
         towerShop = FindObjectOfType<TowerShop>();
+
+        // mechanic_instantiated (apenas 1x)
+        if (!_sentInstantiated)
+        {
+            _sentInstantiated = true;
+            ThinklibTelemetry.Track(
+                "mechanic_instantiated",
+                MechanicName,
+                nameof(TowerPlacement),
+                new Dictionary<string, object> {
+                    { "hasTowerPrefab", towerPrefab != null }
+                }
+            );
+        }
     }
 
-    void Update()
+    private void Update()
     {
-        if (towerShop.IsPlacingTower())
+        try
         {
-            if (Input.GetMouseButtonDown(0))  // Verifica se o jogador clicou com o bot�o esquerdo
+            if (towerShop == null || !towerShop.IsPlacingTower()) return;
+
+            if (Input.GetMouseButtonDown(0))
             {
                 Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                mousePosition.z = 0;  // Garante que a torre ser� posicionada no plano 2D (z = 0)
+                mousePosition.z = 0f;
 
-                // Realiza um Raycast no local clicado para verificar se � uma �rea v�lida para colocar a torre
                 RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector2.zero);
 
-                if (hit.collider != null)
+                if (hit.collider != null && hit.collider.CompareTag("Blocked"))
                 {
-                    // Verifica se o local tem a tag "Blocked"
-                    if (hit.collider.CompareTag("Blocked"))
-                    {
-                        Debug.Log("�rea bloqueada! N�o � poss�vel colocar a torre aqui.");
-                    }
-                    else
-                    {
-                        // Coloca a torre onde o jogador clicou, se n�o for uma �rea bloqueada
-                        Instantiate(towerPrefab, mousePosition, Quaternion.identity);
-                        Debug.Log("Torre colocada!");
+                    // tentativa bloqueada
+                    ThinklibTelemetry.Track(
+                        "mechanic_used",
+                        MechanicName,
+                        nameof(TowerPlacement),
+                        new Dictionary<string, object> {
+                            { "action", "attempt_place_blocked" },
+                            { "x", mousePosition.x },
+                            { "y", mousePosition.y },
+                            { "prefab", towerPrefab ? towerPrefab.name : "null" },
+                            { "blockedCollider", hit.collider.name }
+                        }
+                    );
 
-                        towerShop.StopPlacingTower();  // Para o modo de constru��o ap�s colocar a torre
-                    }
+                    Debug.Log("Área bloqueada! Não é possível colocar a torre aqui.");
+                    return;
                 }
+
+                // posição válida ⇒ instanciar torre
+                if (towerPrefab != null)
+                {
+                    Instantiate(towerPrefab, mousePosition, Quaternion.identity);
+                }
+                Debug.Log("Torre colocada!");
+
+                // mechanic_used: primeira colocação efetiva
+                ThinklibTelemetry.Track(
+                    "mechanic_used",
+                    MechanicName,
+                    nameof(TowerPlacement),
+                    new Dictionary<string, object> {
+                        { "action", "placed" },
+                        { "x", mousePosition.x },
+                        { "y", mousePosition.y },
+                        { "prefab", towerPrefab ? towerPrefab.name : "null" }
+                    }
+                );
+
+                towerShop.StopPlacingTower();
             }
+        }
+        catch (Exception ex)
+        {
+            ThinklibTelemetry.Track(
+                "mechanic_error",
+                MechanicName,
+                nameof(TowerPlacement),
+                new Dictionary<string, object> {
+                    { "where", "Update" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                }
+            );
+            throw;
         }
     }
 }

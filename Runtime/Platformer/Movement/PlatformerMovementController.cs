@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Thinklib.Telemetry;
 
 [AddComponentMenu("Thinklib/Platformer/Movement/Platformer Movement Controller", -97)]
 [RequireComponent(typeof(Animator))]
@@ -7,48 +8,72 @@ public class PlatformerMovementController : MovementController
 {
     [Header("Movement Settings")]
     public List<KeyCode> rightKeys = new List<KeyCode> { KeyCode.D, KeyCode.RightArrow };
-    public List<KeyCode> leftKeys = new List<KeyCode> { KeyCode.A, KeyCode.LeftArrow };
+    public List<KeyCode> leftKeys  = new List<KeyCode> { KeyCode.A, KeyCode.LeftArrow };
     public Joystick joystick;
 
     [Header("Speed Settings")]
     public float walkSpeed = 5f;
-    public float runSpeed = 8f;
-    public KeyCode runKey = KeyCode.LeftShift;
+    public float runSpeed  = 8f;
+    public KeyCode runKey  = KeyCode.LeftShift;
 
     [Header("Player State")]
-    public bool isJumping = false; // Updated by the jump script
-    public bool isFalling = false; // Updated by the jump script
+    public bool isJumping = false; // atualizado pelo script de pulo
+    public bool isFalling = false; // atualizado pelo script de pulo
 
     [Header("Attack Settings")]
-    public PlatformerProjectileAttackController projectileAttackController; // Reference to the projectile controller
+    public PlatformerProjectileAttackController projectileAttackController;
 
     private InputHandler inputHandler;
     private Animator animator;
     private bool isFacingRight = true;
 
+    // ---- Telemetry control ----
+    private const string MechanicName = "Platformer/Movement";
+    private bool _sentUsed = false;
+
     private void Awake()
     {
         inputHandler = GetComponent<InputHandler>() ?? gameObject.AddComponent<InputHandler>();
         animator = GetComponent<Animator>();
+
+        // mechanic_instantiated (uma vez por componente habilitado)
+        ThinklibTelemetry.Track(
+            eventName: "mechanic_instantiated",
+            mechanic:  MechanicName,
+            className: nameof(PlatformerMovementController)
+        );
     }
 
     private void Update()
     {
-        // Get input direction
+        // Coleta input
         Vector2 inputDirection = joystick != null
             ? inputHandler.GetJoystickInput(joystick)
             : inputHandler.GetKeyboardInput(rightKeys, leftKeys);
 
-        // Determine movement speed
+        // Envia mechanic_used apenas na primeira vez que houver input real
+        if (!_sentUsed && inputDirection.sqrMagnitude > 0.0001f)
+        {
+            _sentUsed = true;
+            string inputType = joystick != null ? "joystick" : "keyboard";
+            ThinklibTelemetry.Track(
+                eventName: "mechanic_used",
+                mechanic:  MechanicName,
+                className: nameof(PlatformerMovementController),
+                extra: new Dictionary<string, object> { { "input", inputType } }
+            );
+        }
+
+        // Velocidade
         float speed = Input.GetKey(runKey) ? runSpeed : walkSpeed;
 
-        // Move the character
+        // Move
         Move(inputDirection, speed);
 
-        // Update animator
+        // Animator
         UpdateAnimator(inputDirection, speed);
 
-        // Flip character sprite
+        // Flip sprite
         FlipSprite(inputDirection.x);
     }
 
@@ -65,12 +90,10 @@ public class PlatformerMovementController : MovementController
     {
         if (horizontalInput > 0 && !isFacingRight)
         {
-            Debug.Log("Flipping to the right");
             Flip();
         }
         else if (horizontalInput < 0 && isFacingRight)
         {
-            Debug.Log("Flipping to the left");
             Flip();
         }
     }
@@ -79,14 +102,13 @@ public class PlatformerMovementController : MovementController
     {
         isFacingRight = !isFacingRight;
         Vector3 localScale = transform.localScale;
-        localScale.x *= -1; // Invert X axis to flip the sprite
+        localScale.x *= -1;
         transform.localScale = localScale;
 
-        // Update projectile direction accordingly
         if (projectileAttackController != null)
         {
             int newDirection = isFacingRight ? 1 : -1;
-            projectileAttackController.SetDirection(newDirection); // Pass direction to the projectile controller
+            projectileAttackController.SetDirection(newDirection);
         }
     }
 }

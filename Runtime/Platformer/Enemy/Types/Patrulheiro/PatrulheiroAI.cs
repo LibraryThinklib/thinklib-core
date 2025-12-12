@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+using Thinklib.Telemetry;
 
 [AddComponentMenu("Thinklib/Platformer/Enemy/Patroller/Patrulheiro AI", -99)]
 [RequireComponent(typeof(Animator))]
@@ -15,11 +18,28 @@ public class PatrollerAI : MonoBehaviour
     private Animator animator;
     private Transform currentTarget;
 
+    // Telemetry
+    private const string MechanicName = "Platformer/Enemy/Patroller";
+    private bool _sentUsed = false;
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
         currentTarget = pointB;
         Flip();
+
+        // telemetry: componente instanciado
+        ThinklibTelemetry.Track(
+            "mechanic_instantiated",
+            MechanicName,
+            nameof(PatrollerAI),
+            new Dictionary<string, object> {
+                { "hasPointA", pointA != null },
+                { "hasPointB", pointB != null },
+                { "speed", speed },
+                { "tolerance", tolerance }
+            }
+        );
     }
 
     private void Update()
@@ -29,23 +49,74 @@ public class PatrollerAI : MonoBehaviour
 
     private void Patrol()
     {
-        animator.SetBool("IsWalking", true);
-
-        // Move toward the current target
-        transform.position = Vector2.MoveTowards(transform.position, currentTarget.position, speed * Time.deltaTime);
-
-        // Reached destination?
-        if (Vector2.Distance(transform.position, currentTarget.position) <= tolerance)
+        try
         {
-            SwitchTarget();
+            if (pointA == null || pointB == null) return;
+
+            animator.SetBool("IsWalking", true);
+
+            // Move toward the current target
+            Vector3 before = transform.position;
+            transform.position = Vector2.MoveTowards(transform.position, currentTarget.position, speed * Time.deltaTime);
+
+            // telemetry: primeiro uso real (quando de fato se move pela primeira vez)
+            if (!_sentUsed && (transform.position - before).sqrMagnitude > 0.000001f)
+            {
+                _sentUsed = true;
+                ThinklibTelemetry.Track(
+                    "mechanic_used",
+                    MechanicName,
+                    nameof(PatrollerAI),
+                    new Dictionary<string, object> {
+                        { "trigger", "first_move" }
+                    }
+                );
+            }
+
+            // Reached destination?
+            if (Vector2.Distance(transform.position, currentTarget.position) <= tolerance)
+            {
+                SwitchTarget();
+            }
+        }
+        catch (Exception ex)
+        {
+            ThinklibTelemetry.Track(
+                "mechanic_error",
+                MechanicName,
+                nameof(PatrollerAI),
+                new Dictionary<string, object> {
+                    { "where", "Patrol" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                }
+            );
+            throw;
         }
     }
 
     private void SwitchTarget()
     {
-        // Toggle between point A and B
-        currentTarget = currentTarget == pointA ? pointB : pointA;
-        Flip();
+        try
+        {
+            // Toggle between point A and B
+            currentTarget = currentTarget == pointA ? pointB : pointA;
+            Flip();
+        }
+        catch (Exception ex)
+        {
+            ThinklibTelemetry.Track(
+                "mechanic_error",
+                MechanicName,
+                nameof(PatrollerAI),
+                new Dictionary<string, object> {
+                    { "where", "SwitchTarget" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                }
+            );
+            throw;
+        }
     }
 
     private void Flip()
