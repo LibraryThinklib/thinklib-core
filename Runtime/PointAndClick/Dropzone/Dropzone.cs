@@ -15,6 +15,8 @@ public class DropZone : MonoBehaviour, IDropHandler
 
     private Item storedItem = null;
 
+    private Coroutine itemTimerCoroutine = null;
+
     public bool HasItem()
     {
         return storedItem != null;
@@ -43,14 +45,44 @@ public class DropZone : MonoBehaviour, IDropHandler
         storedItem = newItem;
         if (displaySprite != null) { displaySprite.sprite = storedItem.icon; displaySprite.enabled = true; }
 
-        InventoryManager.instance.RemoveItem(newItem);
+        InventoryManager.instance.RemoveItem(newItem, 1); 
+
         if (ItemSlot.draggedItem == newItem) { ItemSlot.dragWasSuccessful = true; }
         InventoryManager.instance.EndItemDrag();
 
         Debug.Log($"Item '{storedItem.name}' placed in Zone {zoneID}.");
 
+        if (storedItem.hasTimer)
+        {
+            StopTimer();
+            itemTimerCoroutine = StartCoroutine(StartItemTimer(storedItem));
+        }
+
         DropZoneManager.instance.CheckForPuzzleCompletion();
     }
+
+    private IEnumerator StartItemTimer(Item itemToTrack)
+    {
+        Debug.Log($"Timer started for {itemToTrack.name} in Zone {zoneID}.");
+        yield return new WaitForSeconds(itemToTrack.itemLifetime);
+
+        if (storedItem == itemToTrack)
+        {
+            Debug.LogWarning($"Timer expired for {itemToTrack.name}! Removing from Zone {zoneID}.");
+            ClearZone();
+        }
+    }
+
+    public void StopTimer()
+    {
+        if (itemTimerCoroutine != null)
+        {
+            StopCoroutine(itemTimerCoroutine);
+            itemTimerCoroutine = null;
+            Debug.Log($"Timer stopped for item in Zone {zoneID}.");
+        }
+    }
+
 
     private IEnumerator RejectItem(Item itemToReturn, float delay = 0.5f)
     {
@@ -58,7 +90,7 @@ public class DropZone : MonoBehaviour, IDropHandler
 
         if (storedItem == itemToReturn)
         {
-            InventoryManager.instance.AddItem(itemToReturn);
+            InventoryManager.instance.AddItem(itemToReturn, 1);
             ClearZone();
         }
     }
@@ -85,7 +117,8 @@ public class DropZone : MonoBehaviour, IDropHandler
         if (DropZoneManager.instance.CanReturnItem(this.zoneID))
         {
             Debug.Log($"Returning item '{storedItem.name}' from Zone {zoneID} to inventory.");
-            InventoryManager.instance.AddItem(storedItem);
+            
+            InventoryManager.instance.AddItem(storedItem, 1);
             ClearZone();
         }
         else
@@ -96,6 +129,8 @@ public class DropZone : MonoBehaviour, IDropHandler
 
     private void ClearZone()
     {
+        StopTimer(); 
+        
         storedItem = null;
         if (displaySprite != null)
         {
