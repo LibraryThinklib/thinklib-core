@@ -1,0 +1,78 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace Thinklib.Telemetry
+{
+    [DefaultExecutionOrder(-10000)]
+    public class TelemetryRuntime : MonoBehaviour
+    {
+        [SerializeField] TelemetryConfig config;
+
+        TelemetryQueue _queue;
+        float _elapsed;
+        bool _sending;
+
+        public void Init(TelemetryConfig cfg, TelemetryQueue queue, string projectIdHash, string sessionId)
+        {
+            config = cfg;
+            _queue = queue;
+            ThinklibTelemetry.Initialize(_queue, projectIdHash, sessionId);
+        }
+
+        void Update()
+        {
+            if (config == null || _queue == null) return;
+
+            _elapsed += Time.unscaledDeltaTime;
+            if (_elapsed < Mathf.Max(1, config.flushIntervalSeconds)) return;
+            _elapsed = 0f;
+
+            if (_sending) return;
+            if (_queue.Count == 0) return;
+
+            var batch = _queue.Snapshot(Mathf.Max(1, config.maxBatchSize));
+            if (batch.Count == 0) return;
+
+            _sending = true;
+            StartCoroutine(Send(batch));
+        }
+
+        IEnumerator Send(List<TelemetryEvent> batch)
+        {
+            bool ok = false;
+            long dur = 0;
+            yield return TelemetrySender.PostBatch(config, batch, (success, durationMs) =>
+            {
+                ok = success;
+                dur = durationMs;
+            });
+
+            if (ok)
+            {
+                _queue.ClearFirstN(batch.Count);
+            }
+            _sending = false;
+        }
+
+        void OnApplicationQuit()
+        {
+            if (config == null || _queue == null) return;
+            if (_queue.Count == 0) return;
+
+            var batch = _queue.Snapshot(Mathf.Max(1, config.maxBatchSize));
+            if (batch.Count == 0) return;
+
+#if UNITY_WEBGL
+            // WebGL não permite bloqueio; deixa para o próximo load
+#else
+            var cr = TelemetrySender.PostBatch(config, batch, (ok, _) =>
+            {
+                if (ok) _queue.ClearFirstN(batch.Count);
+            });
+            var e = cr;
+            while (e.MoveNext()) { } // tentativa final síncrona no quit (plataformas nativas)
+#endif
+        }
+    }
+}

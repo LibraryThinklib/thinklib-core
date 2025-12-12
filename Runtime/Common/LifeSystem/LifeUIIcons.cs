@@ -1,7 +1,9 @@
-using UnityEngine;
-using UnityEngine.UI;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using Thinklib.Telemetry;
 
 [AddComponentMenu("Thinklib/Common/LifeSystem/Life UI Icons", -88)]
 public class LifeUIIcons : MonoBehaviour
@@ -13,63 +15,195 @@ public class LifeUIIcons : MonoBehaviour
 
     private List<Image> iconList = new List<Image>();
 
+    // Telemetry
+    private const string MechanicName = "Common/LifeSystem/LifeUIIcons";
+    private bool _sentUsedUpdate = false;
+    private bool _sentUsedShake = false;
+
+    private void Awake()
+    {
+        // mechanic_instantiated
+        ThinklibTelemetry.Track(
+            "mechanic_instantiated",
+            MechanicName,
+            nameof(LifeUIIcons),
+            new Dictionary<string, object> {
+                { "hasOriginalIcon", originalIcon != null },
+                { "hasActiveSprite",  activeIcon  != null },
+                { "hasInactiveSprite", inactiveIcon != null }
+            }
+        );
+    }
+
     public void UpdateIcons(int currentHealth, int maxHealth)
     {
-        if (originalIcon == null)
+        try
         {
-            Debug.LogWarning("No original icon assigned.");
-            return;
-        }
+            if (originalIcon == null)
+            {
+                Debug.LogWarning("No original icon assigned.");
+                return;
+            }
 
-        if (iconList.Count != maxHealth)
-        {
-            GenerateIcons(maxHealth);
-        }
+            if (iconList.Count != maxHealth)
+            {
+                GenerateIcons(maxHealth);
+            }
 
-        for (int i = 0; i < iconList.Count; i++)
+            for (int i = 0; i < iconList.Count; i++)
+            {
+                iconList[i].sprite = i < currentHealth ? activeIcon : inactiveIcon;
+                iconList[i].enabled = i < maxHealth;
+            }
+
+            // mechanic_used: primeira atualização
+            if (!_sentUsedUpdate)
+            {
+                _sentUsedUpdate = true;
+                ThinklibTelemetry.Track(
+                    "mechanic_used",
+                    MechanicName,
+                    nameof(LifeUIIcons),
+                    new Dictionary<string, object> {
+                        { "action", "update_icons" },
+                        { "currentHealth", currentHealth },
+                        { "maxHealth", maxHealth }
+                    }
+                );
+            }
+        }
+        catch (Exception ex)
         {
-            iconList[i].sprite = i < currentHealth ? activeIcon : inactiveIcon;
-            iconList[i].enabled = i < maxHealth;
+            ThinklibTelemetry.Track(
+                "mechanic_error",
+                MechanicName,
+                nameof(LifeUIIcons),
+                new Dictionary<string, object> {
+                    { "where", "UpdateIcons" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                }
+            );
+            throw;
         }
     }
 
     private void GenerateIcons(int amount)
     {
-        // Hide the original icon
-        originalIcon.gameObject.SetActive(false);
-
-        // Remove all old icons (except the original)
-        foreach (Transform child in transform)
+        try
         {
-            if (child != originalIcon.transform)
-                Destroy(child.gameObject);
+            // Hide the original icon
+            originalIcon.gameObject.SetActive(false);
+
+            // Remove all old icons (except the original)
+            foreach (Transform child in transform)
+            {
+                if (child != originalIcon.transform)
+                    Destroy(child.gameObject);
+            }
+
+            iconList.Clear();
+
+            for (int i = 0; i < amount; i++)
+            {
+                Image newIcon = Instantiate(originalIcon, transform);
+                newIcon.gameObject.SetActive(true);
+                iconList.Add(newIcon);
+            }
         }
-
-        iconList.Clear();
-
-        for (int i = 0; i < amount; i++)
+        catch (Exception ex)
         {
-            Image newIcon = Instantiate(originalIcon, transform);
-            newIcon.gameObject.SetActive(true);
-            iconList.Add(newIcon);
+            ThinklibTelemetry.Track(
+                "mechanic_error",
+                MechanicName,
+                nameof(LifeUIIcons),
+                new Dictionary<string, object> {
+                    { "where", "GenerateIcons" },
+                    { "amount", amount },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                }
+            );
+            throw;
         }
     }
 
     public void Shake(float intensity)
     {
-        StartCoroutine(ShakeUI(transform, intensity));
+        try
+        {
+            StartCoroutine(ShakeUI(transform, intensity));
+
+            if (!_sentUsedShake)
+            {
+                _sentUsedShake = true;
+                ThinklibTelemetry.Track(
+                    "mechanic_used",
+                    MechanicName,
+                    nameof(LifeUIIcons),
+                    new Dictionary<string, object> {
+                        { "action", "shake" },
+                        { "intensity", intensity }
+                    }
+                );
+            }
+        }
+        catch (Exception ex)
+        {
+            ThinklibTelemetry.Track(
+                "mechanic_error",
+                MechanicName,
+                nameof(LifeUIIcons),
+                new Dictionary<string, object> {
+                    { "where", "Shake" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                }
+            );
+            throw;
+        }
     }
 
+    // Corrotina: sem try/catch (apenas try/finally). Operações com risco vão para helpers sem yield.
     private IEnumerator ShakeUI(Transform target, float intensity)
     {
         Vector3 originalPos = target.localPosition;
 
-        for (int i = 0; i < 5; i++)
+        try
         {
-            target.localPosition = originalPos + (Vector3)Random.insideUnitCircle * intensity;
-            yield return new WaitForSeconds(0.02f);
+            for (int i = 0; i < 5; i++)
+            {
+                ShakeStepSafe(target, originalPos, intensity);
+                yield return new WaitForSeconds(0.02f);
+            }
         }
+        finally
+        {
+            target.localPosition = originalPos;
+        }
+    }
 
-        target.localPosition = originalPos;
+    // Helper sem yield → pode ter try/catch + telemetria
+    private void ShakeStepSafe(Transform target, Vector3 basePos, float intensity)
+    {
+        try
+        {
+            target.localPosition = basePos + (Vector3)UnityEngine.Random.insideUnitCircle * intensity;
+        }
+        catch (Exception ex)
+        {
+            ThinklibTelemetry.Track(
+                "mechanic_error",
+                MechanicName,
+                nameof(LifeUIIcons),
+                new Dictionary<string, object> {
+                    { "where", "ShakeStepSafe" },
+                    { "intensity", intensity },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                }
+            );
+            throw;
+        }
     }
 }

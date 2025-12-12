@@ -1,8 +1,11 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Thinklib.Platformer.Enemy.Core;
 using Thinklib.Topdown.Player.Core;
-using System.Collections;
+using Thinklib.Telemetry;
 
 [AddComponentMenu("Thinklib/Topdown/Combat/Player Shooter Controller", -99)]
 [RequireComponent(typeof(ProjectileTopdownShooterBase))]
@@ -25,10 +28,14 @@ public class PlayerTopdownShooterController : MonoBehaviour
     private Animator animator;
     private ProjectileTopdownShooterBase shooter;
 
+    // Telemetry
+    private const string MechanicName = "Topdown/Combat/PlayerTopdownShooter";
+    private bool _sentUsedShoot = false;
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        shooter = GetComponent<ProjectileTopdownShooterBase>();
+        shooter  = GetComponent<ProjectileTopdownShooterBase>();
 
         if (shootButton != null)
         {
@@ -42,6 +49,19 @@ public class PlayerTopdownShooterController : MonoBehaviour
 
         if (movementController == null)
             movementController = GetComponent<TopdownMovementController>();
+
+        // mechanic_instantiated
+        Thinklib.Telemetry.ThinklibTelemetry.Track(
+            "mechanic_instantiated",
+            MechanicName,
+            nameof(PlayerTopdownShooterController),
+            new Dictionary<string, object> {
+                { "hasShootButton", shootButton != null },
+                { "timeBetweenShots", timeBetweenShots },
+                { "projectileDamage", projectileDamage },
+                { "hasMovementController", movementController != null }
+            }
+        );
     }
 
     private void Update()
@@ -56,41 +76,78 @@ public class PlayerTopdownShooterController : MonoBehaviour
 
     private void Shoot()
     {
-        Vector2 direction = movementController != null
-            ? movementController.GetLastMoveDirection()
-            : Vector2.down;
-
-        if (direction == Vector2.zero)
-            direction = Vector2.down;
-
-        if (animator != null)
+        try
         {
-            animator.SetBool("IsShooting", true);
-            animator.SetFloat("Horizontal", direction.x);
-            animator.SetFloat("Vertical", direction.y);
-            StartCoroutine(ResetIsShootingAfterAnimation());
-        }
+            Vector2 direction = movementController != null
+                ? movementController.GetLastMoveDirection()
+                : Vector2.down;
 
-        GameObject proj = shooter.ShootProjectile(direction);
+            if (direction == Vector2.zero)
+                direction = Vector2.down;
 
-        if (proj != null)
-        {
-            var damageDealer = proj.GetComponent<ProjectileDamageDealer>();
-            if (damageDealer != null)
+            if (animator != null)
             {
-                damageDealer.damage = projectileDamage;
+                animator.SetBool("IsShooting", true);
+                animator.SetFloat("Horizontal", direction.x);
+                animator.SetFloat("Vertical", direction.y);
+                StartCoroutine(ResetIsShootingAfterAnimation());
             }
-        }
 
-        shotCooldownTimer = timeBetweenShots;
+            GameObject proj = shooter.ShootProjectile(direction);
+
+            if (proj != null)
+            {
+                var damageDealer = proj.GetComponent<ProjectileDamageDealer>();
+                if (damageDealer != null)
+                {
+                    damageDealer.damage = projectileDamage;
+                }
+            }
+
+            // mechanic_used: primeiro disparo bem-sucedido
+            if (!_sentUsedShoot)
+            {
+                _sentUsedShoot = true;
+                ThinklibTelemetry.Track(
+                    "mechanic_used",
+                    MechanicName,
+                    nameof(PlayerTopdownShooterController),
+                    new Dictionary<string, object> {
+                        { "action", "shoot" },
+                        { "dirX", direction.x },
+                        { "dirY", direction.y },
+                        { "cooldown", timeBetweenShots },
+                        { "damage", projectileDamage },
+                        { "projectileSpawned", proj != null }
+                    }
+                );
+            }
+
+            shotCooldownTimer = timeBetweenShots;
+        }
+        catch (Exception ex)
+        {
+            ThinklibTelemetry.Track(
+                "mechanic_error",
+                MechanicName,
+                nameof(PlayerTopdownShooterController),
+                new Dictionary<string, object> {
+                    { "where", "Shoot" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                }
+            );
+            throw;
+        }
     }
 
+    // Corrotina: não usar try/catch (apenas try/finally se necessário).
     private IEnumerator ResetIsShootingAfterAnimation()
     {
-        yield return null; // garante que a transi��o de estado ocorra
+        yield return null; // garante que a transição de estado ocorra
         AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
         float duration = state.length > 0 ? state.length : 0.5f;
         yield return new WaitForSeconds(duration);
-        animator.SetBool("IsShooting", false);
+        if (animator != null) animator.SetBool("IsShooting", false);
     }
 }

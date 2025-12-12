@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+using Thinklib.Telemetry;
 
 [AddComponentMenu("Thinklib/Topdown/Movement/Topdown Movement Controller", -100)]
 [RequireComponent(typeof(Animator))]
@@ -17,7 +20,7 @@ public class TopdownMovementController : MonoBehaviour
     private Animator animator;
     private InputHandler inputHandler;
 
-    // Salva a �ltima dire��o v�lida (para idle direcional)
+    // Salva a última direção válida (para idle direcional)
     private Vector2 lastMoveDirection = Vector2.down;
 
     public Vector2 GetLastMoveDirection()
@@ -25,22 +28,59 @@ public class TopdownMovementController : MonoBehaviour
         return lastMoveDirection;
     }
 
+    // Telemetry
+    private const string MechanicName = "Topdown/Movement/TopdownMovementController";
+    private bool _sentUsedMove = false;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
         inputHandler = GetComponent<InputHandler>() ?? gameObject.AddComponent<InputHandler>();
+
+        // mechanic_instantiated
+        ThinklibTelemetry.Track(
+            "mechanic_instantiated",
+            MechanicName,
+            nameof(TopdownMovementController),
+            new Dictionary<string, object> {
+                { "moveSpeed", moveSpeed },
+                { "hasJoystick", joystick != null },
+                { "keys", new Dictionary<string, object> {
+                    { "up",   upKey.ToString() },
+                    { "down", downKey.ToString() },
+                    { "left", leftKey.ToString() },
+                    { "right", rightKey.ToString() }
+                }}
+            }
+        );
     }
 
     private void Update()
     {
-        Vector2 input = GetInput();
+        try
+        {
+            Vector2 input = GetInput();
 
-        // Movement
-        Move(input);
+            // Movement
+            Move(input);
 
-        // Animator
-        UpdateAnimator(input);
+            // Animator
+            UpdateAnimator(input);
+        }
+        catch (Exception ex)
+        {
+            ThinklibTelemetry.Track(
+                "mechanic_error",
+                MechanicName,
+                nameof(TopdownMovementController),
+                new Dictionary<string, object> {
+                    { "where", "Update" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                }
+            );
+            throw;
+        }
     }
 
     private Vector2 GetInput()
@@ -54,10 +94,10 @@ public class TopdownMovementController : MonoBehaviour
             float h = 0f;
             float v = 0f;
 
-            if (Input.GetKey(leftKey)) h -= 1f;
+            if (Input.GetKey(leftKey))  h -= 1f;
             if (Input.GetKey(rightKey)) h += 1f;
-            if (Input.GetKey(downKey)) v -= 1f;
-            if (Input.GetKey(upKey)) v += 1f;
+            if (Input.GetKey(downKey))  v -= 1f;
+            if (Input.GetKey(upKey))    v += 1f;
 
             return new Vector2(h, v).normalized;
         }
@@ -69,7 +109,24 @@ public class TopdownMovementController : MonoBehaviour
         {
             transform.position += (Vector3)direction * moveSpeed * Time.deltaTime;
 
-            // Atualiza a �ltima dire��o
+            // Primeira vez que de fato se moveu
+            if (!_sentUsedMove)
+            {
+                _sentUsedMove = true;
+                ThinklibTelemetry.Track(
+                    "mechanic_used",
+                    MechanicName,
+                    nameof(TopdownMovementController),
+                    new Dictionary<string, object> {
+                        { "action", "start_move" },
+                        { "dirX", direction.x },
+                        { "dirY", direction.y },
+                        { "speed", moveSpeed }
+                    }
+                );
+            }
+
+            // Atualiza a última direção
             lastMoveDirection = direction;
         }
     }
@@ -81,15 +138,15 @@ public class TopdownMovementController : MonoBehaviour
 
         if (isMoving)
         {
-            // Atualiza o blend para a dire��o atual
+            // Atualiza o blend para a direção atual
             animator.SetFloat("Horizontal", direction.x);
             animator.SetFloat("Vertical", direction.y);
         }
         else
         {
-            // Continua usando a �ltima dire��o salva para o Idle
+            // Continua usando a última direção salva para o Idle
             animator.SetFloat("Horizontal", lastMoveDirection.x);
-            animator.SetFloat("Vertical", lastMoveDirection.y);
+            animator.SetFloat("Vertical",   lastMoveDirection.y);
         }
     }
 }
