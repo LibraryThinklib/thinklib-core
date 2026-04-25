@@ -1,4 +1,32 @@
 # Changelog
+## 0.3.0 — 2026-04-24
+* **Novo – Mecânicas de Platformer:**
+  * `RewardChest.cs` — baú de recompensa que cura o jogador ao toque (via `LifeSystemController.Heal`); muda sprite ao ser usado e desativa collider.
+  * `SawHazard.cs` — perigo de serra que causa dano ao jogador (via `LifeSystemController.TakeDamage`); suporta modo de patrulha entre pontos A e B com Gizmos de debug.
+
+* **Novo – Mecânicas de Point & Click:**
+  * **CommandsQueue** — sistema de fila de comandos estilo "Hora do Código":
+    * `ICommand.cs`, `MoveForwardCommand.cs`, `TurnLeftCommand.cs`, `TurnRightCommand.cs`
+    * `PlayerAgent.cs` — executa sequência de ações (mover, girar ±90°) com suporte a reset.
+    * `CommandQueueManager.cs` — gerencia a fila e atualiza UI da lista de comandos.
+  * **GridCoordinates** — navegação de agente por coordenadas em grid:
+    * `IGridCommand.cs`, `GridMoveCommand.cs`
+    * `GridAgent.cs` — move célula a célula até o destino via coroutine.
+    * `GridCommandManager.cs` — aceita input de linha/coluna e executa fila.
+    * `GridManager.cs` — singleton que converte coordenadas (linha, coluna) para posição no mundo.
+
+* **Melhoria – Dropzone (Point & Click):**
+  * `DropZone.cs` — items com `hasTimer` têm vida útil: se expirar antes do puzzle ser concluído, o item é removido automaticamente.
+  * `DropZoneManager.cs` — para todos os timers ao concluir o puzzle corretamente.
+  * `ItemSlot.cs` — exibe quantidade de itens stackáveis e contador de timer em vermelho no slot.
+
+* **Scripts instrumentados (MIA):**
+  * **Common / Enviroment:** `RewardChest.cs`
+  * **Platformer / Enviroment:** `SawHazard.cs`
+  * **PointAndClick / CommandsQueue:** `PlayerAgent.cs`, `CommandQueueManager.cs`
+  * **PointAndClick / GridCoordinates:** `GridAgent.cs`, `GridCommandManager.cs`, `GridManager.cs`
+  * **PointAndClick / Dropzone:** `DropZone.cs`, `ItemSlot.cs`
+
 ## 0.2.0 — 2025-12-12
 * **Novo – MIA (Métricas & Instrumentação Analítica):** telemetria unificada no runtime.
   * Eventos padrão: `mechanic_instantiated`, `mechanic_used`, `mechanic_error`.
