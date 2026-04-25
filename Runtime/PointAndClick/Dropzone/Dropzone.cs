@@ -1,6 +1,8 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using System.Collections;
 
 [AddComponentMenu("Thinklib/Point and Click/Dropzone/DropZone", -100)]
 public class DropZone : MonoBehaviour, IDropHandler
@@ -13,9 +15,20 @@ public class DropZone : MonoBehaviour, IDropHandler
     [Tooltip("The SpriteRenderer of the CHILD OBJECT used to display the item placed here.")]
     [SerializeField] private SpriteRenderer displaySprite;
 
-    private Item storedItem = null;
+    private const string MechanicName = "PointAndClick/Dropzone/DropZone";
 
+    private Item storedItem = null;
     private Coroutine itemTimerCoroutine = null;
+    private bool _sentUsed = false;
+
+    private void Awake()
+    {
+        ThinklibTelemetry.Track("mechanic_instantiated", MechanicName, nameof(DropZone),
+            new Dictionary<string, object>
+            {
+                { "zoneID", zoneID }
+            });
+    }
 
     public bool HasItem()
     {
@@ -37,28 +50,51 @@ public class DropZone : MonoBehaviour, IDropHandler
 
     public void PlaceItem(Item newItem)
     {
-        if (newItem == null || HasItem())
+        if (newItem == null || HasItem()) return;
+
+        try
         {
-            return;
+            storedItem = newItem;
+            if (displaySprite != null) { displaySprite.sprite = storedItem.icon; displaySprite.enabled = true; }
+
+            InventoryManager.instance.RemoveItem(newItem, 1);
+
+            if (ItemSlot.draggedItem == newItem) { ItemSlot.dragWasSuccessful = true; }
+            InventoryManager.instance.EndItemDrag();
+
+            Debug.Log($"Item '{storedItem.name}' placed in Zone {zoneID}.");
+
+            if (!_sentUsed)
+            {
+                _sentUsed = true;
+                ThinklibTelemetry.Track("mechanic_used", MechanicName, nameof(DropZone),
+                    new Dictionary<string, object>
+                    {
+                        { "action", "place_item" },
+                        { "zoneID", zoneID },
+                        { "hasTimer", storedItem.hasTimer }
+                    });
+            }
+
+            if (storedItem.hasTimer)
+            {
+                StopTimer();
+                itemTimerCoroutine = StartCoroutine(StartItemTimer(storedItem));
+            }
+
+            DropZoneManager.instance.CheckForPuzzleCompletion();
         }
-
-        storedItem = newItem;
-        if (displaySprite != null) { displaySprite.sprite = storedItem.icon; displaySprite.enabled = true; }
-
-        InventoryManager.instance.RemoveItem(newItem, 1); 
-
-        if (ItemSlot.draggedItem == newItem) { ItemSlot.dragWasSuccessful = true; }
-        InventoryManager.instance.EndItemDrag();
-
-        Debug.Log($"Item '{storedItem.name}' placed in Zone {zoneID}.");
-
-        if (storedItem.hasTimer)
+        catch (Exception ex)
         {
-            StopTimer();
-            itemTimerCoroutine = StartCoroutine(StartItemTimer(storedItem));
+            ThinklibTelemetry.Track("mechanic_error", MechanicName, nameof(DropZone),
+                new Dictionary<string, object>
+                {
+                    { "where", "PlaceItem" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                });
+            throw;
         }
-
-        DropZoneManager.instance.CheckForPuzzleCompletion();
     }
 
     private IEnumerator StartItemTimer(Item itemToTrack)
@@ -82,7 +118,6 @@ public class DropZone : MonoBehaviour, IDropHandler
             Debug.Log($"Timer stopped for item in Zone {zoneID}.");
         }
     }
-
 
     private IEnumerator RejectItem(Item itemToReturn, float delay = 0.5f)
     {
@@ -117,7 +152,6 @@ public class DropZone : MonoBehaviour, IDropHandler
         if (DropZoneManager.instance.CanReturnItem(this.zoneID))
         {
             Debug.Log($"Returning item '{storedItem.name}' from Zone {zoneID} to inventory.");
-            
             InventoryManager.instance.AddItem(storedItem, 1);
             ClearZone();
         }
@@ -129,8 +163,7 @@ public class DropZone : MonoBehaviour, IDropHandler
 
     private void ClearZone()
     {
-        StopTimer(); 
-        
+        StopTimer();
         storedItem = null;
         if (displaySprite != null)
         {

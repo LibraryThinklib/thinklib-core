@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,9 +11,21 @@ public class CommandQueueManager : MonoBehaviour
     public PlayerAgent playerAgent;
     public TextMeshProUGUI commandListText;
 
-    private List<ICommand> commandQueue = new List<ICommand>();
+    private const string MechanicName = "PointAndClick/CommandsQueue/CommandQueueManager";
 
+    private List<ICommand> commandQueue = new List<ICommand>();
     private int lastExecutedIndex = 0;
+    private bool _sentUsed = false;
+
+    private void Awake()
+    {
+        ThinklibTelemetry.Track("mechanic_instantiated", MechanicName, nameof(CommandQueueManager),
+            new Dictionary<string, object>
+            {
+                { "hasPlayerAgent", playerAgent != null },
+                { "hasCommandListText", commandListText != null }
+            });
+    }
 
     public void AddMoveCommand()
     {
@@ -36,34 +49,54 @@ public class CommandQueueManager : MonoBehaviour
     {
         if (playerAgent == null) return;
 
-        if (lastExecutedIndex < commandQueue.Count)
+        try
         {
-            int count = commandQueue.Count - lastExecutedIndex;
+            if (lastExecutedIndex < commandQueue.Count)
+            {
+                int count = commandQueue.Count - lastExecutedIndex;
+                List<ICommand> newCommands = commandQueue.GetRange(lastExecutedIndex, count);
 
-            List<ICommand> newCommands = commandQueue.GetRange(lastExecutedIndex, count);
+                Debug.Log($"Executando {count} novos comandos...");
 
-            Debug.Log($"Executando {count} novos comandos...");
+                if (!_sentUsed)
+                {
+                    _sentUsed = true;
+                    ThinklibTelemetry.Track("mechanic_used", MechanicName, nameof(CommandQueueManager),
+                        new Dictionary<string, object>
+                        {
+                            { "action", "run_queue" },
+                            { "commandCount", count }
+                        });
+                }
 
-            playerAgent.RunCommandQueue(newCommands);
-
-            lastExecutedIndex = commandQueue.Count;
-            
-            UpdateCommandListUI();
+                playerAgent.RunCommandQueue(newCommands);
+                lastExecutedIndex = commandQueue.Count;
+                UpdateCommandListUI();
+            }
+            else
+            {
+                Debug.Log("Nenhum comando novo para executar.");
+            }
         }
-        else
+        catch (Exception ex)
         {
-            Debug.Log("Nenhum comando novo para executar.");
+            ThinklibTelemetry.Track("mechanic_error", MechanicName, nameof(CommandQueueManager),
+                new Dictionary<string, object>
+                {
+                    { "where", "RunQueue" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                });
+            throw;
         }
     }
 
     public void ClearQueue()
     {
         commandQueue.Clear();
-        
         lastExecutedIndex = 0;
-        
         UpdateCommandListUI();
-        
+
         if (playerAgent != null)
         {
             playerAgent.ResetAgent();
@@ -80,19 +113,15 @@ public class CommandQueueManager : MonoBehaviour
         if (commandListText == null) return;
 
         commandListText.text = "";
-        
+
         for (int i = 0; i < commandQueue.Count; i++)
         {
             string cmdName = commandQueue[i].CommandName;
 
             if (i < lastExecutedIndex)
-            {
                 commandListText.text += $"<color=grey>OK {cmdName}</color>\n";
-            }
             else
-            {
                 commandListText.text += cmdName + "\n";
-            }
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -21,8 +22,22 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
     [SerializeField] private Color selectedColor = new Color(0.8f, 0.8f, 0.8f, 1f);
     [SerializeField] private Color timerColor = Color.red;
 
+    private const string MechanicName = "PointAndClick/Dropzone/ItemSlot";
+
     public static Item draggedItem;
     public static bool dragWasSuccessful;
+
+    private bool _sentUsed = false;
+
+    private void Awake()
+    {
+        ThinklibTelemetry.Track("mechanic_instantiated", MechanicName, nameof(ItemSlot),
+            new Dictionary<string, object>
+            {
+                { "hasIconImage", iconImage != null },
+                { "hasQuantityText", quantityText != null }
+            });
+    }
 
     public void Initialize(InventorySlot slot)
     {
@@ -39,13 +54,26 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
             iconImage.enabled = false;
         }
 
+        if (!_sentUsed)
+        {
+            _sentUsed = true;
+            ThinklibTelemetry.Track("mechanic_used", MechanicName, nameof(ItemSlot),
+                new Dictionary<string, object>
+                {
+                    { "action", "initialize" },
+                    { "hasItem", item != null },
+                    { "hasTimer", item != null && item.hasTimer },
+                    { "isStackable", item != null && item.isStackable }
+                });
+        }
+
         UpdateInfoText();
     }
 
     void Update()
     {
         if (InventoryManager.instance == null) return;
-        
+
         if (mySlotRef != null && item != null && item.hasTimer)
         {
             if (quantityText != null)

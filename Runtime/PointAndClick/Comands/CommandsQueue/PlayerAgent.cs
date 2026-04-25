@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,9 +10,22 @@ public class PlayerAgent : MonoBehaviour
     public float moveSpeed = 3.0f;
     public float turnSpeed = 180.0f;
 
+    private const string MechanicName = "PointAndClick/CommandsQueue/PlayerAgent";
+
     private bool isExecuting = false;
     private Vector3 originalPosition;
     private Quaternion originalRotation;
+    private bool _sentUsed = false;
+
+    private void Awake()
+    {
+        ThinklibTelemetry.Track("mechanic_instantiated", MechanicName, nameof(PlayerAgent),
+            new Dictionary<string, object>
+            {
+                { "moveSpeed", moveSpeed },
+                { "turnSpeed", turnSpeed }
+            });
+    }
 
     void Start()
     {
@@ -19,12 +33,10 @@ public class PlayerAgent : MonoBehaviour
         originalRotation = transform.rotation;
     }
 
-
     public IEnumerator MoveForward()
     {
         Vector3 startPos = transform.position;
-        
-        Vector3 targetPos = transform.position + transform.up; 
+        Vector3 targetPos = transform.position + transform.up;
 
         float t = 0;
         while (t < 1)
@@ -39,7 +51,6 @@ public class PlayerAgent : MonoBehaviour
     public IEnumerator TurnLeft()
     {
         Quaternion startRot = transform.rotation;
-        
         Quaternion targetRot = transform.rotation * Quaternion.Euler(0, 0, 90);
 
         float t = 0;
@@ -56,7 +67,6 @@ public class PlayerAgent : MonoBehaviour
     public IEnumerator TurnRight()
     {
         Quaternion startRot = transform.rotation;
-        
         Quaternion targetRot = transform.rotation * Quaternion.Euler(0, 0, -90);
 
         float t = 0;
@@ -73,7 +83,33 @@ public class PlayerAgent : MonoBehaviour
     public void RunCommandQueue(List<ICommand> commandQueue)
     {
         if (isExecuting) return;
-        StartCoroutine(ExecuteCommandQueue(commandQueue));
+
+        try
+        {
+            if (!_sentUsed)
+            {
+                _sentUsed = true;
+                ThinklibTelemetry.Track("mechanic_used", MechanicName, nameof(PlayerAgent),
+                    new Dictionary<string, object>
+                    {
+                        { "action", "run_queue" },
+                        { "commandCount", commandQueue.Count }
+                    });
+            }
+
+            StartCoroutine(ExecuteCommandQueue(commandQueue));
+        }
+        catch (Exception ex)
+        {
+            ThinklibTelemetry.Track("mechanic_error", MechanicName, nameof(PlayerAgent),
+                new Dictionary<string, object>
+                {
+                    { "where", "RunCommandQueue" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                });
+            throw;
+        }
     }
 
     private IEnumerator ExecuteCommandQueue(List<ICommand> commandQueue)
