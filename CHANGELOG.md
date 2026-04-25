@@ -1,5 +1,5 @@
 # Changelog
-## 0.3.0 — 2026-04-24
+## 0.2.1 — 2026-04-24
 * **Novo – Mecânicas de Platformer:**
   * `RewardChest.cs` — baú de recompensa que cura o jogador ao toque (via `LifeSystemController.Heal`); muda sprite ao ser usado e desativa collider.
   * `SawHazard.cs` — perigo de serra que causa dano ao jogador (via `LifeSystemController.TakeDamage`); suporta modo de patrulha entre pontos A e B com Gizmos de debug.
