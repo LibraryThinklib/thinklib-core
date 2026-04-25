@@ -1,41 +1,118 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using Thinklib.Telemetry;
 
 [AddComponentMenu("Thinklib/TowerDefense/Enemy Progression/Enemy Path", -99)]
 public class EnemyPath : MonoBehaviour
 {
-    public Transform[] waypoints;  // pontos do caminho
+    public Transform[] waypoints;   // pontos do caminho
     public float speed = 2f;
     private int currentWaypointIndex = 0;
 
-    public int damageAmount = 1;  // Dano causado ao jogador ao atingir o fim do caminho
+    public int damageAmount = 1;    // Dano causado ao jogador ao atingir o fim do caminho
 
-    void Update()
+    // === Telemetry ===
+    private const string MechanicName = "TowerDefense/EnemyProgression/EnemyPath";
+    private bool _sentInstantiated = false;
+    private bool _sentStartPath    = false;
+    private bool _sentEndReached   = false;
+
+    private void Start()
     {
-        if (currentWaypointIndex < waypoints.Length)
+        // mechanic_instantiated (1x)
+        if (!_sentInstantiated)
         {
-            // Move o inimigo na dire��o do waypoint atual
-            Transform target = waypoints[currentWaypointIndex];
-            Vector3 direction = (target.position - transform.position).normalized;
-            transform.position += direction * speed * Time.deltaTime;
+            _sentInstantiated = true;
+            ThinklibTelemetry.Track(
+                "mechanic_instantiated",
+                MechanicName,
+                nameof(EnemyPath),
+                new Dictionary<string, object> {
+                    { "waypointsCount", waypoints != null ? waypoints.Length : 0 },
+                    { "speed", speed },
+                    { "damageAmount", damageAmount }
+                }
+            );
+        }
+    }
 
-            // Verifica se chegou perto o suficiente para mudar para o pr�ximo ponto
-            float distance = Vector3.Distance(transform.position, target.position);
-            if (distance < 0.1f)
+    private void Update()
+    {
+        try
+        {
+            if (waypoints == null || waypoints.Length == 0)
+                return;
+
+            if (currentWaypointIndex < waypoints.Length)
             {
-                currentWaypointIndex++;
+                // mechanic_used: primeira movimentação no caminho
+                if (!_sentStartPath)
+                {
+                    _sentStartPath = true;
+                    ThinklibTelemetry.Track(
+                        "mechanic_used",
+                        MechanicName,
+                        nameof(EnemyPath),
+                        new Dictionary<string, object> {
+                            { "action", "start_path" },
+                            { "waypointsCount", waypoints.Length }
+                        }
+                    );
+                }
+
+                // Move o inimigo na direção do waypoint atual
+                Transform target = waypoints[currentWaypointIndex];
+                Vector3 direction = (target.position - transform.position).normalized;
+                transform.position += direction * speed * Time.deltaTime;
+
+                // Verifica se chegou perto o suficiente para mudar para o próximo ponto
+                float distance = Vector3.Distance(transform.position, target.position);
+                if (distance < 0.1f)
+                {
+                    currentWaypointIndex++;
+                }
+            }
+            else
+            {
+                // Chegou ao fim do caminho: causa dano ao jogador
+                if (!_sentEndReached)
+                {
+                    _sentEndReached = true;
+                    ThinklibTelemetry.Track(
+                        "mechanic_used",
+                        MechanicName,
+                        nameof(EnemyPath),
+                        new Dictionary<string, object> {
+                            { "action", "end_reached" },
+                            { "damageAmount", damageAmount }
+                        }
+                    );
+                }
+
+                PlayerHealth playerHealth = FindObjectOfType<PlayerHealth>();
+                if (playerHealth != null)
+                {
+                    playerHealth.TakeDamage(damageAmount);
+                }
+
+                Destroy(gameObject);
             }
         }
-        else
+        catch (Exception ex)
         {
-            // Chegou ao fim do caminho e causa dano ao jogador
-            PlayerHealth playerHealth = FindObjectOfType<PlayerHealth>(); // Encontrar o objeto PlayerHealth
-            if (playerHealth != null)
-            {
-                playerHealth.TakeDamage(damageAmount);  // Causa dano ao jogador
-            }
-
-            Destroy(gameObject);  // Destr�i o inimigo
+            ThinklibTelemetry.Track(
+                "mechanic_error",
+                MechanicName,
+                nameof(EnemyPath),
+                new Dictionary<string, object> {
+                    { "where", "Update" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                }
+            );
+            throw;
         }
     }
 }

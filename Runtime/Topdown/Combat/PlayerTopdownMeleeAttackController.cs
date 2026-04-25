@@ -1,5 +1,8 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Thinklib.Telemetry;
 
 [AddComponentMenu("Thinklib/Topdown/Combat/Player Melee Attack Controller", -100)]
 [RequireComponent(typeof(Animator))]
@@ -15,7 +18,7 @@ public class PlayerTopdownMeleeAttackController : MonoBehaviour
     public float attackRange = 0.5f;
     public LayerMask enemyLayers;
 
-    [Header("Attack Points por Dire��o")]
+    [Header("Attack Points por Direção")]
     public Transform attackPointUp;
     public Transform attackPointDown;
     public Transform attackPointLeft;
@@ -34,11 +37,37 @@ public class PlayerTopdownMeleeAttackController : MonoBehaviour
     private Vector2 lastMoveDirection = Vector2.down;
     private TopdownMovementController movementController;
 
+    // Telemetry
+    private const string MechanicName = "Topdown/Combat/MeleeAttack";
+    private bool _sentUsed = false;
+    private string _lastInput = "unknown";
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
         movementController = GetComponent<TopdownMovementController>();
         ConfigureAttackButton();
+
+        // mechanic_instantiated
+        ThinklibTelemetry.Track(
+            "mechanic_instantiated",
+            MechanicName,
+            nameof(PlayerTopdownMeleeAttackController),
+            new Dictionary<string, object> {
+                { "timeBetweenAttacks", timeBetweenAttacks },
+                { "attackDamage", attackDamage },
+                { "attackRange", attackRange },
+                { "hasButton", attackButton != null },
+                { "hasUp", attackPointUp != null },
+                { "hasDown", attackPointDown != null },
+                { "hasLeft", attackPointLeft != null },
+                { "hasRight", attackPointRight != null },
+                { "hasUpLeft", attackPointUpLeft != null },
+                { "hasUpRight", attackPointUpRight != null },
+                { "hasDownLeft", attackPointDownLeft != null },
+                { "hasDownRight", attackPointDownRight != null }
+            }
+        );
     }
 
     private void Update()
@@ -47,6 +76,7 @@ public class PlayerTopdownMeleeAttackController : MonoBehaviour
 
         if (Input.GetKeyDown(attackKey) && attackCooldown <= 0f)
         {
+            _lastInput = "keyboard";
             Attack();
         }
 
@@ -61,7 +91,10 @@ public class PlayerTopdownMeleeAttackController : MonoBehaviour
             attackButton.onClick.AddListener(() =>
             {
                 if (attackCooldown <= 0f)
+                {
+                    _lastInput = "button";
                     Attack();
+                }
             });
         }
     }
@@ -78,7 +111,7 @@ public class PlayerTopdownMeleeAttackController : MonoBehaviour
 
     private Transform GetAttackPointFromDirection(Vector2 dir)
     {
-        // Diagonais primeiro
+        // Diagonais
         if (dir.x > 0.5f && dir.y > 0.5f) return attackPointUpRight;
         if (dir.x < -0.5f && dir.y > 0.5f) return attackPointUpLeft;
         if (dir.x > 0.5f && dir.y < -0.5f) return attackPointDownRight;
@@ -93,36 +126,68 @@ public class PlayerTopdownMeleeAttackController : MonoBehaviour
 
     private void Attack()
     {
-        if (animator != null)
+        try
         {
-            animator.SetTrigger("IsAttacking");
-            animator.SetFloat("Horizontal", lastMoveDirection.x);
-            animator.SetFloat("Vertical", lastMoveDirection.y);
+            if (animator != null)
+            {
+                animator.SetTrigger("IsAttacking");
+                animator.SetFloat("Horizontal", lastMoveDirection.x);
+                animator.SetFloat("Vertical",  lastMoveDirection.y);
+            }
+
+            Transform attackPoint = GetAttackPointFromDirection(lastMoveDirection);
+            if (attackPoint == null) return;
+
+            Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
+
+            foreach (Collider2D enemy in hitEnemies)
+            {
+                var life = enemy.GetComponent<LifeSystemController>();
+                if (life != null) life.TakeDamage(attackDamage);
+            }
+
+            if (slashEffectPrefab != null)
+            {
+                GameObject effect = Instantiate(slashEffectPrefab, attackPoint.position, Quaternion.identity);
+                float angle = Mathf.Atan2(lastMoveDirection.y, lastMoveDirection.x) * Mathf.Rad2Deg;
+                effect.transform.rotation = Quaternion.Euler(0, 0, angle);
+                Destroy(effect, slashEffectDuration);
+            }
+
+            // mechanic_used (primeiro ataque efetivo)
+            if (!_sentUsed)
+            {
+                _sentUsed = true;
+                ThinklibTelemetry.Track(
+                    "mechanic_used",
+                    MechanicName,
+                    nameof(PlayerTopdownMeleeAttackController),
+                    new Dictionary<string, object> {
+                        { "input", _lastInput },
+                        { "range", attackRange },
+                        { "damage", attackDamage },
+                        { "dirX", Mathf.Round(lastMoveDirection.x * 100f) / 100f },
+                        { "dirY", Mathf.Round(lastMoveDirection.y * 100f) / 100f }
+                    }
+                );
+            }
+
+            attackCooldown = timeBetweenAttacks;
         }
-
-        Transform attackPoint = GetAttackPointFromDirection(lastMoveDirection);
-        if (attackPoint == null) return;
-
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
-
-        foreach (Collider2D enemy in hitEnemies)
+        catch (Exception ex)
         {
-            LifeSystemController life = enemy.GetComponent<LifeSystemController>();
-            if (life != null)
-                life.TakeDamage(attackDamage);
+            ThinklibTelemetry.Track(
+                "mechanic_error",
+                MechanicName,
+                nameof(PlayerTopdownMeleeAttackController),
+                new Dictionary<string, object> {
+                    { "where", "Attack" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                }
+            );
+            throw;
         }
-
-        if (slashEffectPrefab != null)
-        {
-            GameObject effect = Instantiate(slashEffectPrefab, attackPoint.position, Quaternion.identity);
-
-            float angle = Mathf.Atan2(lastMoveDirection.y, lastMoveDirection.x) * Mathf.Rad2Deg;
-            effect.transform.rotation = Quaternion.Euler(0, 0, angle);
-
-            Destroy(effect, slashEffectDuration);
-        }
-
-        attackCooldown = timeBetweenAttacks;
     }
 
     private void OnDrawGizmosSelected()

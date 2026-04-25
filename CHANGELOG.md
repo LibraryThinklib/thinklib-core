@@ -1,4 +1,54 @@
 # Changelog
+## 0.2.0 — 2025-12-12
+* **Novo – MIA (Métricas & Instrumentação Analítica):** telemetria unificada no runtime.
+  * Eventos padrão: `mechanic_instantiated`, `mechanic_used`, `mechanic_error`.
+  * Config via **ThinklibTelemetryConfig.asset** (apiBase/route, batch window, etc.).
+  * **Compat:** ajustado DTO para o backend (campo **`plataform`** – grafia conforme API).
+  * Logs detalhados no `TelemetrySender` (preview do payload, status/erro, duração).
+
+* **Scripts instrumentados (MIA):**
+  * **Common / Effects**
+    * `DeathEffect.cs`
+    * `PlayerHurtEffect.cs`
+  * **Common / LifeSystem**
+    * `LifeUIBar.cs`
+    * `LifeUIIcons.cs`
+    * `UILockerAndFollower.cs`
+  * **Platformer / Collectibles**
+    * `CollectibleItem.cs`
+    * `GameManager.cs`
+  * **Platformer / Combat**
+    * `PlatformerProjectileAttackController.cs`
+    * `PlayerMeleeAttackController.cs`
+    * `PlayerShooterController.cs`
+    * `ProjectileDamageDealer.cs`
+  * **Platformer / Enemy / Types**
+    * **Patroller:** `DamageOnTouch.cs`, `PatrollerAI.cs`
+    * **Shooter:** `EnemyShooterAI.cs`
+  * **Platformer / Environment**
+    * `MovingPlatform.cs`
+    * `TimedPlatform.cs`
+  * **Platformer / Movement**
+    * `PlatformerJumpController.cs`
+    * `PlatformerMovementController.cs`
+  * **Topdown / Combat**
+    * `PlayerTopdownMeleeAttackController.cs`
+    * `PlayerTopdownShooterController.cs`
+  * **Topdown / Enemy / Types**
+    * **Patroller:** `TopdownDamageOnTouch.cs`, `TopdownPatrollerAI.cs`
+    * **Shooter:** `TopdownEnemyShooterAI.cs`
+  * **Topdown / Movement**
+    * `TopdownMovementController.cs`
+  * **Topdown / NPC**
+    * `DialogueBubble.cs`
+    * `TopdownNPCController.cs`
+  * **TowerDefense**
+    * **Defeat system:** `PlayerHealth.cs`
+    * **Defense:** `Bullet.cs`, `TowerPlacement.cs`, `TowerShooter.cs`
+    * **Enemy progression:** `EnemyHealth.cs`, `EnemyPath.cs`, `EnemySpawner.cs`
+    * **Resource management:** `PlayerScore.cs`, `TowerShop.cs`
+    * **Tower upgrade:** `TowerUpgrade.cs`
+
 
 ## 0.1.17 — 2025-09-01
 * **Novo:** adição do menu **Thinklib → Point and Click**, com categorias de componentes para **Dropzone**, **Graph** e **Inventory**:

@@ -1,5 +1,8 @@
-using UnityEngine;
+using System;
 using System.Collections.Generic;
+using UnityEngine;
+using System.Collections; // (não usamos yield aqui, mas mantive por consistência)
+using Thinklib.Telemetry;
 
 [AddComponentMenu("Thinklib/Topdown/NPC/NPC Controller", -99)]
 [RequireComponent(typeof(Animator))]
@@ -24,7 +27,7 @@ public class TopdownNPCController : MonoBehaviour
     public bool useTypewriterEffect = false;
     public float typeSpeed = 0.05f;
 
-    [Header("Configura��es de intera��o")]
+    [Header("Configurações de interação")]
     public KeyCode interactionKey = KeyCode.E;
     public GameObject dialogueBubblePrefab;
     public Transform bubbleAnchor;
@@ -32,7 +35,7 @@ public class TopdownNPCController : MonoBehaviour
     [Header("Camadas que bloqueiam o caminho")]
     public LayerMask obstructionLayers;
 
-    [Header("Refer�ncia do jogador")]
+    [Header("Referência do jogador")]
     public Transform player;
     public MonoBehaviour playerMovementScript; // Ex: PlayerMovement (deve ser um MonoBehaviour com .enabled)
 
@@ -46,45 +49,88 @@ public class TopdownNPCController : MonoBehaviour
     private bool pathBlocked = false;
     private bool playerNearby = false;
 
+    // === TELEMETRIA ===
+    private const string MechanicName = "Topdown/NPC/TopdownNPCController";
+    private bool _sentUsedPatrolStart = false;
+    private bool _sentUsedDialogueOpen = false;
+    private bool _sentUsedDialogueAdvance = false;
+    private bool _sentUsedDialogueEnd = false;
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
+
+        // mechanic_instantiated
+        ThinklibTelemetry.Track(
+            "mechanic_instantiated",
+            MechanicName,
+            nameof(TopdownNPCController),
+            new Dictionary<string, object> {
+                { "npcType", npcType.ToString() },
+                { "patrolPoints", patrolPoints?.Count ?? 0 },
+                { "patrolSpeed", patrolSpeed },
+                { "hasDialogues", hasDialogues },
+                { "dialogueCount", dialogues?.Count ?? 0 },
+                { "useTypewriter", useTypewriterEffect },
+                { "typeSpeed", typeSpeed },
+                { "interactionKey", interactionKey.ToString() },
+                { "hasBubblePrefab", dialogueBubblePrefab != null },
+                { "hasBubbleAnchor", bubbleAnchor != null }
+            }
+        );
     }
 
     private void Update()
     {
-        if (npcType == NPCType.Patroller && !isTalking && !pathBlocked && patrolPoints.Count > 0 && !isTouchingPlayer)
+        try
         {
-            Patrol();
-        }
-        else
-        {
-            animator.SetBool("IsMoving", false);
-            if (isTouchingPlayer)
+            if (npcType == NPCType.Patroller && !isTalking && !pathBlocked && patrolPoints.Count > 0 && !isTouchingPlayer)
             {
-                FacePlayerDirection();
+                Patrol();
             }
-        }
-
-        if (hasDialogues && Input.GetKeyDown(interactionKey) && playerNearby)
-        {
-            if (!isTalking)
+            else
             {
-                currentDialogueIndex = 0;
-                ShowDialogue();
-            }
-            else if (dialogueBubbleComponent != null && !dialogueBubbleComponent.IsTyping)
-            {
-                currentDialogueIndex++;
-                if (currentDialogueIndex >= dialogues.Count)
+                animator.SetBool("IsMoving", false);
+                if (isTouchingPlayer)
                 {
-                    EndDialogue();
+                    FacePlayerDirection();
                 }
-                else
+            }
+
+            if (hasDialogues && Input.GetKeyDown(interactionKey) && playerNearby)
+            {
+                if (!isTalking)
                 {
+                    currentDialogueIndex = 0;
                     ShowDialogue();
                 }
+                else if (dialogueBubbleComponent != null && !dialogueBubbleComponent.IsTyping)
+                {
+                    currentDialogueIndex++;
+                    if (currentDialogueIndex >= dialogues.Count)
+                    {
+                        EndDialogue();
+                    }
+                    else
+                    {
+                        ShowDialogue(advance:true);
+                    }
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            ThinklibTelemetry.Track(
+                "mechanic_error",
+                MechanicName,
+                nameof(TopdownNPCController),
+                new Dictionary<string, object> {
+                    { "where", "Update" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                }
+            );
+            throw;
         }
     }
 
@@ -99,6 +145,21 @@ public class TopdownNPCController : MonoBehaviour
 
         if (!pathBlocked)
         {
+            if (!_sentUsedPatrolStart)
+            {
+                _sentUsedPatrolStart = true;
+                ThinklibTelemetry.Track(
+                    "mechanic_used",
+                    MechanicName,
+                    nameof(TopdownNPCController),
+                    new Dictionary<string, object> {
+                        { "action", "patrol_start" },
+                        { "points", patrolPoints?.Count ?? 0 },
+                        { "speed", patrolSpeed }
+                    }
+                );
+            }
+
             animator.SetBool("IsMoving", true);
             SetAnimatorDirection(direction);
             transform.position = Vector2.MoveTowards(transform.position, target.position, patrolSpeed * Time.deltaTime);
@@ -106,6 +167,8 @@ public class TopdownNPCController : MonoBehaviour
         else
         {
             animator.SetBool("IsMoving", false);
+            // (opcional) reportar primeira vez que bloqueia caminho
+            // Manter simples: sem evento extra para não poluir.
         }
 
         if (Vector2.Distance(transform.position, target.position) < patrolTolerance)
@@ -122,33 +185,112 @@ public class TopdownNPCController : MonoBehaviour
         }
 
         animator.SetFloat("Horizontal", lastDirection.x);
-        animator.SetFloat("Vertical", lastDirection.y);
+        animator.SetFloat("Vertical",   lastDirection.y);
     }
 
-    private void ShowDialogue()
+    private void ShowDialogue(bool advance = false)
     {
-        isTalking = true;
-        animator.SetBool("IsMoving", false);
-        if (playerMovementScript != null)
-            playerMovementScript.enabled = false;
-
-        if (activeBubble != null) Destroy(activeBubble);
-
-        activeBubble = Instantiate(dialogueBubblePrefab, bubbleAnchor.position, Quaternion.identity, bubbleAnchor);
-        dialogueBubbleComponent = activeBubble.GetComponent<DialogueBubble>();
-        if (dialogueBubbleComponent != null)
+        try
         {
-            dialogueBubbleComponent.SetText(dialogues[currentDialogueIndex], useTypewriterEffect, typeSpeed);
+            isTalking = true;
+            animator.SetBool("IsMoving", false);
+            if (playerMovementScript != null)
+                playerMovementScript.enabled = false;
+
+            if (activeBubble != null) Destroy(activeBubble);
+
+            activeBubble = Instantiate(dialogueBubblePrefab, bubbleAnchor.position, Quaternion.identity, bubbleAnchor);
+            dialogueBubbleComponent = activeBubble.GetComponent<DialogueBubble>();
+            if (dialogueBubbleComponent != null)
+            {
+                string line = (currentDialogueIndex >= 0 && currentDialogueIndex < dialogues.Count) ? dialogues[currentDialogueIndex] : string.Empty;
+                dialogueBubbleComponent.SetText(line, useTypewriterEffect, typeSpeed);
+            }
+
+            // Telemetry: primeira abertura e primeiras avanços
+            if (!advance && !_sentUsedDialogueOpen)
+            {
+                _sentUsedDialogueOpen = true;
+                ThinklibTelemetry.Track(
+                    "mechanic_used",
+                    MechanicName,
+                    nameof(TopdownNPCController),
+                    new Dictionary<string, object> {
+                        { "action", "dialogue_open" },
+                        { "index", currentDialogueIndex },
+                        { "total", dialogues?.Count ?? 0 },
+                        { "typewriter", useTypewriterEffect }
+                    }
+                );
+            }
+            else if (advance && !_sentUsedDialogueAdvance)
+            {
+                _sentUsedDialogueAdvance = true;
+                ThinklibTelemetry.Track(
+                    "mechanic_used",
+                    MechanicName,
+                    nameof(TopdownNPCController),
+                    new Dictionary<string, object> {
+                        { "action", "dialogue_advance" },
+                        { "index", currentDialogueIndex },
+                        { "total", dialogues?.Count ?? 0 }
+                    }
+                );
+            }
+        }
+        catch (Exception ex)
+        {
+            ThinklibTelemetry.Track(
+                "mechanic_error",
+                MechanicName,
+                nameof(TopdownNPCController),
+                new Dictionary<string, object> {
+                    { "where", "ShowDialogue" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                }
+            );
+            throw;
         }
     }
 
     private void EndDialogue()
     {
-        isTalking = false;
-        currentDialogueIndex = 0;
-        if (activeBubble != null) Destroy(activeBubble);
-        if (playerMovementScript != null)
-            playerMovementScript.enabled = true;
+        try
+        {
+            isTalking = false;
+            currentDialogueIndex = 0;
+            if (activeBubble != null) Destroy(activeBubble);
+            if (playerMovementScript != null)
+                playerMovementScript.enabled = true;
+
+            if (!_sentUsedDialogueEnd)
+            {
+                _sentUsedDialogueEnd = true;
+                ThinklibTelemetry.Track(
+                    "mechanic_used",
+                    MechanicName,
+                    nameof(TopdownNPCController),
+                    new Dictionary<string, object> {
+                        { "action", "dialogue_end" }
+                    }
+                );
+            }
+        }
+        catch (Exception ex)
+        {
+            ThinklibTelemetry.Track(
+                "mechanic_error",
+                MechanicName,
+                nameof(TopdownNPCController),
+                new Dictionary<string, object> {
+                    { "where", "EndDialogue" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                }
+            );
+            throw;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -205,7 +347,7 @@ public class TopdownNPCController : MonoBehaviour
         {
             lastDirection = directionToPlayer;
             animator.SetFloat("Horizontal", lastDirection.x);
-            animator.SetFloat("Vertical", lastDirection.y);
+            animator.SetFloat("Vertical",   lastDirection.y);
         }
     }
 

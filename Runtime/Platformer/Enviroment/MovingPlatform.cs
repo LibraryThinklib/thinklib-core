@@ -1,16 +1,20 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using Thinklib.Telemetry;
 
 [AddComponentMenu("Thinklib/Platformer/Environment/Moving Platform", -100)]
 public class MovingPlatform : MonoBehaviour
 {
-    [Header("Configura��o de Movimenta��o")]
+    [Header("Configuração de Movimentação")]
     [SerializeField] private Transform pointA;
     [SerializeField] private Transform pointB;
     [SerializeField] private float speed = 2f;
     [SerializeField] private float waitTime = 1f;
     [SerializeField] private bool startActive = false;
 
-    [Header("Configura��o de Ativa��o")]
+    [Header("Configuração de Ativação")]
     [SerializeField] private bool requirePlayerInput = false;
     [SerializeField] private KeyCode activationKey = KeyCode.E;
 
@@ -18,6 +22,11 @@ public class MovingPlatform : MonoBehaviour
     private bool isWaiting = false;
     private bool isActive = false;
     private bool playerOnPlatform = false;
+
+    // Telemetry
+    private const string MechanicName = "Platformer/Environment/MovingPlatform";
+    private bool _sentUsed = false;
+    private bool _wasActive = false;
 
     private void Start()
     {
@@ -31,6 +40,19 @@ public class MovingPlatform : MonoBehaviour
         transform.position = pointA.position;
         targetPoint = pointB;
         isActive = startActive;
+
+        // telemetry: componente instanciado
+        ThinklibTelemetry.Track(
+            "mechanic_instantiated",
+            MechanicName,
+            nameof(MovingPlatform),
+            new Dictionary<string, object> {
+                { "startActive", startActive },
+                { "requirePlayerInput", requirePlayerInput },
+                { "speed", speed },
+                { "waitTime", waitTime }
+            }
+        );
     }
 
     private void Update()
@@ -39,7 +61,36 @@ public class MovingPlatform : MonoBehaviour
         if (requirePlayerInput && playerOnPlatform && Input.GetKeyDown(activationKey))
         {
             isActive = true;
+            // telemetry: primeiro uso quando ativado por input
+            if (!_sentUsed)
+            {
+                _sentUsed = true;
+                ThinklibTelemetry.Track(
+                    "mechanic_used",
+                    MechanicName,
+                    nameof(MovingPlatform),
+                    new Dictionary<string, object> {
+                        { "activation", "input" },
+                        { "key", activationKey.ToString() }
+                    }
+                );
+            }
         }
+
+        // Se ficou ativo sem input (ex.: startActive true), registra uso na transição
+        if (isActive && !_wasActive && !_sentUsed)
+        {
+            _sentUsed = true;
+            ThinklibTelemetry.Track(
+                "mechanic_used",
+                MechanicName,
+                nameof(MovingPlatform),
+                new Dictionary<string, object> {
+                    { "activation", requirePlayerInput ? "input" : "auto" }
+                }
+            );
+        }
+        _wasActive = isActive;
 
         if (!isActive || isWaiting) return;
 
@@ -48,21 +99,56 @@ public class MovingPlatform : MonoBehaviour
 
     private void MoveToTarget()
     {
-        transform.position = Vector2.MoveTowards(transform.position, targetPoint.position, speed * Time.deltaTime);
-
-        // Ao chegar no destino, inicia a troca ap�s espera
-        if (Vector2.Distance(transform.position, targetPoint.position) < 0.01f)
+        try
         {
-            StartCoroutine(WaitAndSwitch());
+            transform.position = Vector2.MoveTowards(transform.position, targetPoint.position, speed * Time.deltaTime);
+
+            // Ao chegar no destino, inicia a troca após espera
+            if (Vector2.Distance(transform.position, targetPoint.position) < 0.01f)
+            {
+                StartCoroutine(WaitAndSwitch());
+            }
+        }
+        catch (Exception ex)
+        {
+            ThinklibTelemetry.Track(
+                "mechanic_error",
+                MechanicName,
+                nameof(MovingPlatform),
+                new Dictionary<string, object> {
+                    { "where", "MoveToTarget" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                }
+            );
+            throw;
         }
     }
 
-    private System.Collections.IEnumerator WaitAndSwitch()
+    private IEnumerator WaitAndSwitch()
     {
         isWaiting = true;
         yield return new WaitForSeconds(waitTime);
         isWaiting = false;
-        targetPoint = (targetPoint == pointA) ? pointB : pointA;
+
+        try
+        {
+            targetPoint = (targetPoint == pointA) ? pointB : pointA;
+        }
+        catch (Exception ex)
+        {
+            ThinklibTelemetry.Track(
+                "mechanic_error",
+                MechanicName,
+                nameof(MovingPlatform),
+                new Dictionary<string, object> {
+                    { "where", "WaitAndSwitch" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                }
+            );
+            throw;
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

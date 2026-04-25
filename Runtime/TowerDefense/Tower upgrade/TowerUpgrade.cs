@@ -1,66 +1,221 @@
 using UnityEngine;
+using System.Collections.Generic;
+using Thinklib.Telemetry;
 
 [AddComponentMenu("Thinklib/TowerDefense/Tower Upgrade/Tower Upgrade", -99)]
 public class TowerUpgrade : MonoBehaviour
 {
-    public int currentLevel = 1;  // N�vel atual da torre
-    public int maxLevel = 3;      // M�ximo de n�veis que a torre pode alcan�ar
+    public int currentLevel = 1;   // Nível atual da torre
+    public int maxLevel = 3;       // Máximo de níveis que a torre pode alcançar
 
     // Atributos da torre
     public int damage = 1;
     public float fireRate = 1f;
     public float range = 3f;
 
-    public int upgradeCost = 10;  // Custo para evoluir a torre
+    public int upgradeCost = 10;   // Custo para evoluir a torre
 
     private PlayerScore playerScore;
 
+    // Telemetry
+    private const string MechanicName = "TowerDefense/TowerUpgrade/TowerUpgrade";
+    private bool _sentInstantiated = false;
+    private bool _sentFirstSuccess = false;
+
     void Start()
     {
-        playerScore = FindObjectOfType<PlayerScore>();  // Encontra o script PlayerScore
+        playerScore = FindObjectOfType<PlayerScore>();
+
+        if (!_sentInstantiated)
+        {
+            _sentInstantiated = true;
+            Thinklib.Telemetry.ThinklibTelemetry.Track(
+                "mechanic_instantiated",
+                MechanicName,
+                nameof(TowerUpgrade),
+                new Dictionary<string, object>
+                {
+                    { "currentLevel", currentLevel },
+                    { "maxLevel", maxLevel },
+                    { "damage", damage },
+                    { "fireRate", fireRate },
+                    { "range", range },
+                    { "upgradeCost", upgradeCost },
+                    { "hasPlayerScore", playerScore != null }
+                }
+            );
+        }
     }
 
-    // M�todo para melhorar a torre
+    // Método para melhorar a torre
     public void UpgradeTower()
     {
-        if (playerScore.currentScore >= upgradeCost && currentLevel < maxLevel)
+        try
         {
-            playerScore.AddScore(-upgradeCost);  // Subtrai os pontos
-            currentLevel++;  // Aumenta o n�vel da torre
+            if (currentLevel >= maxLevel)
+            {
+                // Já está no máximo — ainda é útil registrar o uso
+                ThinklibTelemetry.Track(
+                    "mechanic_used",
+                    MechanicName,
+                    nameof(TowerUpgrade),
+                    new Dictionary<string, object>
+                    {
+                        { "action", "already_at_max_level" },
+                        { "currentLevel", currentLevel },
+                        { "maxLevel", maxLevel }
+                    }
+                );
 
-            // Atualiza os atributos da torre conforme o n�vel
+                Debug.Log("Nível máximo atingido.");
+                return;
+            }
+
+            if (playerScore == null)
+            {
+                ThinklibTelemetry.Track(
+                    "mechanic_error",
+                    MechanicName,
+                    nameof(TowerUpgrade),
+                    new Dictionary<string, object>
+                    {
+                        { "where", "UpgradeTower" },
+                        { "message", "PlayerScore reference is null" }
+                    }
+                );
+                Debug.LogWarning("PlayerScore não encontrado.");
+                return;
+            }
+
+            if (playerScore.currentScore < upgradeCost)
+            {
+                // Tentativa com pontos insuficientes (conta como uso para entender demanda)
+                ThinklibTelemetry.Track(
+                    "mechanic_used",
+                    MechanicName,
+                    nameof(TowerUpgrade),
+                    new Dictionary<string, object>
+                    {
+                        { "action", "insufficient_funds" },
+                        { "currentScore", playerScore.currentScore },
+                        { "required", upgradeCost },
+                        { "currentLevel", currentLevel },
+                        { "maxLevel", maxLevel }
+                    }
+                );
+
+                Debug.Log("Pontos insuficientes.");
+                return;
+            }
+
+            // --- Upgrade efetivo ---
+            int fromLevel = currentLevel;
+            int oldDamage = damage;
+            float oldFire = fireRate;
+            float oldRange = range;
+
+            playerScore.AddScore(-upgradeCost);
+            currentLevel++;
+
+            // Atualiza os atributos conforme o novo nível
             switch (currentLevel)
             {
                 case 2:
-                    damage = 3;  // Novo valor para o dano
-                    fireRate = 1.5f;  // Novo valor para a taxa de disparo
-                    range = 4f;  // Novo valor para o alcance
-                    upgradeCost = 20;  // Aumenta o custo para o pr�ximo n�vel
+                    damage = 3;
+                    fireRate = 1.5f;
+                    range = 4f;
+                    upgradeCost = 20;
                     break;
                 case 3:
-                    damage = 5;  // Novo valor para o dano
-                    fireRate = 2f;  // Novo valor para a taxa de disparo
-                    range = 5f;  // Novo valor para o alcance
-                    upgradeCost = 30;  // Aumenta o custo para o pr�ximo n�vel
+                    damage = 5;
+                    fireRate = 2f;
+                    range = 5f;
+                    upgradeCost = 30;
                     break;
                 default:
                     break;
             }
 
-            Debug.Log("Torre evolu�da para o n�vel " + currentLevel);
+            // Registra o primeiro sucesso de upgrade
+            if (!_sentFirstSuccess)
+            {
+                _sentFirstSuccess = true;
+                ThinklibTelemetry.Track(
+                    "mechanic_used",
+                    MechanicName,
+                    nameof(TowerUpgrade),
+                    new Dictionary<string, object>
+                    {
+                        { "action", "first_upgrade_success" },
+                        { "fromLevel", fromLevel },
+                        { "toLevel", currentLevel },
+                        { "oldDamage", oldDamage }, { "newDamage", damage },
+                        { "oldFireRate", oldFire }, { "newFireRate", fireRate },
+                        { "oldRange", oldRange },   { "newRange", range }
+                    }
+                );
+            }
+            else
+            {
+                // Demais upgrades (se quiser rastrear todos)
+                ThinklibTelemetry.Track(
+                    "mechanic_used",
+                    MechanicName,
+                    nameof(TowerUpgrade),
+                    new Dictionary<string, object>
+                    {
+                        { "action", "upgrade_success" },
+                        { "fromLevel", fromLevel },
+                        { "toLevel", currentLevel },
+                        { "oldDamage", oldDamage }, { "newDamage", damage },
+                        { "oldFireRate", oldFire }, { "newFireRate", fireRate },
+                        { "oldRange", oldRange },   { "newRange", range }
+                    }
+                );
+            }
+
+            // Se acabou de atingir o máximo, registra
+            if (currentLevel >= maxLevel)
+            {
+                ThinklibTelemetry.Track(
+                    "mechanic_used",
+                    MechanicName,
+                    nameof(TowerUpgrade),
+                    new Dictionary<string, object>
+                    {
+                        { "action", "reached_max_level" },
+                        { "level", currentLevel }
+                    }
+                );
+            }
+
+            Debug.Log("Torre evoluída para o nível " + currentLevel);
         }
-        else
+        catch (System.Exception ex)
         {
-            Debug.Log("Pontos insuficientes ou m�ximo de n�vel atingido.");
+            ThinklibTelemetry.Track(
+                "mechanic_error",
+                MechanicName,
+                nameof(TowerUpgrade),
+                new Dictionary<string, object>
+                {
+                    { "where", "UpgradeTower" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace },
+                    { "currentLevel", currentLevel },
+                    { "maxLevel", maxLevel }
+                }
+            );
+            throw;
         }
     }
 
-    // Exibindo as informa��es da torre (opcional)
+    // Exibindo as informações da torre (opcional)
     void OnGUI()
     {
-        GUI.Label(new Rect(10, 10, 200, 20), "N�vel da Torre: " + currentLevel);
-        GUI.Label(new Rect(10, 30, 200, 20), "Dano: " + damage);
-        GUI.Label(new Rect(10, 50, 200, 20), "Alcance: " + range);
-        GUI.Label(new Rect(10, 70, 200, 20), "Taxa de Disparo: " + fireRate);
+        GUI.Label(new Rect(10, 10, 220, 20), "Nível da Torre: " + currentLevel);
+        GUI.Label(new Rect(10, 30, 220, 20), "Dano: " + damage);
+        GUI.Label(new Rect(10, 50, 220, 20), "Alcance: " + range);
+        GUI.Label(new Rect(10, 70, 220, 20), "Taxa de Disparo: " + fireRate);
     }
 }

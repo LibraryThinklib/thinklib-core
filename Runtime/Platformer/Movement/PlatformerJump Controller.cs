@@ -1,5 +1,8 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Thinklib.Telemetry;
 
 [AddComponentMenu("Thinklib/Platformer/Movement/Platformer Jump Controller", -98)]
 public class PlatformerJumpController : MonoBehaviour
@@ -16,11 +19,18 @@ public class PlatformerJumpController : MonoBehaviour
     private bool isGrounded = false;
     private bool canDoubleJump = false;
 
+    // Telemetry
+    private const string MechanicName = "Platformer/Jump";
+    private bool _sentUsed = false;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         ConfigureJumpButton();
+
+        // telemetry: instanciado
+        ThinklibTelemetry.Track("mechanic_instantiated", MechanicName, nameof(PlatformerJumpController));
     }
 
     private void Update()
@@ -45,17 +55,45 @@ public class PlatformerJumpController : MonoBehaviour
 
     public void Jump()
     {
-        if (isGrounded)
+        try
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-            animator.SetBool("IsJumping", true);
-            if (enableDoubleJump) canDoubleJump = true;
+            bool jumped = false;
+
+            if (isGrounded)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+                animator.SetBool("IsJumping", true);
+                if (enableDoubleJump) canDoubleJump = true;
+                jumped = true;
+            }
+            else if (enableDoubleJump && canDoubleJump)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+                animator.SetBool("IsJumping", true);
+                canDoubleJump = false;
+                jumped = true;
+            }
+
+            // telemetry: primeiro uso real (primeiro pulo efetivo)
+            if (jumped && !_sentUsed)
+            {
+                _sentUsed = true;
+                ThinklibTelemetry.Track("mechanic_used", MechanicName, nameof(PlatformerJumpController));
+            }
         }
-        else if (enableDoubleJump && canDoubleJump)
+        catch (Exception ex)
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-            animator.SetBool("IsJumping", true);
-            canDoubleJump = false;
+            // telemetry: erro
+            ThinklibTelemetry.Track(
+                "mechanic_error",
+                MechanicName,
+                nameof(PlatformerJumpController),
+                new Dictionary<string, object> {
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                }
+            );
+            throw; // mantém comportamento padrão
         }
     }
 

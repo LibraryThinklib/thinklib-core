@@ -1,40 +1,174 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Thinklib.Telemetry;
 
 [AddComponentMenu("Thinklib/TowerDefense/Defeat System/Player Health", -100)]
 public class PlayerHealth : MonoBehaviour
 {
-    public int maxHealth = 10;  // Quantidade inicial de vidas
+    [Header("Health")]
+    public int maxHealth = 10;       // Quantidade inicial de vidas
     private int currentHealth;
-    public Text healthText;  // Refer�ncia ao componente Text para exibir as vidas
-    public Text gameOverText;  // Refer�ncia ao componente Text para exibir "GAME OVER"
 
-    void Start()
+    [Header("UI")]
+    public Text healthText;          // Exibe as vidas
+    public Text gameOverText;        // Exibe "GAME OVER"
+
+    // === Telemetry ===
+    private const string MechanicName = "TowerDefense/DefeatSystem/PlayerHealth";
+    private bool _sentUsedFirstDamage = false;
+    private bool _sentUsedGameOver    = false;
+
+    private void Awake()
     {
-        currentHealth = maxHealth;
-        UpdateHealthUI();
-        gameOverText.gameObject.SetActive(false);  // Assegura que "GAME OVER" esteja desativado inicialmente
+        // mechanic_instantiated
+        ThinklibTelemetry.Track(
+            "mechanic_instantiated",
+            MechanicName,
+            nameof(PlayerHealth),
+            new Dictionary<string, object> {
+                { "maxHealth", maxHealth },
+                { "hasHealthText", healthText != null },
+                { "hasGameOverText", gameOverText != null }
+            }
+        );
+    }
+
+    private void Start()
+    {
+        try
+        {
+            currentHealth = maxHealth;
+            UpdateHealthUI();
+            if (gameOverText != null)
+                gameOverText.gameObject.SetActive(false);  // Garante que "GAME OVER" comece oculto
+        }
+        catch (Exception ex)
+        {
+            ThinklibTelemetry.Track(
+                "mechanic_error",
+                MechanicName,
+                nameof(PlayerHealth),
+                new Dictionary<string, object> {
+                    { "where", "Start" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                }
+            );
+            throw;
+        }
     }
 
     public void TakeDamage(int amount)
     {
-        currentHealth -= amount;
-        UpdateHealthUI();
-
-        if (currentHealth <= 0)
+        try
         {
-            GameOver();
+            currentHealth -= amount;
+            UpdateHealthUI();
+
+            // mechanic_used: primeira vez que recebe dano
+            if (!_sentUsedFirstDamage)
+            {
+                _sentUsedFirstDamage = true;
+                ThinklibTelemetry.Track(
+                    "mechanic_used",
+                    MechanicName,
+                    nameof(PlayerHealth),
+                    new Dictionary<string, object> {
+                        { "action", "take_damage_first_time" },
+                        { "amount", amount },
+                        { "currentHealth", currentHealth },
+                        { "maxHealth", maxHealth }
+                    }
+                );
+            }
+
+            if (currentHealth <= 0)
+            {
+                GameOver();
+            }
+        }
+        catch (Exception ex)
+        {
+            ThinklibTelemetry.Track(
+                "mechanic_error",
+                MechanicName,
+                nameof(PlayerHealth),
+                new Dictionary<string, object> {
+                    { "where", "TakeDamage" },
+                    { "amount", amount },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                }
+            );
+            throw;
         }
     }
 
-    void UpdateHealthUI()
+    private void UpdateHealthUI()
     {
-        healthText.text = "Lifes: " + currentHealth.ToString();  // Atualiza o texto de vidas
+        try
+        {
+            if (healthText != null)
+            {
+                healthText.text = "Lifes: " + currentHealth.ToString();
+            }
+        }
+        catch (Exception ex)
+        {
+            ThinklibTelemetry.Track(
+                "mechanic_error",
+                MechanicName,
+                nameof(PlayerHealth),
+                new Dictionary<string, object> {
+                    { "where", "UpdateHealthUI" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                }
+            );
+            throw;
+        }
     }
 
-    void GameOver()
+    private void GameOver()
     {
-        gameOverText.gameObject.SetActive(true);  // Exibe o texto "GAME OVER"
-        Time.timeScale = 0f;  // Pausa o jogo (para tudo, inclusive anima��es e f�sica)
+        try
+        {
+            if (gameOverText != null)
+                gameOverText.gameObject.SetActive(true);
+
+            // mechanic_used: primeira transição para game over
+            if (!_sentUsedGameOver)
+            {
+                _sentUsedGameOver = true;
+                ThinklibTelemetry.Track(
+                    "mechanic_used",
+                    MechanicName,
+                    nameof(PlayerHealth),
+                    new Dictionary<string, object> {
+                        { "action", "game_over" },
+                        { "finalHealth", currentHealth },
+                        { "maxHealth", maxHealth }
+                    }
+                );
+            }
+
+            Time.timeScale = 0f; // Pausa o jogo
+        }
+        catch (Exception ex)
+        {
+            ThinklibTelemetry.Track(
+                "mechanic_error",
+                MechanicName,
+                nameof(PlayerHealth),
+                new Dictionary<string, object> {
+                    { "where", "GameOver" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                }
+            );
+            throw;
+        }
     }
 }
