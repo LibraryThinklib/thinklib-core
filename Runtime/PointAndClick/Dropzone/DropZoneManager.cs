@@ -36,6 +36,9 @@ public class DropZoneManager : MonoBehaviour
         if (IsSolutionCorrect())
         {
             Debug.Log("<color=lime>PUZZLE COMPLETED! The solution is correct.</color>");
+            
+            StopAllZoneTimers();
+            
             if (onPuzzleCompleted != null)
             {
                 onPuzzleCompleted.Invoke();
@@ -46,6 +49,16 @@ public class DropZoneManager : MonoBehaviour
             Debug.Log("<color=orange>Puzzle is full, but the solution is incorrect. Try again!</color>");
         }
     }
+    
+    private void StopAllZoneTimers()
+    {
+        Debug.Log("Puzzle complete! Stopping all item timers.");
+        foreach (DropZone zone in orderedZones)
+        {
+            zone.StopTimer();
+        }
+    }
+
 
     private bool IsSolutionCorrect()
     {

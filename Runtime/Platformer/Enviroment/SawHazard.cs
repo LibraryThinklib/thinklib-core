@@ -1,0 +1,119 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+[RequireComponent(typeof(Collider2D))]
+[AddComponentMenu("Thinklib/Game/SawHazard")]
+public class SawHazard : MonoBehaviour
+{
+    [Header("Configuração de Dano")]
+    [Tooltip("Quanto de dano esta serra causa ao tocar o jogador.")]
+    public int damageAmount = 1;
+
+    [Header("Movimento (Patrulha)")]
+    [Tooltip("Marque se esta serra deve se mover.")]
+    public bool shouldMove = false;
+
+    [Tooltip("Ponto A da patrulha (posição de início).")]
+    public Vector2 pointA;
+
+    [Tooltip("Ponto B da patrulha (posição final).")]
+    public Vector2 pointB;
+
+    [Tooltip("Velocidade do movimento de patrulha.")]
+    public float moveSpeed = 3.0f;
+
+    private const string MechanicName = "Platformer/Enviroment/SawHazard";
+
+    private Vector2 targetPosition;
+    private bool _sentUsed = false;
+
+    private void Awake()
+    {
+        ThinklibTelemetry.Track("mechanic_instantiated", MechanicName, nameof(SawHazard),
+            new Dictionary<string, object>
+            {
+                { "damageAmount", damageAmount },
+                { "shouldMove", shouldMove },
+                { "moveSpeed", moveSpeed }
+            });
+    }
+
+    void Start()
+    {
+        GetComponent<Collider2D>().isTrigger = true;
+
+        if (shouldMove)
+        {
+            transform.position = pointA;
+            targetPosition = pointB;
+        }
+    }
+
+    void Update()
+    {
+        if (shouldMove) Move();
+    }
+
+    private void Move()
+    {
+        transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+
+        if (Vector2.Distance((Vector2)transform.position, targetPosition) < 0.1f)
+        {
+            targetPosition = (targetPosition == pointA) ? pointB : pointA;
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!other.CompareTag("Player")) return;
+
+        try
+        {
+            LifeSystemController lifeSystem = other.GetComponent<LifeSystemController>();
+
+            if (lifeSystem != null)
+            {
+                lifeSystem.TakeDamage(damageAmount);
+
+                if (!_sentUsed)
+                {
+                    _sentUsed = true;
+                    ThinklibTelemetry.Track("mechanic_used", MechanicName, nameof(SawHazard),
+                        new Dictionary<string, object>
+                        {
+                            { "action", "damage" },
+                            { "damageAmount", damageAmount }
+                        });
+                }
+            }
+            else
+            {
+                Debug.LogWarning("Serra tocou o 'Player', mas não encontrou o script 'LifeSystemController'.");
+            }
+        }
+        catch (Exception ex)
+        {
+            ThinklibTelemetry.Track("mechanic_error", MechanicName, nameof(SawHazard),
+                new Dictionary<string, object>
+                {
+                    { "where", "OnTriggerEnter2D" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                });
+            throw;
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (shouldMove)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(pointA, 0.3f);
+            Gizmos.DrawWireSphere(pointB, 0.3f);
+            Gizmos.DrawLine(pointA, pointB);
+        }
+    }
+}

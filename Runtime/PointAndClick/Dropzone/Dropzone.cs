@@ -1,6 +1,8 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using System.Collections;
 
 [AddComponentMenu("Thinklib/Point and Click/Dropzone/DropZone", -100)]
 public class DropZone : MonoBehaviour, IDropHandler
@@ -13,7 +15,20 @@ public class DropZone : MonoBehaviour, IDropHandler
     [Tooltip("The SpriteRenderer of the CHILD OBJECT used to display the item placed here.")]
     [SerializeField] private SpriteRenderer displaySprite;
 
+    private const string MechanicName = "PointAndClick/Dropzone/DropZone";
+
     private Item storedItem = null;
+    private Coroutine itemTimerCoroutine = null;
+    private bool _sentUsed = false;
+
+    private void Awake()
+    {
+        ThinklibTelemetry.Track("mechanic_instantiated", MechanicName, nameof(DropZone),
+            new Dictionary<string, object>
+            {
+                { "zoneID", zoneID }
+            });
+    }
 
     public bool HasItem()
     {
@@ -35,21 +50,73 @@ public class DropZone : MonoBehaviour, IDropHandler
 
     public void PlaceItem(Item newItem)
     {
-        if (newItem == null || HasItem())
+        if (newItem == null || HasItem()) return;
+
+        try
         {
-            return;
+            storedItem = newItem;
+            if (displaySprite != null) { displaySprite.sprite = storedItem.icon; displaySprite.enabled = true; }
+
+            InventoryManager.instance.RemoveItem(newItem, 1);
+
+            if (ItemSlot.draggedItem == newItem) { ItemSlot.dragWasSuccessful = true; }
+            InventoryManager.instance.EndItemDrag();
+
+            Debug.Log($"Item '{storedItem.name}' placed in Zone {zoneID}.");
+
+            if (!_sentUsed)
+            {
+                _sentUsed = true;
+                ThinklibTelemetry.Track("mechanic_used", MechanicName, nameof(DropZone),
+                    new Dictionary<string, object>
+                    {
+                        { "action", "place_item" },
+                        { "zoneID", zoneID },
+                        { "hasTimer", storedItem.hasTimer }
+                    });
+            }
+
+            if (storedItem.hasTimer)
+            {
+                StopTimer();
+                itemTimerCoroutine = StartCoroutine(StartItemTimer(storedItem));
+            }
+
+            DropZoneManager.instance.CheckForPuzzleCompletion();
         }
+        catch (Exception ex)
+        {
+            ThinklibTelemetry.Track("mechanic_error", MechanicName, nameof(DropZone),
+                new Dictionary<string, object>
+                {
+                    { "where", "PlaceItem" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                });
+            throw;
+        }
+    }
 
-        storedItem = newItem;
-        if (displaySprite != null) { displaySprite.sprite = storedItem.icon; displaySprite.enabled = true; }
+    private IEnumerator StartItemTimer(Item itemToTrack)
+    {
+        Debug.Log($"Timer started for {itemToTrack.name} in Zone {zoneID}.");
+        yield return new WaitForSeconds(itemToTrack.itemLifetime);
 
-        InventoryManager.instance.RemoveItem(newItem);
-        if (ItemSlot.draggedItem == newItem) { ItemSlot.dragWasSuccessful = true; }
-        InventoryManager.instance.EndItemDrag();
+        if (storedItem == itemToTrack)
+        {
+            Debug.LogWarning($"Timer expired for {itemToTrack.name}! Removing from Zone {zoneID}.");
+            ClearZone();
+        }
+    }
 
-        Debug.Log($"Item '{storedItem.name}' placed in Zone {zoneID}.");
-
-        DropZoneManager.instance.CheckForPuzzleCompletion();
+    public void StopTimer()
+    {
+        if (itemTimerCoroutine != null)
+        {
+            StopCoroutine(itemTimerCoroutine);
+            itemTimerCoroutine = null;
+            Debug.Log($"Timer stopped for item in Zone {zoneID}.");
+        }
     }
 
     private IEnumerator RejectItem(Item itemToReturn, float delay = 0.5f)
@@ -58,7 +125,7 @@ public class DropZone : MonoBehaviour, IDropHandler
 
         if (storedItem == itemToReturn)
         {
-            InventoryManager.instance.AddItem(itemToReturn);
+            InventoryManager.instance.AddItem(itemToReturn, 1);
             ClearZone();
         }
     }
@@ -85,7 +152,7 @@ public class DropZone : MonoBehaviour, IDropHandler
         if (DropZoneManager.instance.CanReturnItem(this.zoneID))
         {
             Debug.Log($"Returning item '{storedItem.name}' from Zone {zoneID} to inventory.");
-            InventoryManager.instance.AddItem(storedItem);
+            InventoryManager.instance.AddItem(storedItem, 1);
             ClearZone();
         }
         else
@@ -96,6 +163,7 @@ public class DropZone : MonoBehaviour, IDropHandler
 
     private void ClearZone()
     {
+        StopTimer();
         storedItem = null;
         if (displaySprite != null)
         {
