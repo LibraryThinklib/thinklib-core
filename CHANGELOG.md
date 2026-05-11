@@ -1,4 +1,7 @@
 # Changelog
+## 0.2.3 — 2026-05-11
+* **Chore:** removidos `Thinklib_Core_Manual_v0.2.1.docx` e `generate_manual.py` do repositório; adicionado `.gitignore` para evitar reinclusão acidental.
+
 ## 0.2.2 — 2026-05-11
 * **Fix:** adicionado `using Thinklib.Telemetry;` nos scripts instrumentados que estavam com erro `CS0103: ThinklibTelemetry does not exist`.
   * `RewardChest.cs`, `SawHazard.cs`

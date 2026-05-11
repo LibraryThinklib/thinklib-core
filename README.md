@@ -22,7 +22,7 @@
 In Unity: **Window → Package Manager → + → Add package from Git URL…**
 
 ```bash
-https://github.com/LibraryThinklib/thinklib-core.git#v0.2.2
+https://github.com/LibraryThinklib/thinklib-core.git#v0.2.3
 ```
 
 ---
