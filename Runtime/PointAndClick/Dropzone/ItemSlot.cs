@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
+using Thinklib.Telemetry;
 
 [AddComponentMenu("Thinklib/Point and Click/Dropzone/ItemSlot", -98)]
 public class ItemSlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDragHandler, IDropHandler

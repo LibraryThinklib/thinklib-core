@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Thinklib.Telemetry;
 
 [RequireComponent(typeof(Collider2D))]
 [AddComponentMenu("Thinklib/Game/SawHazard")]

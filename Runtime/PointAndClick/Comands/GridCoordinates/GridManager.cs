@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Thinklib.Telemetry;
 
 [AddComponentMenu("Thinklib/Grid/GridManager")]
 public class GridManager : MonoBehaviour

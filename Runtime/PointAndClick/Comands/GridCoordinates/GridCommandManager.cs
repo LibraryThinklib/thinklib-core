@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Thinklib.Telemetry;
 
 [AddComponentMenu("Thinklib/Grid/GridCommandManager")]
 public class GridCommandManager : MonoBehaviour

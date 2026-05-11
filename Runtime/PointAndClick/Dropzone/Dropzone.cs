@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Thinklib.Telemetry;
 
 [AddComponentMenu("Thinklib/Point and Click/Dropzone/DropZone", -100)]
 public class DropZone : MonoBehaviour, IDropHandler
