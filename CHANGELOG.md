@@ -1,4 +1,11 @@
 # Changelog
+## 0.2.2 — 2026-05-11
+* **Fix:** adicionado `using Thinklib.Telemetry;` nos scripts instrumentados que estavam com erro `CS0103: ThinklibTelemetry does not exist`.
+  * `RewardChest.cs`, `SawHazard.cs`
+  * `CommandQueueManager.cs`, `PlayerAgent.cs`
+  * `GridAgent.cs`, `GridCommandManager.cs`, `GridManager.cs`
+  * `Dropzone.cs`, `ItemSlot.cs`
+
 ## 0.2.1 — 2026-04-24
 * **Novo – Mecânicas de Platformer:**
   * `RewardChest.cs` — baú de recompensa que cura o jogador ao toque (via `LifeSystemController.Heal`); muda sprite ao ser usado e desativa collider.
