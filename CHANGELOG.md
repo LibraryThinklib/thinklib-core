@@ -1,4 +1,15 @@
 # Changelog
+## 0.3.0 — 2026-05-20
+* **Breaking – Licença:** alterada de MIT para Apache 2.0; header de copyright adicionado em todos os `.cs`.
+* **Breaking – Telemetria:** `apiBase` padrão atualizado de `localhost:8080` para `https://thinklib.thinktedlab.org`.
+* **Breaking – Renomeações de arquivos e pasta:**
+  * `TipoColetavel.cs` → `CollectibleType.cs` (enum `TipoColetavel` → `CollectibleType`; valores `Moeda` → `Coin`, `Vida` → `Life`)
+  * `PatrulheiroAI.cs` → `PatrollerAI.cs` / pasta `Patrulheiro/` → `Patroller/`
+  * `Itens.cs` → `Items.cs`
+  * `TimedPlatfom.cs` → `TimedPlatform.cs`
+  * `PlatformerJump Controller.cs` → `PlatformerJumpController.cs`
+* **Breaking – API pública (`CollectibleItem` / `GameManager`):** campos e métodos renomeados de português para inglês (`valor` → `value`, `somColeta` → `collectSound`, `destruirAutomaticamente` → `destroyOnCollect`, `AdicionarColetavel` → `AddCollectible`, `moedas` → `coins`, etc.).
+
 ## 0.2.3 — 2026-05-11
 * **Chore:** removidos `Thinklib_Core_Manual_v0.2.1.docx` e `generate_manual.py` do repositório; adicionado `.gitignore` para evitar reinclusão acidental.
 
