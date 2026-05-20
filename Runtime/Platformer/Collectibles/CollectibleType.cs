@@ -5,8 +5,8 @@
 //
 //     http://www.apache.org/licenses/LICENSE-2.0
 
-public enum TipoColetavel
+public enum CollectibleType
 {
-    Moeda,
-    Vida
+    Coin,
+    Life
 }

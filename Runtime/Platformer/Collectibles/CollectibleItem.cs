@@ -14,7 +14,7 @@ using Thinklib.Telemetry;
 [RequireComponent(typeof(Collider2D))]
 public class CollectibleItem : MonoBehaviour
 {
-    public TipoColetavel tipo;
+    public CollectibleType type;
     public int valor = 1;
 
     [Header("Feedbacks")]
@@ -36,7 +36,7 @@ public class CollectibleItem : MonoBehaviour
             MechanicName,
             nameof(CollectibleItem),
             new Dictionary<string, object> {
-                { "tipo", tipo.ToString() },
+                { "type", type.ToString() },
                 { "valor", valor },
                 { "hasSound", somColeta != null },
                 { "hasEffect", efeitoColeta != null },
@@ -56,7 +56,7 @@ public class CollectibleItem : MonoBehaviour
                 jaColetado = true;
 
                 if (GameManager.Instance != null)
-                    GameManager.Instance.AdicionarColetavel(tipo, valor);
+                    GameManager.Instance.AdicionarColetavel(type, valor);
 
                 if (somColeta != null)
                     AudioSource.PlayClipAtPoint(somColeta, transform.position);
@@ -76,7 +76,7 @@ public class CollectibleItem : MonoBehaviour
                         MechanicName,
                         nameof(CollectibleItem),
                         new Dictionary<string, object> {
-                            { "tipo", tipo.ToString() },
+                            { "type", type.ToString() },
                             { "valor", valor }
                         }
                     );

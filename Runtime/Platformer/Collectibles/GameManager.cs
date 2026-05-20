@@ -48,18 +48,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void AdicionarColetavel(TipoColetavel tipo, int valor)
+    public void AdicionarColetavel(CollectibleType type, int valor)
     {
         try
         {
-            switch (tipo)
+            switch (type)
             {
-                case TipoColetavel.Moeda:
+                case CollectibleType.Coin:
                     moedas += valor;
                     AtualizarUI();
                     break;
 
-                case TipoColetavel.Vida:
+                case CollectibleType.Life:
                     GameObject jogador = GameObject.FindGameObjectWithTag("Player");
                     if (jogador != null)
                     {
@@ -82,7 +82,7 @@ public class GameManager : MonoBehaviour
                     MechanicName,
                     nameof(GameManager),
                     new Dictionary<string, object> {
-                        { "tipo", tipo.ToString() },
+                        { "type", type.ToString() },
                         { "valor", valor },
                         { "coinsAfter", moedas }
                     }
@@ -97,7 +97,7 @@ public class GameManager : MonoBehaviour
                 nameof(GameManager),
                 new Dictionary<string, object> {
                     { "where", "AdicionarColetavel" },
-                    { "tipo", tipo.ToString() },
+                    { "type", type.ToString() },
                     { "valor", valor },
                     { "message", ex.Message },
                     { "stack", ex.StackTrace }
