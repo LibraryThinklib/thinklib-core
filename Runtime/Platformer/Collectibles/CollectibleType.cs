@@ -5,12 +5,8 @@
 //
 //     http://www.apache.org/licenses/LICENSE-2.0
 
-using System.Collections;
-using UnityEngine;
-
-public interface IGridCommand
+public enum CollectibleType
 {
-    string CommandName { get; }
-    
-    IEnumerator Execute(GridAgent agent);
+    Coin,
+    Life
 }

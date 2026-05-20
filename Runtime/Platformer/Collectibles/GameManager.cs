@@ -1,3 +1,10 @@
+// Copyright (c) 2026 Thinkned Lab
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,9 +16,9 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    [Header("Moedas")]
-    public int moedas = 0;
-    public Text moedasText;
+    [Header("Coins")]
+    public int coins = 0;
+    public Text coinsText;
 
     // Telemetry
     private const string MechanicName = "Platformer/Collectibles/Manager";
@@ -23,14 +30,13 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
 
-            // telemetry: componente instanciado
             ThinklibTelemetry.Track(
                 "mechanic_instantiated",
                 MechanicName,
                 nameof(GameManager),
                 new Dictionary<string, object> {
-                    { "startCoins", moedas },
-                    { "hasCoinsText", moedasText != null }
+                    { "startCoins", coins },
+                    { "hasCoinsText", coinsText != null }
                 }
             );
         }
@@ -41,32 +47,28 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void AdicionarColetavel(TipoColetavel tipo, int valor)
+    public void AddCollectible(CollectibleType type, int value)
     {
         try
         {
-            switch (tipo)
+            switch (type)
             {
-                case TipoColetavel.Moeda:
-                    moedas += valor;
-                    AtualizarUI();
+                case CollectibleType.Coin:
+                    coins += value;
+                    UpdateUI();
                     break;
 
-                case TipoColetavel.Vida:
-                    GameObject jogador = GameObject.FindGameObjectWithTag("Player");
-                    if (jogador != null)
+                case CollectibleType.Life:
+                    GameObject player = GameObject.FindGameObjectWithTag("Player");
+                    if (player != null)
                     {
-                        LifeSystemController vida = jogador.GetComponent<LifeSystemController>();
-                        if (vida != null)
-                        {
-                            Debug.Log("Chamando GanharVida()");
-                            vida.Heal(valor);
-                        }
+                        LifeSystemController lifeSystem = player.GetComponent<LifeSystemController>();
+                        if (lifeSystem != null)
+                            lifeSystem.Heal(value);
                     }
                     break;
             }
 
-            // telemetry: primeiro uso efetivo (primeira coleta processada pelo manager)
             if (!_sentUsed)
             {
                 _sentUsed = true;
@@ -75,9 +77,9 @@ public class GameManager : MonoBehaviour
                     MechanicName,
                     nameof(GameManager),
                     new Dictionary<string, object> {
-                        { "tipo", tipo.ToString() },
-                        { "valor", valor },
-                        { "coinsAfter", moedas }
+                        { "type", type.ToString() },
+                        { "value", value },
+                        { "coinsAfter", coins }
                     }
                 );
             }
@@ -89,9 +91,9 @@ public class GameManager : MonoBehaviour
                 MechanicName,
                 nameof(GameManager),
                 new Dictionary<string, object> {
-                    { "where", "AdicionarColetavel" },
-                    { "tipo", tipo.ToString() },
-                    { "valor", valor },
+                    { "where", "AddCollectible" },
+                    { "type", type.ToString() },
+                    { "value", value },
                     { "message", ex.Message },
                     { "stack", ex.StackTrace }
                 }
@@ -100,9 +102,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void AtualizarUI()
+    private void UpdateUI()
     {
-        if (moedasText != null)
-            moedasText.text = "" + moedas;
+        if (coinsText != null)
+            coinsText.text = "" + coins;
     }
 }

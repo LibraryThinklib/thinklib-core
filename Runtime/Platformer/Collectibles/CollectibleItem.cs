@@ -1,3 +1,10 @@
+// Copyright (c) 2026 Thinkted Lab
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,15 +14,15 @@ using Thinklib.Telemetry;
 [RequireComponent(typeof(Collider2D))]
 public class CollectibleItem : MonoBehaviour
 {
-    public TipoColetavel tipo;
-    public int valor = 1;
+    public CollectibleType type;
+    public int value = 1;
 
     [Header("Feedbacks")]
-    public AudioClip somColeta;
-    public ParticleSystem efeitoColeta;
-    public bool destruirAutomaticamente = true;
+    public AudioClip collectSound;
+    public ParticleSystem collectEffect;
+    public bool destroyOnCollect = true;
 
-    private bool jaColetado = false;
+    private bool alreadyCollected = false;
 
     // Telemetry
     private const string MechanicName = "Platformer/Collectibles/CollectibleItem";
@@ -23,44 +30,42 @@ public class CollectibleItem : MonoBehaviour
 
     private void Awake()
     {
-        // mechanic_instantiated
         ThinklibTelemetry.Track(
             "mechanic_instantiated",
             MechanicName,
             nameof(CollectibleItem),
             new Dictionary<string, object> {
-                { "tipo", tipo.ToString() },
-                { "valor", valor },
-                { "hasSound", somColeta != null },
-                { "hasEffect", efeitoColeta != null },
-                { "destroyOnCollect", destruirAutomaticamente }
+                { "type", type.ToString() },
+                { "value", value },
+                { "hasSound", collectSound != null },
+                { "hasEffect", collectEffect != null },
+                { "destroyOnCollect", destroyOnCollect }
             }
         );
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (jaColetado) return;
+        if (alreadyCollected) return;
 
         try
         {
             if (other.CompareTag("Player"))
             {
-                jaColetado = true;
+                alreadyCollected = true;
 
                 if (GameManager.Instance != null)
-                    GameManager.Instance.AdicionarColetavel(tipo, valor);
+                    GameManager.Instance.AddCollectible(type, value);
 
-                if (somColeta != null)
-                    AudioSource.PlayClipAtPoint(somColeta, transform.position);
+                if (collectSound != null)
+                    AudioSource.PlayClipAtPoint(collectSound, transform.position);
 
-                if (efeitoColeta != null)
+                if (collectEffect != null)
                 {
-                    ParticleSystem efeito = Instantiate(efeitoColeta, transform.position, Quaternion.identity);
-                    Destroy(efeito.gameObject, efeito.main.duration + efeito.main.startLifetime.constantMax);
+                    ParticleSystem effect = Instantiate(collectEffect, transform.position, Quaternion.identity);
+                    Destroy(effect.gameObject, effect.main.duration + effect.main.startLifetime.constantMax);
                 }
 
-                // mechanic_used (primeira coleta efetiva)
                 if (!_sentUsed)
                 {
                     _sentUsed = true;
@@ -69,13 +74,13 @@ public class CollectibleItem : MonoBehaviour
                         MechanicName,
                         nameof(CollectibleItem),
                         new Dictionary<string, object> {
-                            { "tipo", tipo.ToString() },
-                            { "valor", valor }
+                            { "type", type.ToString() },
+                            { "value", value }
                         }
                     );
                 }
 
-                if (destruirAutomaticamente)
+                if (destroyOnCollect)
                     Destroy(gameObject);
             }
         }
