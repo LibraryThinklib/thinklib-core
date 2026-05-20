@@ -15,14 +15,14 @@ using Thinklib.Telemetry;
 public class CollectibleItem : MonoBehaviour
 {
     public CollectibleType type;
-    public int valor = 1;
+    public int value = 1;
 
     [Header("Feedbacks")]
-    public AudioClip somColeta;
-    public ParticleSystem efeitoColeta;
-    public bool destruirAutomaticamente = true;
+    public AudioClip collectSound;
+    public ParticleSystem collectEffect;
+    public bool destroyOnCollect = true;
 
-    private bool jaColetado = false;
+    private bool alreadyCollected = false;
 
     // Telemetry
     private const string MechanicName = "Platformer/Collectibles/CollectibleItem";
@@ -30,44 +30,42 @@ public class CollectibleItem : MonoBehaviour
 
     private void Awake()
     {
-        // mechanic_instantiated
         ThinklibTelemetry.Track(
             "mechanic_instantiated",
             MechanicName,
             nameof(CollectibleItem),
             new Dictionary<string, object> {
                 { "type", type.ToString() },
-                { "valor", valor },
-                { "hasSound", somColeta != null },
-                { "hasEffect", efeitoColeta != null },
-                { "destroyOnCollect", destruirAutomaticamente }
+                { "value", value },
+                { "hasSound", collectSound != null },
+                { "hasEffect", collectEffect != null },
+                { "destroyOnCollect", destroyOnCollect }
             }
         );
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (jaColetado) return;
+        if (alreadyCollected) return;
 
         try
         {
             if (other.CompareTag("Player"))
             {
-                jaColetado = true;
+                alreadyCollected = true;
 
                 if (GameManager.Instance != null)
-                    GameManager.Instance.AdicionarColetavel(type, valor);
+                    GameManager.Instance.AddCollectible(type, value);
 
-                if (somColeta != null)
-                    AudioSource.PlayClipAtPoint(somColeta, transform.position);
+                if (collectSound != null)
+                    AudioSource.PlayClipAtPoint(collectSound, transform.position);
 
-                if (efeitoColeta != null)
+                if (collectEffect != null)
                 {
-                    ParticleSystem efeito = Instantiate(efeitoColeta, transform.position, Quaternion.identity);
-                    Destroy(efeito.gameObject, efeito.main.duration + efeito.main.startLifetime.constantMax);
+                    ParticleSystem effect = Instantiate(collectEffect, transform.position, Quaternion.identity);
+                    Destroy(effect.gameObject, effect.main.duration + effect.main.startLifetime.constantMax);
                 }
 
-                // mechanic_used (primeira coleta efetiva)
                 if (!_sentUsed)
                 {
                     _sentUsed = true;
@@ -77,12 +75,12 @@ public class CollectibleItem : MonoBehaviour
                         nameof(CollectibleItem),
                         new Dictionary<string, object> {
                             { "type", type.ToString() },
-                            { "valor", valor }
+                            { "value", value }
                         }
                     );
                 }
 
-                if (destruirAutomaticamente)
+                if (destroyOnCollect)
                     Destroy(gameObject);
             }
         }
