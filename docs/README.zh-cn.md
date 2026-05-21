@@ -8,17 +8,17 @@
 
 <div align="center">
 
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&size=20&pause=1000&color=FFD54F&center=true&vCenter=true&width=900&lines=Biblioteca+de+Mec%C3%A2nicas+para+Unity;Plataforma+%7C+Vis%C3%A3o+Superior+%7C+Aponte+e+Clique+%7C+Torre+de+Defesa)](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Noto+Sans+SC&size=20&pause=1000&color=FFD54F&center=true&vCenter=true&width=900&lines=Unity+%E6%B8%B8%E6%88%8F%E6%9C%BA%E5%88%B6%E5%BA%93;%E5%B9%B3%E5%8F%B0%E8%B7%B3%E8%B7%83+%7C+%E4%BF%AF%E8%A7%86%E8%A7%92+%7C+%E7%82%B9%E5%87%BB%E5%86%92%E9%99%A9+%7C+%E5%A1%94%E9%98%B2)](https://git.io/typing-svg)
 
 </div>
 
 <div align="center">
-   <h1>📊 Estatísticas do Repositório</h1>
+   <h1>📊 仓库统计</h1>
 
-[English](../README.md) | [简体中文](./README.zh-cn.md)
+[English](../README.md) | [Português](./README.pt-br.md)
 
-<p>Uma coleção de mecânicas reutilizáveis e modulares para Unity, criada para acelerar o desenvolvimento de jogos.</p>
-<p>⭐ Se esta biblioteca ajudou o seu projeto, considere deixar uma estrela e fique à vontade para contribuir! ⭐</p>
+<p>一个可复用的模块化 Unity 游戏机制合集，旨在加速游戏开发。</p>
+<p>⭐ 如果这个库对你的项目有所帮助，欢迎点个 Star，也欢迎参与贡献！⭐</p>
    <p align="center">
 <a href="https://github.com/LibraryThinklib/thinklib-core/stargazers">
 <img alt="Stars" src="https://img.shields.io/github/stars/LibraryThinklib/thinklib-core?style=for-the-badge&logo=github&color=FFD54F&logoColor=D9E0EE&labelColor=302D41"/></a>
@@ -36,8 +36,8 @@
 <br/>
 
 <div align="left">
-  <h2>📦 Instalação (GIT URL)</h2>
-  <p>Na Unity: <strong>Window → Package Manager → + → Add package from Git URL…</strong></p>
+  <h2>📦 安装（GIT URL）</h2>
+  <p>在 Unity 中：<strong>Window → Package Manager → + → Add package from Git URL…</strong></p>
 
 ```bash
 https://github.com/LibraryThinklib/thinklib-core.git#v0.3.1
@@ -48,8 +48,8 @@ https://github.com/LibraryThinklib/thinklib-core.git#v0.3.1
 <br/>
 
 <div align="left">
-  <h2>🛠 Tecnologias Utilizadas</h2>
-  <p>A biblioteca é escrita em <strong>C#</strong>, desenvolvida para a engine <strong>Unity</strong> e criada usando o <strong>Visual Studio Code</strong> como editor principal. O controle de versão é gerenciado com o <strong>Git</strong>.</p>
+  <h2>🛠 使用技术</h2>
+  <p>该库使用 <strong>C#</strong> 编写，面向 <strong>Unity</strong> 引擎开发，以 <strong>Visual Studio Code</strong> 作为主要编辑器，版本控制由 <strong>Git</strong> 管理。</p>
   <p align="center">
     <a href="https://learn.microsoft.com/dotnet/csharp/"><img width="60" src="https://img.icons8.com/color/48/000000/c-sharp-logo.png" alt="C#"/></a>
     <a href="https://unity.com"><img width="60" src="https://img.icons8.com/ios-filled/50/ffffff/unity.png" alt="Unity"/></a>
@@ -61,8 +61,8 @@ https://github.com/LibraryThinklib/thinklib-core.git#v0.3.1
 <br/>
 
 <div align="left">
-  <h2>📜 Changelog</h2>
-  <p>Confira as alterações em <a href="../CHANGELOG.md">CHANGELOG.md</a>.</p>
+  <h2>📜 更新日志</h2>
+  <p>查看变更记录：<a href="../CHANGELOG.md">CHANGELOG.md</a>。</p>
 </div>
 
 <div align="left">

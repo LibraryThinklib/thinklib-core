@@ -15,7 +15,7 @@
 <div align="center">
    <h1>📊 Repository Stats</h1>
 
-[Portuguese](./docs/README.pt-br.md)
+[Portuguese](./docs/README.pt-br.md) | [简体中文](./docs/README.zh-cn.md)
 
 <p>A collection of reusable and modular mechanics for Unity, built to speed up game creation.</p>
 <p>⭐ If this library helped your project, consider leaving a star and feel free to contribute! ⭐</p>
