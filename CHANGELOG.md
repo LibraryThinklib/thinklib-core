@@ -1,4 +1,7 @@
 # Changelog
+## 0.3.1 — 2026-05-21
+* **Fix:** correção do arquivo `LICENSE` (Apache 2.0).
+
 ## 0.3.0 — 2026-05-20
 * **Breaking – Licença:** alterada de MIT para Apache 2.0; header de copyright adicionado em todos os `.cs`.
 * **Breaking – Telemetria:** `apiBase` padrão atualizado de `localhost:8080` para `https://thinklib.thinktedlab.org`.
