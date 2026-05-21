@@ -8,17 +8,17 @@
 
 <div align="center">
 
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&size=20&pause=1000&color=FFD54F&center=true&vCenter=true&width=900&lines=Unity+Game+Mechanics+Library;Platformer+%7C+Topdown+%7C+Point+%26+Click+%7C+Tower+Defense)](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&size=20&pause=1000&color=FFD54F&center=true&vCenter=true&width=900&lines=Biblioteca+de+Mec%C3%A2nicas+para+Unity;Platformer+%7C+Topdown+%7C+Point+%26+Click+%7C+Tower+Defense)](https://git.io/typing-svg)
 
 </div>
 
 <div align="center">
-   <h1>📊 Repository Stats</h1>
+   <h1>📊 Estatísticas do Repositório</h1>
 
-[Portuguese](./docs/README.pt-br.md)
+[English](../README.md)
 
-<p>A collection of reusable and modular mechanics for Unity, built to speed up game creation.</p>
-<p>⭐ If this library helped your project, consider leaving a star and feel free to contribute! ⭐</p>
+<p>Uma coleção de mecânicas reutilizáveis e modulares para Unity, criada para acelerar o desenvolvimento de jogos.</p>
+<p>⭐ Se esta biblioteca ajudou o seu projeto, considere deixar uma estrela e fique à vontade para contribuir! ⭐</p>
    <p align="center">
 <a href="https://github.com/LibraryThinklib/thinklib-core/stargazers">
 <img alt="Stars" src="https://img.shields.io/github/stars/LibraryThinklib/thinklib-core?style=for-the-badge&logo=github&color=FFD54F&logoColor=D9E0EE&labelColor=302D41"/></a>
@@ -35,9 +35,9 @@
 
 <br/>
 
-<div align="left" margin-top="30px">
-  <h2>📦 Installation (GIT URL)</h2>
-  <p>In Unity: <strong>Window → Package Manager → + → Add package from Git URL…</strong></p>
+<div align="left">
+  <h2>📦 Instalação (GIT URL)</h2>
+  <p>Na Unity: <strong>Window → Package Manager → + → Add package from Git URL…</strong></p>
 
 ```bash
 https://github.com/LibraryThinklib/thinklib-core.git#v0.3.1
@@ -48,8 +48,8 @@ https://github.com/LibraryThinklib/thinklib-core.git#v0.3.1
 <br/>
 
 <div align="left">
-  <h2>🛠 Technologies Used</h2>
-<p>The library is written in <strong>C#</strong>, designed for the <strong>Unity</strong> engine, and developed using <strong>Visual Studio Code</strong> as the primary editor. Version control is managed with <strong>Git</strong>.</p>
+  <h2>🛠 Tecnologias Utilizadas</h2>
+  <p>A biblioteca é escrita em <strong>C#</strong>, desenvolvida para a engine <strong>Unity</strong> e criada usando o <strong>Visual Studio Code</strong> como editor principal. O controle de versão é gerenciado com o <strong>Git</strong>.</p>
   <p align="center">
     <a href="https://learn.microsoft.com/dotnet/csharp/"><img width="60" src="https://img.icons8.com/color/48/000000/c-sharp-logo.png" alt="C#"/></a>
     <a href="https://unity.com"><img width="60" src="https://img.icons8.com/ios-filled/50/ffffff/unity.png" alt="Unity"/></a>
@@ -62,7 +62,7 @@ https://github.com/LibraryThinklib/thinklib-core.git#v0.3.1
 
 <div align="left">
   <h2>📜 Changelog</h2>
-  <p>Check the changes in <a href="./CHANGELOG.md">CHANGELOG.md</a>.</p>
+  <p>Confira as alterações em <a href="../CHANGELOG.md">CHANGELOG.md</a>.</p>
 </div>
 
 <div align="left">
