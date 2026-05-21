@@ -40,17 +40,19 @@ https://github.com/LibraryThinklib/thinklib-core.git#v0.3.1
 ---
 
 ## 📊 Repository Stats
-
 <div align="center">
 
-<!-- Card do repositório -->
-[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=LibraryThinklib&repo=thinklib-core)](https://github.com/LibraryThinklib/thinklib-core)
+<a href="https://github.com/LibraryThinklib/thinklib-core/stargazers">
+<img alt="Stars" src="https://img.shields.io/github/stars/LibraryThinklib/thinklib-core?style=for-the-badge&logo=github&color=FFD54F&logoColor=1b1b1b&labelColor=1b1b1b"/></a>
+<a href="https://github.com/LibraryThinklib/thinklib-core/network/members">
+<img alt="Forks" src="https://img.shields.io/github/forks/LibraryThinklib/thinklib-core?style=for-the-badge&logo=github&color=81C784&logoColor=1b1b1b&labelColor=1b1b1b"/></a>
+<a href="https://github.com/LibraryThinklib/thinklib-core/issues">
+<img alt="Issues" src="https://img.shields.io/github/issues/LibraryThinklib/thinklib-core?style=for-the-badge&logo=github&color=E57373&logoColor=1b1b1b&labelColor=1b1b1b"/></a>
+<a href="https://github.com/LibraryThinklib/thinklib-core/commits/main">
+<img alt="Last Commit" src="https://img.shields.io/github/last-commit/LibraryThinklib/thinklib-core?style=for-the-badge&logo=git&color=64B5F6&logoColor=1b1b1b&labelColor=1b1b1b"/></a>
 
-<!-- Badges dinâmicas -->
-![GitHub stars](https://img.shields.io/github/stars/LibraryThinklib/thinklib-core?style=for-the-badge&logo=github&color=FFD54F&labelColor=1b1b1b)
-![GitHub forks](https://img.shields.io/github/forks/LibraryThinklib/thinklib-core?style=for-the-badge&logo=github&color=81C784&labelColor=1b1b1b)
-![GitHub issues](https://img.shields.io/github/issues/LibraryThinklib/thinklib-core?style=for-the-badge&logo=github&color=E57373&labelColor=1b1b1b)
-![Last Commit](https://img.shields.io/github/last-commit/LibraryThinklib/thinklib-core?style=for-the-badge&logo=git&color=64B5F6&labelColor=1b1b1b)
+<img src="https://github-profile-summary-cards.vercel.app/api/cards/stats?username=LibraryThinklib&theme=tokyonight" width="49%"/>
+<img src="https://github-profile-summary-cards.vercel.app/api/cards/productive-time?username=LibraryThinklib&theme=tokyonight&utcOffset=-4" width="49%"/>
 
 </div>
 
