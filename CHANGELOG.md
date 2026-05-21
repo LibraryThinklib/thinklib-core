@@ -1,4 +1,9 @@
 # Changelog
+## 0.3.2 — 2026-05-21
+* **Docs:** adicionado README em Chinês Simplificado (`docs/README.zh-cn.md`).
+* **Docs:** links de idioma adicionados no `README.md` e `docs/README.pt-br.md`.
+* **Style:** Typing SVG do `README.pt-br.md` traduzido para português nas categorias de mecânica.
+
 ## 0.3.1 — 2026-05-21
 * **Fix:** correção do arquivo `LICENSE` (Apache 2.0).
 
