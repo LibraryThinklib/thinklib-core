@@ -14,11 +14,11 @@ using Thinklib.Telemetry;
 [AddComponentMenu("Thinklib/TowerDefense/Enemy Progression/Enemy Path", -99)]
 public class EnemyPath : MonoBehaviour
 {
-    public Transform[] waypoints;   // pontos do caminho
+    public Transform[] waypoints;
     public float speed = 2f;
     private int currentWaypointIndex = 0;
 
-    public int damageAmount = 1;    // Dano causado ao jogador ao atingir o fim do caminho
+    public int damageAmount = 1;
 
     // === Telemetry ===
     private const string MechanicName = "TowerDefense/EnemyProgression/EnemyPath";
@@ -28,7 +28,6 @@ public class EnemyPath : MonoBehaviour
 
     private void Start()
     {
-        // mechanic_instantiated (1x)
         if (!_sentInstantiated)
         {
             _sentInstantiated = true;
@@ -54,7 +53,7 @@ public class EnemyPath : MonoBehaviour
 
             if (currentWaypointIndex < waypoints.Length)
             {
-                // mechanic_used: primeira movimentação no caminho
+                // mechanic_used: first movement along the path
                 if (!_sentStartPath)
                 {
                     _sentStartPath = true;
@@ -69,12 +68,10 @@ public class EnemyPath : MonoBehaviour
                     );
                 }
 
-                // Move o inimigo na direção do waypoint atual
                 Transform target = waypoints[currentWaypointIndex];
                 Vector3 direction = (target.position - transform.position).normalized;
                 transform.position += direction * speed * Time.deltaTime;
 
-                // Verifica se chegou perto o suficiente para mudar para o próximo ponto
                 float distance = Vector3.Distance(transform.position, target.position);
                 if (distance < 0.1f)
                 {
@@ -83,7 +80,6 @@ public class EnemyPath : MonoBehaviour
             }
             else
             {
-                // Chegou ao fim do caminho: causa dano ao jogador
                 if (!_sentEndReached)
                 {
                     _sentEndReached = true;

@@ -21,12 +21,11 @@ public class Bullet : MonoBehaviour
 
     // === Telemetry ===
     private const string MechanicName = "TowerDefense/Defense/Bullet";
-    private bool _sentUsed = false;    // envio do primeiro "uso" (quando ganha um alvo)
-    private bool _sentHit  = false;    // opcional: marcar primeiro acerto
+    private bool _sentUsed = false;    // fires the first "used" event (when the bullet gets a target)
+    private bool _sentHit  = false;    // optional: marks the first hit
 
     private void Awake()
     {
-        // mechanic_instantiated
         ThinklibTelemetry.Track(
             "mechanic_instantiated",
             MechanicName,
@@ -44,7 +43,7 @@ public class Bullet : MonoBehaviour
         {
             target = newTarget;
 
-            // mechanic_used: primeira vez que a bala recebe um alvo (momento em que o uso começa de fato)
+            // mechanic_used: first time the bullet receives a target (this is when actual use begins)
             if (!_sentUsed && target != null)
             {
                 _sentUsed = true;
@@ -81,21 +80,17 @@ public class Bullet : MonoBehaviour
         {
             if (target == null)
             {
-                Destroy(gameObject); // Destrói a bala se o alvo não existir
+                Destroy(gameObject);
                 return;
             }
 
-            // Direção do movimento (do centro da bala até o alvo)
             Vector3 direction = (target.position - transform.position).normalized;
 
-            // Movimenta a bala em direção ao alvo
             transform.position += direction * speed * Time.deltaTime;
 
-            // Rotaciona a bala para que a ponta esteja sempre voltada para o alvo
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(0f, 0f, angle);
 
-            // Se a bala atingir o inimigo
             float distance = Vector3.Distance(transform.position, target.position);
             if (distance < 0.1f)
             {
@@ -104,7 +99,7 @@ public class Bullet : MonoBehaviour
                 {
                     eh.TakeDamage(damage);
 
-                    // (Opcional) mechanic_used: primeiro hit
+                    // (Optional) mechanic_used: first hit
                     if (!_sentHit)
                     {
                         _sentHit = true;
@@ -121,7 +116,7 @@ public class Bullet : MonoBehaviour
                     }
                 }
 
-                Destroy(gameObject); // Destrói a bala
+                Destroy(gameObject);
             }
         }
         catch (Exception ex)

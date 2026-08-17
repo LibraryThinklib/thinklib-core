@@ -111,7 +111,7 @@ public class InventoryManager : MonoBehaviour
 
                 if (slot.currentLifeTime <= 0)
                 {
-                    Debug.Log($"Tempo acabou para {slot.item.name}! Removendo do inventário.");
+                    Debug.Log($"Time's up for {slot.item.name}! Removing from inventory.");
                     
                     if (selectedItem == slot.item) DeselectItem();
                     

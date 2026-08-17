@@ -15,7 +15,7 @@ namespace Thinklib.Telemetry
         public string apiBase = "https://thinklib.thinktedlab.org";
         public string route = "/api/analytics/unity-logs";
 
-        [Header("Envio")]
+        [Header("Sending")]
         public int flushIntervalSeconds = 10;
         public int maxBatchSize = 50;
     }

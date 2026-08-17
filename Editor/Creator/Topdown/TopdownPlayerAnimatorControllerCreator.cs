@@ -42,7 +42,6 @@ public static class TopdownPlayerAnimatorControllerCreator
 
         sm.defaultState = idle;
 
-        // BlendTrees 2D (8 direções) com clips placeholders
         idle.motion = CreateDirectionalBlendTree(controller, "Idle");
         walk.motion = CreateDirectionalBlendTree(controller, "Walk");
         shoot.motion = CreateDirectionalBlendTree(controller, "Shoot");
@@ -88,7 +87,7 @@ public static class TopdownPlayerAnimatorControllerCreator
         anyDead.AddCondition(AnimatorConditionMode.If, 0f, "IsDead");
         anyDead.hasExitTime = false;
 
-        Debug.Log($"✅ Topdown Player Animator Controller criado em: {controllerPath}");
+        Debug.Log($"✅ Topdown Player Animator Controller created at: {controllerPath}");
     }
 
     private static BlendTree CreateDirectionalBlendTree(AnimatorController controller, string baseName)
@@ -101,10 +100,9 @@ public static class TopdownPlayerAnimatorControllerCreator
             blendParameterY = "Vertical"
         };
 
-        // Mantém tudo dentro do .controller
+        // Keeps everything inside the same .controller
         AssetDatabase.AddObjectToAsset(bt, controller);
 
-        // 8 direções com clips placeholders
         bt.AddChild(PlaceholderClip(controller, $"{baseName}_Up"), new Vector2(0, 1));
         bt.AddChild(PlaceholderClip(controller, $"{baseName}_Down"), new Vector2(0, -1));
         bt.AddChild(PlaceholderClip(controller, $"{baseName}_Right"), new Vector2(1, 0));

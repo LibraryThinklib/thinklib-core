@@ -40,7 +40,7 @@
   <p>Na Unity: <strong>Window → Package Manager → + → Add package from Git URL…</strong></p>
 
 ```bash
-https://github.com/LibraryThinklib/thinklib-core.git#v0.3.2
+https://github.com/LibraryThinklib/thinklib-core.git#v0.3.3
 ```
 
 </div>

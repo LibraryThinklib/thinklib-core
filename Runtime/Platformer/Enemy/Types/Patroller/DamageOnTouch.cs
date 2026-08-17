@@ -14,10 +14,10 @@ using Thinklib.Telemetry;
 [RequireComponent(typeof(Collider2D))]
 public class DamageOnTouch : MonoBehaviour
 {
-    [Header("Dano ao tocar no jogador")]
+    [Header("Damage On Player Touch")]
     public int damage = 1;
 
-    [Header("Tag do jogador")]
+    [Header("Player Tag")]
     public string targetTag = "Player";
 
     // Telemetry

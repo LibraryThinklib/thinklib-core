@@ -15,22 +15,20 @@ using Thinklib.Telemetry;
 [AddComponentMenu("Thinklib/Topdown/NPC/Dialogue Bubble", -100)]
 public class DialogueBubble : MonoBehaviour
 {
-    [Header("Campo de texto")]
+    [Header("Text Field")]
     public Text textField;
 
     private Coroutine typeCoroutine;
 
-    /// <summary>Indica se o texto ainda está sendo exibido letra por letra.</summary>
+    /// <summary>Whether the text is still being revealed letter by letter.</summary>
     public bool IsTyping { get; private set; } = false;
 
-    // Telemetry
     private const string MechanicName = "Topdown/NPC/DialogueBubble";
-    private bool _sentUsedSet   = false; // primeira vez que SetText é chamado
-    private bool _sentUsedType  = false; // primeira vez que efeito typewriter é usado
+    private bool _sentUsedSet   = false; // first time SetText is called
+    private bool _sentUsedType  = false; // first time the typewriter effect is used
 
     private void Awake()
     {
-        // mechanic_instantiated
         ThinklibTelemetry.Track(
             "mechanic_instantiated",
             MechanicName,
@@ -42,18 +40,18 @@ public class DialogueBubble : MonoBehaviour
     }
 
     /// <summary>
-    /// Define o texto a ser exibido no balão, com ou sem efeito de digitação.
+    /// Sets the text to display in the bubble, with or without the typing effect.
     /// </summary>
-    /// <param name="text">Texto completo da fala.</param>
-    /// <param name="useTypewriter">Se verdadeiro, ativa o efeito de digitação letra por letra.</param>
-    /// <param name="speed">Velocidade da digitação (tempo entre letras).</param>
+    /// <param name="text">Full line of dialogue.</param>
+    /// <param name="useTypewriter">If true, enables the letter-by-letter typing effect.</param>
+    /// <param name="speed">Typing speed (time between letters).</param>
     public void SetText(string text, bool useTypewriter = false, float speed = 0.05f)
     {
         try
         {
             if (textField == null)
             {
-                Debug.LogWarning("Campo 'textField' do balão de fala não está atribuído!");
+                Debug.LogWarning("The dialogue bubble's 'textField' is not assigned!");
                 return;
             }
 
@@ -67,7 +65,7 @@ public class DialogueBubble : MonoBehaviour
             {
                 typeCoroutine = StartCoroutine(TypeText(text, speed));
 
-                // mechanic_used: primeira vez que ativa typewriter
+                // mechanic_used: first time the typewriter is activated
                 if (!_sentUsedType)
                 {
                     _sentUsedType = true;
@@ -89,7 +87,7 @@ public class DialogueBubble : MonoBehaviour
                 IsTyping = false;
             }
 
-            // mechanic_used: primeira vez que define texto (independente do modo)
+            // mechanic_used: first time text is set (regardless of mode)
             if (!_sentUsedSet)
             {
                 _sentUsedSet = true;
@@ -123,7 +121,7 @@ public class DialogueBubble : MonoBehaviour
 
     private IEnumerator TypeText(string text, float speed)
     {
-        // Importante: não envolver yield com try/catch.
+        // Important: don't wrap yield in try/catch.
         IsTyping = true;
         textField.text = "";
         string safeText = text ?? string.Empty;
@@ -136,7 +134,7 @@ public class DialogueBubble : MonoBehaviour
 
         IsTyping = false;
 
-        // (Opcional) Podemos marcar a conclusão do typewriter apenas uma vez.
+        // (Optional) We could mark the typewriter's completion only once.
         if (_sentUsedType)
         {
             ThinklibTelemetry.Track(

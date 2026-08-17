@@ -6,15 +6,15 @@
 //     http://www.apache.org/licenses/LICENSE-2.0
 
 using UnityEngine;
-using UnityEngine.UI;                // Para utilizar o Text da UI
-using System.Collections.Generic;    // Para o dicionário do extra
+using UnityEngine.UI;
+using System.Collections.Generic;
 using Thinklib.Telemetry;
 
 [AddComponentMenu("Thinklib/TowerDefense/Resource Management/Player Score", -100)]
 public class PlayerScore : MonoBehaviour
 {
-    public int currentScore = 0;     // Pontuação atual
-    public Text scoreText;           // Para exibir a pontuação na UI
+    public int currentScore = 0;
+    public Text scoreText;
 
     // Telemetry
     private const string MechanicName = "TowerDefense/ResourceManagement/PlayerScore";
@@ -38,11 +38,9 @@ public class PlayerScore : MonoBehaviour
             );
         }
 
-        // Garante que a UI inicial esteja coerente
         SafeUpdateScoreUI();
     }
 
-    // Método para adicionar pontos
     public void AddScore(int points)
     {
         try
@@ -66,7 +64,7 @@ public class PlayerScore : MonoBehaviour
             }
             else
             {
-                // (Opcional) Caso queira registrar todo incremento:
+                // (Optional) If you want to log every increment:
                 // ThinklibTelemetry.Track(
                 //     "mechanic_used",
                 //     MechanicName,
@@ -100,7 +98,6 @@ public class PlayerScore : MonoBehaviour
         }
     }
 
-    // Atualiza a UI com a pontuação atual (com proteção e telemetria de erro)
     private void SafeUpdateScoreUI()
     {
         try
@@ -111,7 +108,7 @@ public class PlayerScore : MonoBehaviour
             }
             else
             {
-                // Se quiser registrar ausência de UI em uso real (opcional)
+                // If you want to log a missing UI in real usage (optional)
                 // ThinklibTelemetry.Track(
                 //     "mechanic_error",
                 //     MechanicName,

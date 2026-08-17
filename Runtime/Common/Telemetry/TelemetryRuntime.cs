@@ -71,14 +71,14 @@ namespace Thinklib.Telemetry
             if (batch.Count == 0) return;
 
 #if UNITY_WEBGL
-            // WebGL não permite bloqueio; deixa para o próximo load
+            // WebGL doesn't allow blocking; leave it for the next load
 #else
             var cr = TelemetrySender.PostBatch(config, batch, (ok, _) =>
             {
                 if (ok) _queue.ClearFirstN(batch.Count);
             });
             var e = cr;
-            while (e.MoveNext()) { } // tentativa final síncrona no quit (plataformas nativas)
+            while (e.MoveNext()) { } // final synchronous attempt on quit (native platforms)
 #endif
         }
     }

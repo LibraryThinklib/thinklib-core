@@ -42,7 +42,6 @@ public static class TopdownEnemyAnimatorControllerCreator
 
         sm.defaultState = idle;
 
-        // 2D directional blend trees (8 direções) com clips placeholders
         idle.motion = CreateDirectionalBlendTree(controller, "Idle");
         walk.motion = CreateDirectionalBlendTree(controller, "Walk");
         shoot.motion = CreateDirectionalBlendTree(controller, "Shoot");
@@ -88,7 +87,7 @@ public static class TopdownEnemyAnimatorControllerCreator
         anyDead.AddCondition(AnimatorConditionMode.If, 0f, "IsDead");
         anyDead.hasExitTime = false;
 
-        Debug.Log($"✅ Topdown Enemy Animator Controller criado em: {controllerPath}");
+        Debug.Log($"✅ Topdown Enemy Animator Controller created at: {controllerPath}");
     }
 
     private static BlendTree CreateDirectionalBlendTree(AnimatorController controller, string baseName)
@@ -101,10 +100,9 @@ public static class TopdownEnemyAnimatorControllerCreator
             blendParameterY = "Vertical"
         };
 
-        // Subasset para o controller (deixa tudo dentro do mesmo .controller)
+        // Adds the blend tree as a sub-asset of the controller (keeps everything in the same .controller)
         AssetDatabase.AddObjectToAsset(bt, controller);
 
-        // 8 direções com clips placeholders
         bt.AddChild(PlaceholderClip(controller, $"{baseName}_Up"), new Vector2(0, 1));
         bt.AddChild(PlaceholderClip(controller, $"{baseName}_Down"), new Vector2(0, -1));
         bt.AddChild(PlaceholderClip(controller, $"{baseName}_Right"), new Vector2(1, 0));
@@ -127,7 +125,7 @@ public static class TopdownEnemyAnimatorControllerCreator
     private static void ConfigureShootTransitions(AnimatorState from, AnimatorState shoot)
     {
         var toShoot = from.AddTransition(shoot);
-        toShoot.AddCondition(AnimatorConditionMode.If, 0f, "IsShooting"); // Bool: threshold ignorado
+        toShoot.AddCondition(AnimatorConditionMode.If, 0f, "IsShooting"); // Bool parameter: the 0f threshold is ignored
         toShoot.hasExitTime = false;
         toShoot.duration = 0f;
 

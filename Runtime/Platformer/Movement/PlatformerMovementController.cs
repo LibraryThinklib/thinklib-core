@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Thinklib.Telemetry;
 
-[AddComponentMenu("Thinklib/Platformer/Movement/Platformer Movement Controller", -97)]
+[AddComponentMenu("Thinklib/Platformer/Movement/Movement Controller", -97)]
 [RequireComponent(typeof(Animator))]
 public class PlatformerMovementController : MovementController
 {
@@ -24,8 +24,14 @@ public class PlatformerMovementController : MovementController
     public KeyCode runKey  = KeyCode.LeftShift;
 
     [Header("Player State")]
-    public bool isJumping = false; // atualizado pelo script de pulo
-    public bool isFalling = false; // atualizado pelo script de pulo
+    /// <summary>
+    /// Updated externally by the jump controller script.
+    /// </summary>
+    public bool isJumping = false;
+    /// <summary>
+    /// Updated externally by the jump controller script.
+    /// </summary>
+    public bool isFalling = false;
 
     [Header("Attack Settings")]
     public PlatformerProjectileAttackController projectileAttackController;
@@ -34,7 +40,6 @@ public class PlatformerMovementController : MovementController
     private Animator animator;
     private bool isFacingRight = true;
 
-    // ---- Telemetry control ----
     private const string MechanicName = "Platformer/Movement";
     private bool _sentUsed = false;
 
@@ -43,7 +48,6 @@ public class PlatformerMovementController : MovementController
         inputHandler = GetComponent<InputHandler>() ?? gameObject.AddComponent<InputHandler>();
         animator = GetComponent<Animator>();
 
-        // mechanic_instantiated (uma vez por componente habilitado)
         ThinklibTelemetry.Track(
             eventName: "mechanic_instantiated",
             mechanic:  MechanicName,
@@ -53,12 +57,11 @@ public class PlatformerMovementController : MovementController
 
     private void Update()
     {
-        // Coleta input
         Vector2 inputDirection = joystick != null
             ? inputHandler.GetJoystickInput(joystick)
             : inputHandler.GetKeyboardInput(rightKeys, leftKeys);
 
-        // Envia mechanic_used apenas na primeira vez que houver input real
+        // Sends mechanic_used only the first time there is real input.
         if (!_sentUsed && inputDirection.sqrMagnitude > 0.0001f)
         {
             _sentUsed = true;
@@ -71,16 +74,12 @@ public class PlatformerMovementController : MovementController
             );
         }
 
-        // Velocidade
         float speed = Input.GetKey(runKey) ? runSpeed : walkSpeed;
 
-        // Move
         Move(inputDirection, speed);
 
-        // Animator
         UpdateAnimator(inputDirection, speed);
 
-        // Flip sprite
         FlipSprite(inputDirection.x);
     }
 

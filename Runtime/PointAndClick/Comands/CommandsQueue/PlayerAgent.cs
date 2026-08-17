@@ -14,7 +14,7 @@ using Thinklib.Telemetry;
 [AddComponentMenu("Thinklib/Game/PlayerAgent")]
 public class PlayerAgent : MonoBehaviour
 {
-    [Header("Velocidades")]
+    [Header("Speeds")]
     public float moveSpeed = 3.0f;
     public float turnSpeed = 180.0f;
 
@@ -128,7 +128,7 @@ public class PlayerAgent : MonoBehaviour
             yield return StartCoroutine(command.Execute(this));
         }
         isExecuting = false;
-        Debug.Log("Fila concluída!");
+        Debug.Log("Queue completed!");
     }
 
     public void ResetAgent()

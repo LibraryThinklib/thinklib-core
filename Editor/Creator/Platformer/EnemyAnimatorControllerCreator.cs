@@ -80,7 +80,7 @@ public static class EnemyAnimatorControllerCreator
         anyDead.AddCondition(AnimatorConditionMode.If, 0, "IsDead");
         anyDead.hasExitTime = false;
 
-        Debug.Log($"✅ Enemy Animator Controller criado em: {controllerPath}");
+        Debug.Log($"✅ Enemy Animator Controller created at: {controllerPath}");
     }
 
     private static void EnsureFolderPath(string path)

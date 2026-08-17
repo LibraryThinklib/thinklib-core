@@ -17,19 +17,19 @@ public class TimedPlatform : MonoBehaviour
 {
     public enum PlatformBehavior
     {
-        Fall,       // A plataforma cai
-        Disappear   // A plataforma desaparece gradualmente
+        Fall,
+        Disappear
     }
 
     public PlatformBehavior behavior = PlatformBehavior.Disappear;
 
-    public float delayBeforeAction = 1f;   // Tempo antes da ação ocorrer
-    public float fadeDuration = 1f;        // Tempo para desaparecer (fade out)
+    public float delayBeforeAction = 1f;
+    public float fadeDuration = 1f;
 
-    public bool enableRespawn = false;     // Define se a plataforma reaparece
-    public float respawnDelay = 2f;        // Tempo até reaparecer
+    public bool enableRespawn = false;
+    public float respawnDelay = 2f;
 
-    public string activatorTag = "Player"; // Quem pode ativar a plataforma
+    public string activatorTag = "Player";
 
     private Rigidbody2D rb;
     private Collider2D col;
@@ -53,7 +53,6 @@ public class TimedPlatform : MonoBehaviour
         originalPosition = transform.position;
         originalRotation = transform.rotation;
 
-        // telemetry: componente instanciado
         ThinklibTelemetry.Track(
             "mechanic_instantiated",
             MechanicName,
@@ -95,7 +94,7 @@ public class TimedPlatform : MonoBehaviour
                 StartCoroutine(FadeOutAndDisable());
             }
 
-            // telemetry: primeiro uso efetivo (primeira ativação)
+            // telemetry: first effective use (first activation)
             if (!_sentUsed)
             {
                 _sentUsed = true;
@@ -125,7 +124,7 @@ public class TimedPlatform : MonoBehaviour
         }
     }
 
-    // Iteradores (yield) não podem ter try/catch — use helpers sem yield para capturar/telemetrar erros e try/finally aqui.
+    // Iterators (yield) can't have try/catch — use helpers without yield to catch/log errors, and try/finally here.
     private IEnumerator FadeOutAndDisable()
     {
         float elapsed = 0f;
@@ -134,11 +133,10 @@ public class TimedPlatform : MonoBehaviour
         {
             while (elapsed < fadeDuration)
             {
-                // Passo sem yield → pode ter try/catch interno
+                // Step without yield -> can have an internal try/catch
                 SafeSetAlpha(Mathf.Lerp(originalColor.a, 0f, elapsed / fadeDuration));
                 elapsed += Time.deltaTime;
 
-                // yield fica “limpo”
                 yield return null;
             }
         }
@@ -176,7 +174,6 @@ public class TimedPlatform : MonoBehaviour
     {
         try
         {
-            // força alpha 0 e desabilita
             var c = sr.color;
             sr.color = new Color(c.r, c.g, c.b, 0f);
             sr.enabled = false;
@@ -197,13 +194,12 @@ public class TimedPlatform : MonoBehaviour
                     { "stack", ex.StackTrace }
                 }
             );
-            // normalmente não relança aqui para não derrubar o jogo; ajuste se preferir.
+            // usually not re-thrown here, so it doesn't crash the game; adjust if you prefer otherwise.
         }
     }
 
     private void ResetPlatform()
     {
-        // Restaura a plataforma ao estado original
         sr.enabled = true;
         col.enabled = true;
         sr.color = originalColor;

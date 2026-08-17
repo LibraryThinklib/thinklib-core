@@ -12,53 +12,48 @@ using UnityEngine;
 [AddComponentMenu("Thinklib/Game/ItemSpawner")]
 public class ItemSpawner : MonoBehaviour
 {
-    [Header("Configuração de Spawn")]
-    [Tooltip("O prefab do objeto que 'cai'. Deve ter o script FallingItem e um Collider2D.")]
+    [Header("Spawn Configuration")]
+    [Tooltip("The prefab for the object that 'falls'. Must have the FallingItem script and a Collider2D.")]
     public GameObject fallingItemPrefab;
 
-    [Tooltip("A lista de possíveis itens (ScriptableObjects) que podem ser 'dropados'.")]
+    [Tooltip("The list of possible items (ScriptableObjects) that can be dropped.")]
     public List<Item> itemsToSpawn;
 
-    [Tooltip("Intervalo, em segundos, entre cada item 'dropado'.")]
+    [Tooltip("Interval, in seconds, between each dropped item.")]
     public float spawnInterval = 2.0f;
 
-    [Tooltip("Largura da área de spawn. O item surgirá em uma posição X aleatória dentro desta largura.")]
+    [Tooltip("Width of the spawn area. The item will appear at a random X position within this width.")]
     public float spawnAreaWidth = 10f;
 
-    [Tooltip("Atraso inicial antes de começar a 'dropar' itens.")]
+    [Tooltip("Initial delay before items start dropping.")]
     public float initialDelay = 1.0f;
 
     void Start()
     {
         if (fallingItemPrefab == null)
         {
-            Debug.LogError("O prefab 'fallingItemPrefab' não foi atribuído no ItemSpawner!");
+            Debug.LogError("The 'fallingItemPrefab' prefab was not assigned on ItemSpawner!");
             return;
         }
 
         if (itemsToSpawn.Count == 0)
         {
-            Debug.LogError("A lista 'itemsToSpawn' está vazia no ItemSpawner!");
+            Debug.LogError("The 'itemsToSpawn' list is empty on ItemSpawner!");
             return;
         }
         
-        // Começa a 'dropar' itens repetidamente
         InvokeRepeating("SpawnItem", initialDelay, spawnInterval);
     }
 
     void SpawnItem()
     {
-        // 1. Escolhe um item aleatório da lista
         Item itemToSpawn = itemsToSpawn[Random.Range(0, itemsToSpawn.Count)];
 
-        // 2. Calcula uma posição X aleatória
         float randomX = Random.Range(-spawnAreaWidth / 2, spawnAreaWidth / 2);
         Vector3 spawnPosition = transform.position + new Vector3(randomX, 0, 0);
 
-        // 3. Instancia o prefab
         GameObject itemObject = Instantiate(fallingItemPrefab, spawnPosition, Quaternion.identity);
 
-        // 4. Inicializa o item 'dropado' com os dados do ScriptableObject
         FallingItem fallingItem = itemObject.GetComponent<FallingItem>();
         if (fallingItem != null)
         {
@@ -66,12 +61,12 @@ public class ItemSpawner : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"O prefab {fallingItemPrefab.name} não contém o script FallingItem.cs!");
-            Destroy(itemObject); // Destroi o objeto se estiver configurado incorretamente
+            Debug.LogError($"The prefab {fallingItemPrefab.name} does not contain the FallingItem.cs script!");
+            Destroy(itemObject); // Destroy it if it's misconfigured
         }
     }
 
-    // Ajuda visual para ver a área de spawn no Editor
+    // Visual aid for seeing the spawn area in the Editor
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;

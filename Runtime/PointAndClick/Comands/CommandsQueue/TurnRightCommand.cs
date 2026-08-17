@@ -10,7 +10,7 @@ using UnityEngine;
 
 public class TurnRightCommand : ICommand
 {
-    public string CommandName => "Virar Direita";
+    public string CommandName => "Turn Right";
 
     public IEnumerator Execute(PlayerAgent agent)
     {

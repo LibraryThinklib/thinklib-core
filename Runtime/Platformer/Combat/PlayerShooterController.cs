@@ -105,7 +105,7 @@ public class PlayerShooterController : MonoBehaviour
                     damageDealer.damage = projectileDamage;
                 }
 
-                // mechanic_used (primeiro disparo efetivo)
+                // mechanic_used (first effective shot)
                 if (!_sentUsed)
                 {
                     _sentUsed = true;

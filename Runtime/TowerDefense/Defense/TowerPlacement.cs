@@ -24,7 +24,6 @@ public class TowerPlacement : MonoBehaviour
     {
         towerShop = FindObjectOfType<TowerShop>();
 
-        // mechanic_instantiated (apenas 1x)
         if (!_sentInstantiated)
         {
             _sentInstantiated = true;
@@ -54,7 +53,6 @@ public class TowerPlacement : MonoBehaviour
 
                 if (hit.collider != null && hit.collider.CompareTag("Blocked"))
                 {
-                    // tentativa bloqueada
                     ThinklibTelemetry.Track(
                         "mechanic_used",
                         MechanicName,
@@ -68,18 +66,17 @@ public class TowerPlacement : MonoBehaviour
                         }
                     );
 
-                    Debug.Log("Área bloqueada! Não é possível colocar a torre aqui.");
+                    Debug.Log("Blocked area! Cannot place the tower here.");
                     return;
                 }
 
-                // posição válida ⇒ instanciar torre
                 if (towerPrefab != null)
                 {
                     Instantiate(towerPrefab, mousePosition, Quaternion.identity);
                 }
-                Debug.Log("Torre colocada!");
+                Debug.Log("Tower placed!");
 
-                // mechanic_used: primeira colocação efetiva
+                // mechanic_used: first effective placement
                 ThinklibTelemetry.Track(
                     "mechanic_used",
                     MechanicName,

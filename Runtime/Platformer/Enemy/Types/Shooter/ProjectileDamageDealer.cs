@@ -14,10 +14,10 @@ using Thinklib.Telemetry;
 [RequireComponent(typeof(Collider2D))]
 public class ProjectileDamageDealer : MonoBehaviour
 {
-    [Header("Dano")]
+    [Header("Damage")]
     public int damage = 1;
 
-    [Header("Configuração de colisão")]
+    [Header("Collision Configuration")]
     public string targetTag = "Player";
 
     // Telemetry
@@ -26,7 +26,6 @@ public class ProjectileDamageDealer : MonoBehaviour
 
     private void Awake()
     {
-        // Evento de instância do projétil (um por spawn)
         ThinklibTelemetry.Track(
             "mechanic_instantiated",
             MechanicName,
@@ -54,7 +53,7 @@ public class ProjectileDamageDealer : MonoBehaviour
                 if (hurtEffect != null)
                     hurtEffect.TriggerInvulnerability();
 
-                // Primeiro uso efetivo do projétil (acerto)
+                // First effective use of the projectile (a hit)
                 if (!_sentUsed)
                 {
                     _sentUsed = true;

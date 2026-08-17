@@ -11,13 +11,13 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public class FallingItem : MonoBehaviour
 {
-    [Header("Configuração de Movimento")]
+    [Header("Movement Configuration")]
     public float fallSpeed = 5.0f;
 
-    [Header("Referências")]
+    [Header("References")]
     [SerializeField] private SpriteRenderer itemSpriteRenderer;
 
-    // Guarda os dados do item (ScriptableObject)
+    // Holds the item data (ScriptableObject)
     public Item itemData { get; private set; }
     
     private Rigidbody2D rb;
@@ -26,26 +26,24 @@ public class FallingItem : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         
-        // Garante que o Rigidbody não seja afetado pela gravidade padrão (vamos controlar a velocidade)
-        // e que não colida fisicamente com outros itens
+        // Keeps the Rigidbody unaffected by default gravity (we control velocity manually)
+        // and prevents physical collision with other items
         rb.isKinematic = true;
-        
-        // Garante que o Collider seja um 'trigger' para detecção, não colisão física
+
+        // Keeps the Collider as a 'trigger', for detection only, not physical collision
         GetComponent<Collider2D>().isTrigger = true;
 
         if (itemSpriteRenderer == null)
         {
-            // Tenta encontrar o SpriteRenderer no objeto filho, se não foi atribuído
             itemSpriteRenderer = GetComponentInChildren<SpriteRenderer>();
         }
     }
 
-    // Chamado pelo ItemSpawner para configurar este item
+    // Called by ItemSpawner to configure this item
     public void Initialize(Item item)
     {
         this.itemData = item;
-        
-        // Atualiza o sprite para ser o ícone do item
+
         if (itemSpriteRenderer != null && item.icon != null)
         {
             itemSpriteRenderer.sprite = item.icon;
@@ -54,11 +52,10 @@ public class FallingItem : MonoBehaviour
 
     void Update()
     {
-        // Move o item para baixo em velocidade constante
         transform.Translate(Vector3.down * fallSpeed * Time.deltaTime);
     }
 
-    // Detecta se o item saiu da tela (se você tiver uma "DespawnZone" na parte inferior)
+    // Requires a "DespawnZone"-tagged collider below the screen to destroy items that fall off
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("DespawnZone"))

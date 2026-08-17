@@ -14,7 +14,7 @@ using Thinklib.Telemetry;
 [AddComponentMenu("Thinklib/Grid/GridAgent")]
 public class GridAgent : MonoBehaviour
 {
-    [Header("Velocidades")]
+    [Header("Speeds")]
     public float moveSpeed = 5.0f;
 
     private const string MechanicName = "PointAndClick/GridCoordinates/GridAgent";
@@ -47,7 +47,7 @@ public class GridAgent : MonoBehaviour
     {
         if (GridManager.instance == null)
         {
-            Debug.LogError("GridManager não encontrado!");
+            Debug.LogError("GridManager not found!");
             yield break;
         }
 

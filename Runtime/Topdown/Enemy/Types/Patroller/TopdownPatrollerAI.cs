@@ -26,7 +26,6 @@ public class TopdownPatrollerAI : MonoBehaviour
     private Transform currentTarget;
     private Vector2 lastDirection = Vector2.down;
 
-    // Telemetry
     private const string MechanicName = "Topdown/Enemy/Patroller/PatrollerAI";
     private bool _sentUsedMove = false;
     private bool _sentUsedSwitch = false;
@@ -36,7 +35,6 @@ public class TopdownPatrollerAI : MonoBehaviour
         animator = GetComponent<Animator>();
         currentTarget = pointB;
 
-        // mechanic_instantiated
         ThinklibTelemetry.Track(
             "mechanic_instantiated",
             MechanicName,
@@ -80,7 +78,6 @@ public class TopdownPatrollerAI : MonoBehaviour
         Vector2 targetPosition  = currentTarget.position;
         Vector2 direction       = (targetPosition - currentPosition).normalized;
 
-        // move
         transform.position = Vector2.MoveTowards(currentPosition, targetPosition, speed * Time.deltaTime);
 
         bool isMoving = direction.sqrMagnitude > 0.01f;
@@ -92,7 +89,7 @@ public class TopdownPatrollerAI : MonoBehaviour
             animator.SetFloat("Vertical",   direction.y);
             lastDirection = direction;
 
-            // mechanic_used: primeira vez que começa a se mover
+            // mechanic_used: first time it starts moving
             if (!_sentUsedMove)
             {
                 _sentUsedMove = true;
@@ -115,7 +112,6 @@ public class TopdownPatrollerAI : MonoBehaviour
             animator.SetFloat("Vertical",   lastDirection.y);
         }
 
-        // chegou?
         if (Vector2.Distance(currentPosition, targetPosition) <= tolerance)
         {
             SwitchTarget();
@@ -126,7 +122,7 @@ public class TopdownPatrollerAI : MonoBehaviour
     {
         currentTarget = currentTarget == pointA ? pointB : pointA;
 
-        // opcional: logar a primeira troca de ponto
+        // optional: log the first point switch
         if (!_sentUsedSwitch)
         {
             _sentUsedSwitch = true;

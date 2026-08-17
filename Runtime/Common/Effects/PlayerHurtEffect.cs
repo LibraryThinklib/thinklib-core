@@ -107,7 +107,7 @@ public class PlayerHurtEffect : MonoBehaviour
                 Debug.LogWarning("⚠️ Layer 'PlayerInvulnerable' not found. Make sure it exists in the project.");
             }
 
-            // mechanic_used (primeiro acionamento do efeito)
+            // mechanic_used (first time the effect triggers)
             if (!_sentUsed)
             {
                 _sentUsed = true;

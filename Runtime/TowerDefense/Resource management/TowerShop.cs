@@ -6,17 +6,17 @@
 //     http://www.apache.org/licenses/LICENSE-2.0
 
 using UnityEngine;
-using UnityEngine.UI;                  // Para utilizar o Button da UI
-using System.Collections.Generic;      // Para o dicionário do extra
+using UnityEngine.UI;
+using System.Collections.Generic;
 using Thinklib.Telemetry;
 
 [AddComponentMenu("Thinklib/TowerDefense/Resource Management/Tower Shop", -99)]
 public class TowerShop : MonoBehaviour
 {
-    public int towerCost = 5;          // Custo da torre
-    public Button buyButton;           // Botão de compra
+    public int towerCost = 5;
+    public Button buyButton;
     private PlayerScore playerScore;
-    private bool isPlacingTower = false;  // Modo de construção
+    private bool isPlacingTower = false;
 
     // Telemetry
     private const string MechanicName = "TowerDefense/ResourceManagement/TowerShop";
@@ -106,7 +106,7 @@ public class TowerShop : MonoBehaviour
                         }
                     );
                 }
-                Debug.Log("Modo de construção ativado! Escolha onde colocar a torre.");
+                Debug.Log("Build mode activated! Choose where to place the tower.");
             }
             else
             {
@@ -123,7 +123,7 @@ public class TowerShop : MonoBehaviour
                     }
                 );
 
-                Debug.Log("Pontos insuficientes!");
+                Debug.Log("Insufficient points!");
             }
         }
         catch (System.Exception ex)

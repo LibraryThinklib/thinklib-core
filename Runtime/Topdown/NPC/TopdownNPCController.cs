@@ -8,7 +8,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Collections; // (não usamos yield aqui, mas mantive por consistência)
+using System.Collections; // (we don't use yield here, kept for consistency)
 using Thinklib.Telemetry;
 
 [AddComponentMenu("Thinklib/Topdown/NPC/NPC Controller", -99)]
@@ -18,33 +18,33 @@ public class TopdownNPCController : MonoBehaviour
 {
     public enum NPCType { Static, Patroller }
 
-    [Header("Tipo do NPC")]
+    [Header("NPC Type")]
     public NPCType npcType = NPCType.Static;
 
-    [Header("Pontos de patrulha")]
+    [Header("Patrol Points")]
     public List<Transform> patrolPoints = new List<Transform>();
     public float patrolSpeed = 2f;
     public float patrolTolerance = 0.1f;
     private int currentPointIndex = 0;
 
-    [Header("Falas")]
+    [Header("Dialogues")]
     public bool hasDialogues = false;
     [TextArea(2, 5)]
     public List<string> dialogues = new List<string>();
     public bool useTypewriterEffect = false;
     public float typeSpeed = 0.05f;
 
-    [Header("Configurações de interação")]
+    [Header("Interaction Settings")]
     public KeyCode interactionKey = KeyCode.E;
     public GameObject dialogueBubblePrefab;
     public Transform bubbleAnchor;
 
-    [Header("Camadas que bloqueiam o caminho")]
+    [Header("Layers That Block The Path")]
     public LayerMask obstructionLayers;
 
-    [Header("Referência do jogador")]
+    [Header("Player Reference")]
     public Transform player;
-    public MonoBehaviour playerMovementScript; // Ex: PlayerMovement (deve ser um MonoBehaviour com .enabled)
+    public MonoBehaviour playerMovementScript; // e.g. PlayerMovement (must be a MonoBehaviour with .enabled)
 
     private Animator animator;
     private bool isTouchingPlayer = false;
@@ -56,7 +56,6 @@ public class TopdownNPCController : MonoBehaviour
     private bool pathBlocked = false;
     private bool playerNearby = false;
 
-    // === TELEMETRIA ===
     private const string MechanicName = "Topdown/NPC/TopdownNPCController";
     private bool _sentUsedPatrolStart = false;
     private bool _sentUsedDialogueOpen = false;
@@ -67,7 +66,6 @@ public class TopdownNPCController : MonoBehaviour
     {
         animator = GetComponent<Animator>();
 
-        // mechanic_instantiated
         ThinklibTelemetry.Track(
             "mechanic_instantiated",
             MechanicName,
@@ -174,8 +172,8 @@ public class TopdownNPCController : MonoBehaviour
         else
         {
             animator.SetBool("IsMoving", false);
-            // (opcional) reportar primeira vez que bloqueia caminho
-            // Manter simples: sem evento extra para não poluir.
+            // (optional) could report the first time the path gets blocked
+            // Keeping it simple: no extra event, to avoid noise.
         }
 
         if (Vector2.Distance(transform.position, target.position) < patrolTolerance)
@@ -214,7 +212,7 @@ public class TopdownNPCController : MonoBehaviour
                 dialogueBubbleComponent.SetText(line, useTypewriterEffect, typeSpeed);
             }
 
-            // Telemetry: primeira abertura e primeiras avanços
+            // Telemetry: first open and first advance
             if (!advance && !_sentUsedDialogueOpen)
             {
                 _sentUsedDialogueOpen = true;

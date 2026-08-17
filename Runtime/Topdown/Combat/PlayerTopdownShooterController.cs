@@ -111,7 +111,7 @@ public class PlayerTopdownShooterController : MonoBehaviour
                 }
             }
 
-            // mechanic_used: primeiro disparo bem-sucedido
+            // mechanic_used: first successful shot
             if (!_sentUsedShoot)
             {
                 _sentUsedShoot = true;
@@ -148,10 +148,10 @@ public class PlayerTopdownShooterController : MonoBehaviour
         }
     }
 
-    // Corrotina: não usar try/catch (apenas try/finally se necessário).
+    // Coroutine: don't use try/catch (only try/finally if needed).
     private IEnumerator ResetIsShootingAfterAnimation()
     {
-        yield return null; // garante que a transição de estado ocorra
+        yield return null; // ensures the state transition actually takes effect
         AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
         float duration = state.length > 0 ? state.length : 0.5f;
         yield return new WaitForSeconds(duration);

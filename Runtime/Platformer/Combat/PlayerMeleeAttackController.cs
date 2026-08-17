@@ -99,7 +99,6 @@ public class PlayerMeleeAttackController : MonoBehaviour
             if (animator != null)
                 animator.SetTrigger("IsAttacking");
 
-            // Detecta inimigos na área de ataque
             Vector2 attackCenter = (Vector2)attackPoint.position + Vector2.right * direction * attackRange * 0.5f;
             Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackCenter, attackRange, enemyLayers);
 
@@ -116,7 +115,7 @@ public class PlayerMeleeAttackController : MonoBehaviour
                 Vector3 effectPosition = attackPoint.position;
                 GameObject effect = Instantiate(slashEffectPrefab, effectPosition, Quaternion.identity);
 
-                // Inverte o efeito se estiver olhando para a esquerda
+                // Flips the effect when facing left
                 Vector3 scale = effect.transform.localScale;
                 scale.x = Mathf.Abs(scale.x) * direction;
                 effect.transform.localScale = scale;
@@ -124,7 +123,7 @@ public class PlayerMeleeAttackController : MonoBehaviour
                 Destroy(effect, slashEffectDuration);
             }
 
-            // telemetry: primeiro uso efetivo (primeiro ataque)
+            // telemetry: first effective use (first attack)
             if (!_sentUsed)
             {
                 _sentUsed = true;

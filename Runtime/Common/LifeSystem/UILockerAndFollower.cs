@@ -13,10 +13,10 @@ using Thinklib.Telemetry;
 [AddComponentMenu("Thinklib/Common/LifeSystem/UI Locker And Follower", -87)]
 public class UILockerAndFollower : MonoBehaviour
 {
-    [Tooltip("Transform do alvo (objeto que será seguido)")]
+    [Tooltip("Target's transform (the object to follow)")]
     public Transform target;
 
-    [Tooltip("Offset da UI em relação ao alvo")]
+    [Tooltip("UI offset relative to the target")]
     public Vector3 offset = new Vector3(0, 1.5f, 0);
 
     private Vector3 initialScale;
@@ -57,15 +57,15 @@ public class UILockerAndFollower : MonoBehaviour
             // Posicionar a UI no local desejado
             transform.position = target.position + offset;
 
-            // Manter rotação e escala originais (impede que a UI vire junto com o alvo)
+            // Keep the original rotation and scale (stops the UI from flipping/rotating with the target)
             transform.rotation = initialRotation;
 
-            // Corrigir a escala para não flipar com o alvo
+            // Correct the scale so it doesn't flip along with the target
             Vector3 correctedScale = initialScale;
-            correctedScale.x = Mathf.Abs(initialScale.x); // força a UI a manter X positivo
+            correctedScale.x = Mathf.Abs(initialScale.x);
             transform.localScale = correctedScale;
 
-            // mechanic_used: primeira vez que efetivamente acompanha o alvo
+            // mechanic_used: first time it actually follows the target
             if (!_sentUsed)
             {
                 _sentUsed = true;

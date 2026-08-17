@@ -12,15 +12,14 @@ using Thinklib.Telemetry;
 [AddComponentMenu("Thinklib/TowerDefense/Tower Upgrade/Tower Upgrade", -99)]
 public class TowerUpgrade : MonoBehaviour
 {
-    public int currentLevel = 1;   // Nível atual da torre
-    public int maxLevel = 3;       // Máximo de níveis que a torre pode alcançar
+    public int currentLevel = 1;
+    public int maxLevel = 3;
 
-    // Atributos da torre
     public int damage = 1;
     public float fireRate = 1f;
     public float range = 3f;
 
-    public int upgradeCost = 10;   // Custo para evoluir a torre
+    public int upgradeCost = 10;
 
     private PlayerScore playerScore;
 
@@ -54,14 +53,13 @@ public class TowerUpgrade : MonoBehaviour
         }
     }
 
-    // Método para melhorar a torre
     public void UpgradeTower()
     {
         try
         {
             if (currentLevel >= maxLevel)
             {
-                // Já está no máximo — ainda é útil registrar o uso
+                // Already at max level — still useful to log the usage
                 ThinklibTelemetry.Track(
                     "mechanic_used",
                     MechanicName,
@@ -74,7 +72,7 @@ public class TowerUpgrade : MonoBehaviour
                     }
                 );
 
-                Debug.Log("Nível máximo atingido.");
+                Debug.Log("Maximum level reached.");
                 return;
             }
 
@@ -90,13 +88,13 @@ public class TowerUpgrade : MonoBehaviour
                         { "message", "PlayerScore reference is null" }
                     }
                 );
-                Debug.LogWarning("PlayerScore não encontrado.");
+                Debug.LogWarning("PlayerScore not found.");
                 return;
             }
 
             if (playerScore.currentScore < upgradeCost)
             {
-                // Tentativa com pontos insuficientes (conta como uso para entender demanda)
+                // Attempt with insufficient points (counted as usage to understand demand)
                 ThinklibTelemetry.Track(
                     "mechanic_used",
                     MechanicName,
@@ -111,11 +109,10 @@ public class TowerUpgrade : MonoBehaviour
                     }
                 );
 
-                Debug.Log("Pontos insuficientes.");
+                Debug.Log("Insufficient points.");
                 return;
             }
 
-            // --- Upgrade efetivo ---
             int fromLevel = currentLevel;
             int oldDamage = damage;
             float oldFire = fireRate;
@@ -124,7 +121,6 @@ public class TowerUpgrade : MonoBehaviour
             playerScore.AddScore(-upgradeCost);
             currentLevel++;
 
-            // Atualiza os atributos conforme o novo nível
             switch (currentLevel)
             {
                 case 2:
@@ -143,7 +139,6 @@ public class TowerUpgrade : MonoBehaviour
                     break;
             }
 
-            // Registra o primeiro sucesso de upgrade
             if (!_sentFirstSuccess)
             {
                 _sentFirstSuccess = true;
@@ -164,7 +159,6 @@ public class TowerUpgrade : MonoBehaviour
             }
             else
             {
-                // Demais upgrades (se quiser rastrear todos)
                 ThinklibTelemetry.Track(
                     "mechanic_used",
                     MechanicName,
@@ -181,7 +175,6 @@ public class TowerUpgrade : MonoBehaviour
                 );
             }
 
-            // Se acabou de atingir o máximo, registra
             if (currentLevel >= maxLevel)
             {
                 ThinklibTelemetry.Track(
@@ -196,7 +189,7 @@ public class TowerUpgrade : MonoBehaviour
                 );
             }
 
-            Debug.Log("Torre evoluída para o nível " + currentLevel);
+            Debug.Log("Tower upgraded to level " + currentLevel);
         }
         catch (System.Exception ex)
         {
@@ -217,12 +210,11 @@ public class TowerUpgrade : MonoBehaviour
         }
     }
 
-    // Exibindo as informações da torre (opcional)
     void OnGUI()
     {
-        GUI.Label(new Rect(10, 10, 220, 20), "Nível da Torre: " + currentLevel);
-        GUI.Label(new Rect(10, 30, 220, 20), "Dano: " + damage);
-        GUI.Label(new Rect(10, 50, 220, 20), "Alcance: " + range);
-        GUI.Label(new Rect(10, 70, 220, 20), "Taxa de Disparo: " + fireRate);
+        GUI.Label(new Rect(10, 10, 220, 20), "Tower Level: " + currentLevel);
+        GUI.Label(new Rect(10, 30, 220, 20), "Damage: " + damage);
+        GUI.Label(new Rect(10, 50, 220, 20), "Range: " + range);
+        GUI.Label(new Rect(10, 70, 220, 20), "Fire Rate: " + fireRate);
     }
 }

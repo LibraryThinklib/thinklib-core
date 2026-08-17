@@ -23,14 +23,14 @@ public class Item : ScriptableObject
     public Sprite icon;
 
     [Header("Stacking")]
-    [Tooltip("Este item pode ser acumulado no inventário?")]
+    [Tooltip("Can this item be stacked in the inventory?")]
     public bool isStackable = false;
-    [Tooltip("Qual a quantidade máxima deste item por slot?")]
+    [Tooltip("What is the maximum quantity of this item per slot?")]
     public int maxStackSize = 99;
 
     [Header("Timer Settings")]
-    [Tooltip("Este item ativa um cronômetro quando colocado em uma DropZone?")]
+    [Tooltip("Does this item start a timer when placed in a DropZone?")]
     public bool hasTimer = false;
-    [Tooltip("Tempo em segundos que o item pode ficar na DropZone antes de sumir.")]
+    [Tooltip("Time in seconds the item can stay in the DropZone before disappearing.")]
     public float itemLifetime = 10.0f;
 }

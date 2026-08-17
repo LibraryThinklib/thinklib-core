@@ -134,7 +134,7 @@ namespace Thinklib.Topdown.Enemy
                         damageDealer.damage = projectileDamage;
                 }
 
-                // mechanic_used: primeiro disparo com sucesso
+                // mechanic_used: first successful shot
                 if (!_sentUsedShoot)
                 {
                     _sentUsedShoot = true;
@@ -184,7 +184,7 @@ namespace Thinklib.Topdown.Enemy
 
                 transform.position = Vector2.MoveTowards(currentPos, targetPos, patrolSpeed * Time.deltaTime);
 
-                // mechanic_used: primeira vez que inicia patrulha/movimento
+                // mechanic_used: first time it starts patrolling/moving
                 if (!_sentUsedPatrol && moveDir.sqrMagnitude > 0.0001f)
                 {
                     _sentUsedPatrol = true;

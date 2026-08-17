@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Thinklib.Telemetry;
 
-[AddComponentMenu("Thinklib/Platformer/Enemy/Patroller/Patrulheiro AI", -99)]
+[AddComponentMenu("Thinklib/Platformer/Enemy/Patroller/Patroller AI", -99)]
 [RequireComponent(typeof(Animator))]
 public class PatrollerAI : MonoBehaviour
 {
@@ -25,7 +25,6 @@ public class PatrollerAI : MonoBehaviour
     private Animator animator;
     private Transform currentTarget;
 
-    // Telemetry
     private const string MechanicName = "Platformer/Enemy/Patroller";
     private bool _sentUsed = false;
 
@@ -35,7 +34,6 @@ public class PatrollerAI : MonoBehaviour
         currentTarget = pointB;
         Flip();
 
-        // telemetry: componente instanciado
         ThinklibTelemetry.Track(
             "mechanic_instantiated",
             MechanicName,
@@ -62,11 +60,10 @@ public class PatrollerAI : MonoBehaviour
 
             animator.SetBool("IsWalking", true);
 
-            // Move toward the current target
             Vector3 before = transform.position;
             transform.position = Vector2.MoveTowards(transform.position, currentTarget.position, speed * Time.deltaTime);
 
-            // telemetry: primeiro uso real (quando de fato se move pela primeira vez)
+            // Telemetry: first real use (sent the first time the enemy actually moves).
             if (!_sentUsed && (transform.position - before).sqrMagnitude > 0.000001f)
             {
                 _sentUsed = true;
@@ -80,7 +77,6 @@ public class PatrollerAI : MonoBehaviour
                 );
             }
 
-            // Reached destination?
             if (Vector2.Distance(transform.position, currentTarget.position) <= tolerance)
             {
                 SwitchTarget();
@@ -106,7 +102,6 @@ public class PatrollerAI : MonoBehaviour
     {
         try
         {
-            // Toggle between point A and B
             currentTarget = currentTarget == pointA ? pointB : pointA;
             Flip();
         }
@@ -132,9 +127,9 @@ public class PatrollerAI : MonoBehaviour
         float direction = currentTarget.position.x - transform.position.x;
 
         if (direction > 0f)
-            scale.x = Mathf.Abs(scale.x); // facing right
+            scale.x = Mathf.Abs(scale.x);
         else if (direction < 0f)
-            scale.x = -Mathf.Abs(scale.x); // facing left
+            scale.x = -Mathf.Abs(scale.x);
 
         transform.localScale = scale;
     }

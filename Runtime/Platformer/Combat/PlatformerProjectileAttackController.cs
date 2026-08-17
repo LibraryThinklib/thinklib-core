@@ -124,7 +124,7 @@ public class PlatformerProjectileAttackController : MonoBehaviour
             scale.x = Mathf.Abs(scale.x) * direction;
             projectile.transform.localScale = scale;
 
-            // mechanic_used (primeiro disparo)
+            // mechanic_used (first shot)
             if (!_sentUsed)
             {
                 _sentUsed = true;

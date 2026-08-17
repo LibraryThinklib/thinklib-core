@@ -15,7 +15,7 @@ public class EnemyHealth : MonoBehaviour
 {
     public int maxHealth = 3;
     private int currentHealth;
-    public int pointsOnDeath = 5;  // Pontos dados ao jogador ao matar esse inimigo
+    public int pointsOnDeath = 5;
 
     // === Telemetry ===
     private const string MechanicName = "TowerDefense/EnemyProgression/EnemyHealth";
@@ -27,7 +27,6 @@ public class EnemyHealth : MonoBehaviour
     {
         currentHealth = maxHealth;
 
-        // mechanic_instantiated (1x)
         if (!_sentInstantiated)
         {
             _sentInstantiated = true;
@@ -49,7 +48,7 @@ public class EnemyHealth : MonoBehaviour
         {
             currentHealth -= amount;
 
-            // mechanic_used: primeiro dano recebido
+            // mechanic_used: first damage received
             if (!_sentFirstHit)
             {
                 _sentFirstHit = true;
@@ -67,7 +66,7 @@ public class EnemyHealth : MonoBehaviour
 
             if (currentHealth <= 0)
             {
-                // mechanic_used: morte do inimigo
+                // mechanic_used: enemy death
                 if (!_sentDeath)
                 {
                     _sentDeath = true;
@@ -82,7 +81,6 @@ public class EnemyHealth : MonoBehaviour
                     );
                 }
 
-                // Adiciona pontos ao jogador
                 PlayerScore playerScore = FindObjectOfType<PlayerScore>();
                 if (playerScore != null)
                 {

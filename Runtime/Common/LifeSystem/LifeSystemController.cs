@@ -60,17 +60,14 @@ public class LifeSystemController : MonoBehaviour
 
         if (currentHealth > 0)
         {
-            // Ativa a animação de dano (Hurt) se ainda estiver vivo
             if (animator != null)
                 animator.SetTrigger("IsHurt");
         }
         else
         {
-            // Ativa a animação de morte (Dead)
             if (animator != null)
                 animator.SetBool("IsDead", true);
 
-            // Executa o efeito de morte
             DeathEffect deathEffect = GetComponent<DeathEffect>();
             if (deathEffect != null)
             {

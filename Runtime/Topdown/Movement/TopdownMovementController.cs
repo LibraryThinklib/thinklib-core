@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Thinklib.Telemetry;
 
-[AddComponentMenu("Thinklib/Topdown/Movement/Topdown Movement Controller", -100)]
+[AddComponentMenu("Thinklib/Topdown/Movement/Movement Controller", -100)]
 [RequireComponent(typeof(Animator))]
 public class TopdownMovementController : MonoBehaviour
 {
@@ -27,7 +27,9 @@ public class TopdownMovementController : MonoBehaviour
     private Animator animator;
     private InputHandler inputHandler;
 
-    // Salva a última direção válida (para idle direcional)
+    /// <summary>
+    /// Stores the last valid direction (used for directional idle).
+    /// </summary>
     private Vector2 lastMoveDirection = Vector2.down;
 
     public Vector2 GetLastMoveDirection()
@@ -35,7 +37,6 @@ public class TopdownMovementController : MonoBehaviour
         return lastMoveDirection;
     }
 
-    // Telemetry
     private const string MechanicName = "Topdown/Movement/TopdownMovementController";
     private bool _sentUsedMove = false;
 
@@ -44,7 +45,6 @@ public class TopdownMovementController : MonoBehaviour
         animator = GetComponent<Animator>();
         inputHandler = GetComponent<InputHandler>() ?? gameObject.AddComponent<InputHandler>();
 
-        // mechanic_instantiated
         ThinklibTelemetry.Track(
             "mechanic_instantiated",
             MechanicName,
@@ -68,10 +68,8 @@ public class TopdownMovementController : MonoBehaviour
         {
             Vector2 input = GetInput();
 
-            // Movement
             Move(input);
 
-            // Animator
             UpdateAnimator(input);
         }
         catch (Exception ex)
@@ -116,7 +114,7 @@ public class TopdownMovementController : MonoBehaviour
         {
             transform.position += (Vector3)direction * moveSpeed * Time.deltaTime;
 
-            // Primeira vez que de fato se moveu
+            // First time the object actually moved.
             if (!_sentUsedMove)
             {
                 _sentUsedMove = true;
@@ -133,7 +131,6 @@ public class TopdownMovementController : MonoBehaviour
                 );
             }
 
-            // Atualiza a última direção
             lastMoveDirection = direction;
         }
     }
@@ -145,13 +142,12 @@ public class TopdownMovementController : MonoBehaviour
 
         if (isMoving)
         {
-            // Atualiza o blend para a direção atual
             animator.SetFloat("Horizontal", direction.x);
             animator.SetFloat("Vertical", direction.y);
         }
         else
         {
-            // Continua usando a última direção salva para o Idle
+            // Keeps using the last saved direction for the Idle state.
             animator.SetFloat("Horizontal", lastMoveDirection.x);
             animator.SetFloat("Vertical",   lastMoveDirection.y);
         }

@@ -15,7 +15,7 @@ public class ThinklibTagInstaller : MonoBehaviour
     {
         string[] requiredTags = new string[]
         {
-            "Player", "Ground", "Enemy", "Tower", "NPC"
+            "Player", "Ground", "Enemy", "Tower", "NPC", "Blocked", "DespawnZone"
         };
 
         foreach (string tag in requiredTags)
@@ -36,7 +36,7 @@ public class ThinklibTagInstaller : MonoBehaviour
         for (int i = 0; i < tagsProp.arraySize; i++)
         {
             SerializedProperty t = tagsProp.GetArrayElementAtIndex(i);
-            if (t != null && t.stringValue.Equals(tagName)) return; // Already exists
+            if (t != null && t.stringValue.Equals(tagName)) return;
         }
 
         for (int i = 0; i < tagsProp.arraySize; i++)
@@ -51,7 +51,6 @@ public class ThinklibTagInstaller : MonoBehaviour
             }
         }
 
-        // If no empty slot found, expand array and add
         tagsProp.InsertArrayElementAtIndex(tagsProp.arraySize);
         tagsProp.GetArrayElementAtIndex(tagsProp.arraySize - 1).stringValue = tagName;
         tagManager.ApplyModifiedProperties();

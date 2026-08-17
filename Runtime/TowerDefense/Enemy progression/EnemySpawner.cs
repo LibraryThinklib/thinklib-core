@@ -13,10 +13,10 @@ using Thinklib.Telemetry;
 [AddComponentMenu("Thinklib/TowerDefense/Enemy Progression/Enemy Spawner", -98)]
 public class EnemySpawner : MonoBehaviour
 {
-    public GameObject enemyPrefab;     // Prefab do inimigo a ser instanciado
-    public Transform[] waypoints;      // Caminho que será passado para o inimigo
-    public int enemiesToSpawn = 5;     // Quantos inimigos criar
-    public float spawnInterval = 2f;   // Intervalo entre cada inimigo
+    public GameObject enemyPrefab;
+    public Transform[] waypoints;
+    public int enemiesToSpawn = 5;
+    public float spawnInterval = 2f;
 
     // === Telemetry ===
     private const string MechanicName = "TowerDefense/EnemyProgression/EnemySpawner";
@@ -25,7 +25,6 @@ public class EnemySpawner : MonoBehaviour
 
     private void Start()
     {
-        // mechanic_instantiated (1x)
         if (!_sentInstantiated)
         {
             _sentInstantiated = true;
@@ -47,13 +46,13 @@ public class EnemySpawner : MonoBehaviour
 
     private IEnumerator SpawnEnemies()
     {
-        // Observação importante sobre try/catch + yield:
-        // não colocamos yield dentro de um try-catch para evitar o erro do C#.
+        // Important note about try/catch + yield:
+        // we don't put yield inside a try-catch, to avoid the C# compiler error.
         for (int i = 0; i < enemiesToSpawn; i++)
         {
             bool ok = SpawnOne(i);
 
-            // mechanic_used (primeiro uso efetivo: 1º spawn com sucesso)
+            // mechanic_used (first real use: 1st successful spawn)
             if (!_sentUsed && ok)
             {
                 _sentUsed = true;
@@ -69,13 +68,12 @@ public class EnemySpawner : MonoBehaviour
                 );
             }
 
-            // espera entre spawns
             yield return new WaitForSeconds(spawnInterval);
         }
     }
 
     /// <summary>
-    /// Instancia um inimigo e injeta os waypoints. Sem yield aqui, então podemos usar try/catch.
+    /// Instantiates an enemy and injects the waypoints. No yield here, so we can use try/catch.
     /// </summary>
     private bool SpawnOne(int index)
     {

@@ -11,7 +11,7 @@ using System.Collections;
 
 namespace Thinklib.Platformer.Enemy.Core
 {
-    [AddComponentMenu("Thinklib/Core/Projectile Shooter Base", -100)]
+    [AddComponentMenu("Thinklib/Platformer/Combat/Projectile Shooter (Base)", -100)]
 
     public class ProjectileShooterBase : MonoBehaviour
     {
@@ -55,7 +55,6 @@ namespace Thinklib.Platformer.Enemy.Core
                 rb.velocity = direction * projectileSpeed;
             }
 
-            // Ajusta a escala do projétil de acordo com a direção
             Vector3 scale = proj.transform.localScale;
             if (Mathf.Abs(direction.x) > 0.01f)
                 scale.x = Mathf.Abs(scale.x) * Mathf.Sign(direction.x);

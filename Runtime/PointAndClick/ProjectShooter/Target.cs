@@ -11,13 +11,13 @@ using UnityEngine;
 [AddComponentMenu("Thinklib/Game/Target")]
 public class Target : MonoBehaviour
 {
-    [Header("Configuração")]
-    [Tooltip("O valor 'n' que este alvo adiciona à pontuação.")]
+    [Header("Configuration")]
+    [Tooltip("The 'n' value this target adds to the score.")]
     public int scoreValue = 10;
 
     public void OnHit()
     {
-        Debug.Log($"Alvo '{gameObject.name}' atingido, +{scoreValue} pontos!");
+        Debug.Log($"Target '{gameObject.name}' hit, +{scoreValue} points!");
         Destroy(gameObject);
     }
 }

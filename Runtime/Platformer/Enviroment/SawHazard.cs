@@ -11,24 +11,24 @@ using UnityEngine;
 using Thinklib.Telemetry;
 
 [RequireComponent(typeof(Collider2D))]
-[AddComponentMenu("Thinklib/Game/SawHazard")]
+[AddComponentMenu("Thinklib/Platformer/Environment/Saw Hazard", -98)]
 public class SawHazard : MonoBehaviour
 {
-    [Header("Configuração de Dano")]
-    [Tooltip("Quanto de dano esta serra causa ao tocar o jogador.")]
+    [Header("Damage Configuration")]
+    [Tooltip("How much damage this saw deals when touching the player.")]
     public int damageAmount = 1;
 
-    [Header("Movimento (Patrulha)")]
-    [Tooltip("Marque se esta serra deve se mover.")]
+    [Header("Movement (Patrol)")]
+    [Tooltip("Check if this saw should move.")]
     public bool shouldMove = false;
 
-    [Tooltip("Ponto A da patrulha (posição de início).")]
+    [Tooltip("Patrol point A (starting position).")]
     public Vector2 pointA;
 
-    [Tooltip("Ponto B da patrulha (posição final).")]
+    [Tooltip("Patrol point B (ending position).")]
     public Vector2 pointB;
 
-    [Tooltip("Velocidade do movimento de patrulha.")]
+    [Tooltip("Patrol movement speed.")]
     public float moveSpeed = 3.0f;
 
     private const string MechanicName = "Platformer/Enviroment/SawHazard";
@@ -98,7 +98,7 @@ public class SawHazard : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("Serra tocou o 'Player', mas não encontrou o script 'LifeSystemController'.");
+                Debug.LogWarning("Saw touched the 'Player', but couldn't find the 'LifeSystemController' script.");
             }
         }
         catch (Exception ex)

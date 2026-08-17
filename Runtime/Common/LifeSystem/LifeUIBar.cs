@@ -22,14 +22,12 @@ public class LifeUIBar : MonoBehaviour
     [SerializeField] private Color mediumHealthColor = new Color(1f, 0.64f, 0f);  // orange
     [SerializeField] private Color lowHealthColor = new Color(1f, 0f, 0f);     // red
 
-    // Telemetry
     private const string MechanicName = "Common/LifeSystem/LifeUIBar";
     private bool _sentUsedUpdate = false;
     private bool _sentUsedShake = false;
 
     private void Awake()
     {
-        // mechanic_instantiated
         ThinklibTelemetry.Track(
             "mechanic_instantiated",
             MechanicName,
@@ -125,7 +123,7 @@ public class LifeUIBar : MonoBehaviour
         }
     }
 
-    // Em corrotinas: sem try/catch (apenas try/finally). Erros são telemetrados nos helpers sem yield.
+    // In coroutines: no try/catch (only try/finally). Errors are reported via telemetry in the yield-free helpers.
     private IEnumerator ShakeUI(Transform target, float intensity)
     {
         Vector3 originalPos = target.localPosition;
@@ -140,12 +138,12 @@ public class LifeUIBar : MonoBehaviour
         }
         finally
         {
-            // restaura posição mesmo se algo der errado
+            // restores position even if something goes wrong
             target.localPosition = originalPos;
         }
     }
 
-    // Helper sem yield → pode ter try/catch + telemetria
+    // Yield-free helper -> can have try/catch + telemetry
     private void ShakeStepSafe(Transform target, Vector3 basePos, float intensity)
     {
         try

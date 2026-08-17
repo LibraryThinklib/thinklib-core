@@ -25,7 +25,7 @@ public class PlayerTopdownMeleeAttackController : MonoBehaviour
     public float attackRange = 0.5f;
     public LayerMask enemyLayers;
 
-    [Header("Attack Points por Direção")]
+    [Header("Attack Points by Direction")]
     public Transform attackPointUp;
     public Transform attackPointDown;
     public Transform attackPointLeft;
@@ -161,7 +161,7 @@ public class PlayerTopdownMeleeAttackController : MonoBehaviour
                 Destroy(effect, slashEffectDuration);
             }
 
-            // mechanic_used (primeiro ataque efetivo)
+            // mechanic_used (first effective attack)
             if (!_sentUsed)
             {
                 _sentUsed = true;

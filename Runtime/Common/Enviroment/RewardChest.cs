@@ -11,15 +11,15 @@ using UnityEngine;
 using Thinklib.Telemetry;
 
 [RequireComponent(typeof(Collider2D))]
-[AddComponentMenu("Thinklib/Game/RewardChest")]
+[AddComponentMenu("Thinklib/Common/Environment/Reward Chest", -99)]
 public class RewardChest : MonoBehaviour
 {
-    [Header("Configuração da Recompensa")]
-    [Tooltip("Quantidade de vida a ser curada.")]
+    [Header("Reward Configuration")]
+    [Tooltip("Amount of health to heal.")]
     public int healthToGive = 1;
 
-    [Header("Visuais")]
-    [Tooltip("Sprite opcional do baú 'aberto' para mostrar que foi usado.")]
+    [Header("Visuals")]
+    [Tooltip("Optional sprite for the 'opened' chest, shown once it has been used.")]
     public Sprite openSprite;
 
     private const string MechanicName = "Common/Enviroment/RewardChest";

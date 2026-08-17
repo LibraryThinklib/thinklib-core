@@ -15,7 +15,7 @@ using TMPro;
 [AddComponentMenu("Thinklib/Game/CommandQueueManager")]
 public class CommandQueueManager : MonoBehaviour
 {
-    [Header("Referências")]
+    [Header("References")]
     public PlayerAgent playerAgent;
     public TextMeshProUGUI commandListText;
 
@@ -64,7 +64,7 @@ public class CommandQueueManager : MonoBehaviour
                 int count = commandQueue.Count - lastExecutedIndex;
                 List<ICommand> newCommands = commandQueue.GetRange(lastExecutedIndex, count);
 
-                Debug.Log($"Executando {count} novos comandos...");
+                Debug.Log($"Running {count} new commands...");
 
                 if (!_sentUsed)
                 {
@@ -83,7 +83,7 @@ public class CommandQueueManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("Nenhum comando novo para executar.");
+                Debug.Log("No new commands to run.");
             }
         }
         catch (Exception ex)

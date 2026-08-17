@@ -15,12 +15,12 @@ using Thinklib.Telemetry;
 public class PlayerHealth : MonoBehaviour
 {
     [Header("Health")]
-    public int maxHealth = 10;       // Quantidade inicial de vidas
+    public int maxHealth = 10;
     private int currentHealth;
 
     [Header("UI")]
-    public Text healthText;          // Exibe as vidas
-    public Text gameOverText;        // Exibe "GAME OVER"
+    public Text healthText;
+    public Text gameOverText;
 
     // === Telemetry ===
     private const string MechanicName = "TowerDefense/DefeatSystem/PlayerHealth";
@@ -49,7 +49,7 @@ public class PlayerHealth : MonoBehaviour
             currentHealth = maxHealth;
             UpdateHealthUI();
             if (gameOverText != null)
-                gameOverText.gameObject.SetActive(false);  // Garante que "GAME OVER" comece oculto
+                gameOverText.gameObject.SetActive(false);
         }
         catch (Exception ex)
         {
@@ -74,7 +74,7 @@ public class PlayerHealth : MonoBehaviour
             currentHealth -= amount;
             UpdateHealthUI();
 
-            // mechanic_used: primeira vez que recebe dano
+            // mechanic_used: first time damage is received
             if (!_sentUsedFirstDamage)
             {
                 _sentUsedFirstDamage = true;
@@ -145,7 +145,7 @@ public class PlayerHealth : MonoBehaviour
             if (gameOverText != null)
                 gameOverText.gameObject.SetActive(true);
 
-            // mechanic_used: primeira transição para game over
+            // mechanic_used: first transition to game over
             if (!_sentUsedGameOver)
             {
                 _sentUsedGameOver = true;
@@ -161,7 +161,7 @@ public class PlayerHealth : MonoBehaviour
                 );
             }
 
-            Time.timeScale = 0f; // Pausa o jogo
+            Time.timeScale = 0f;
         }
         catch (Exception ex)
         {

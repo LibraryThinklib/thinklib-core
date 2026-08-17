@@ -97,7 +97,7 @@ public static class PlayerAnimatorControllerCreator
         meleeToIdle.exitTime = 1f;
         meleeToIdle.duration = 0.1f;
 
-        Debug.Log($"✅ Player Animator Controller criado em: {controllerPath}");
+        Debug.Log($"✅ Player Animator Controller created at: {controllerPath}");
     }
 
     private static void ConfigureShoot(AnimatorState shoot, AnimatorState from)

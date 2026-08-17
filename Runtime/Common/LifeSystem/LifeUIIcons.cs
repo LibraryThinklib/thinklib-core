@@ -22,14 +22,12 @@ public class LifeUIIcons : MonoBehaviour
 
     private List<Image> iconList = new List<Image>();
 
-    // Telemetry
     private const string MechanicName = "Common/LifeSystem/LifeUIIcons";
     private bool _sentUsedUpdate = false;
     private bool _sentUsedShake = false;
 
     private void Awake()
     {
-        // mechanic_instantiated
         ThinklibTelemetry.Track(
             "mechanic_instantiated",
             MechanicName,
@@ -63,7 +61,7 @@ public class LifeUIIcons : MonoBehaviour
                 iconList[i].enabled = i < maxHealth;
             }
 
-            // mechanic_used: primeira atualização
+            // mechanic_used: first update
             if (!_sentUsedUpdate)
             {
                 _sentUsedUpdate = true;
@@ -171,7 +169,7 @@ public class LifeUIIcons : MonoBehaviour
         }
     }
 
-    // Corrotina: sem try/catch (apenas try/finally). Operações com risco vão para helpers sem yield.
+    // Coroutine: no try/catch (only try/finally). Risky operations go into yield-free helpers.
     private IEnumerator ShakeUI(Transform target, float intensity)
     {
         Vector3 originalPos = target.localPosition;
@@ -190,7 +188,7 @@ public class LifeUIIcons : MonoBehaviour
         }
     }
 
-    // Helper sem yield → pode ter try/catch + telemetria
+    // Yield-free helper -> can have try/catch + telemetry
     private void ShakeStepSafe(Transform target, Vector3 basePos, float intensity)
     {
         try

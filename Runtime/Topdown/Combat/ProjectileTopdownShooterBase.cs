@@ -48,7 +48,6 @@ namespace Thinklib.Topdown.Player.Core
                 rb.velocity = direction * projectileSpeed;
             }
 
-            // Ajusta a escala do proj�til de acordo com a dire��o
             Vector3 scale = proj.transform.localScale;
             if (Mathf.Abs(direction.x) > 0.01f)
                 scale.x = Mathf.Abs(scale.x) * Mathf.Sign(direction.x);

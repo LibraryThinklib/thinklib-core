@@ -20,7 +20,7 @@ public class TowerShooter : MonoBehaviour
 
     private float fireCountdown = 0f;
     private Transform target;
-    private TowerUpgrade towerUpgrade;  // Referência para o script TowerUpgrade
+    private TowerUpgrade towerUpgrade;
 
     // === Telemetry ===
     private const string MechanicName = "TowerDefense/Defense/TowerShooter";
@@ -29,9 +29,8 @@ public class TowerShooter : MonoBehaviour
 
     private void Start()
     {
-        towerUpgrade = GetComponent<TowerUpgrade>();  // Encontra o script TowerUpgrade
+        towerUpgrade = GetComponent<TowerUpgrade>();
 
-        // mechanic_instantiated (1x)
         if (!_sentInstantiated)
         {
             _sentInstantiated = true;
@@ -113,10 +112,10 @@ public class TowerShooter : MonoBehaviour
             {
                 bulletScript.SetTarget(target);
                 if (towerUpgrade != null)
-                    bulletScript.damage = towerUpgrade.damage;  // Dano baseado no nível da torre
+                    bulletScript.damage = towerUpgrade.damage;  // Damage comes from the tower's current TowerUpgrade level
             }
 
-            // mechanic_used: primeira vez que a torre atira
+            // mechanic_used: first time the tower fires
             if (!_sentFirstShot)
             {
                 _sentFirstShot = true;

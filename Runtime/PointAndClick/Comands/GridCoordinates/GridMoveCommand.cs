@@ -13,7 +13,7 @@ public class GridMoveCommand : IGridCommand
     private int row;
     private int col;
     
-    public string CommandName => $"Ir para (L:{row}, C:{col})";
+    public string CommandName => $"Go to (L:{row}, C:{col})";
 
     public GridMoveCommand(int targetRow, int targetCol)
     {

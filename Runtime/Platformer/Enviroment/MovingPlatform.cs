@@ -14,14 +14,14 @@ using Thinklib.Telemetry;
 [AddComponentMenu("Thinklib/Platformer/Environment/Moving Platform", -100)]
 public class MovingPlatform : MonoBehaviour
 {
-    [Header("Configuração de Movimentação")]
+    [Header("Movement Configuration")]
     [SerializeField] private Transform pointA;
     [SerializeField] private Transform pointB;
     [SerializeField] private float speed = 2f;
     [SerializeField] private float waitTime = 1f;
     [SerializeField] private bool startActive = false;
 
-    [Header("Configuração de Ativação")]
+    [Header("Activation Configuration")]
     [SerializeField] private bool requirePlayerInput = false;
     [SerializeField] private KeyCode activationKey = KeyCode.E;
 
@@ -39,7 +39,7 @@ public class MovingPlatform : MonoBehaviour
     {
         if (pointA == null || pointB == null)
         {
-            Debug.LogError("PontoA e PontoB devem ser posicionados.");
+            Debug.LogError("PointA and PointB must be set.");
             enabled = false;
             return;
         }
@@ -64,7 +64,6 @@ public class MovingPlatform : MonoBehaviour
 
     private void Update()
     {
-        // Ativa a plataforma se precisar de input e o jogador estiver nela
         if (requirePlayerInput && playerOnPlatform && Input.GetKeyDown(activationKey))
         {
             isActive = true;
@@ -84,7 +83,7 @@ public class MovingPlatform : MonoBehaviour
             }
         }
 
-        // Se ficou ativo sem input (ex.: startActive true), registra uso na transição
+        // Covers the case where it became active without input (e.g. startActive = true), logging usage on that transition
         if (isActive && !_wasActive && !_sentUsed)
         {
             _sentUsed = true;
@@ -110,7 +109,6 @@ public class MovingPlatform : MonoBehaviour
         {
             transform.position = Vector2.MoveTowards(transform.position, targetPoint.position, speed * Time.deltaTime);
 
-            // Ao chegar no destino, inicia a troca após espera
             if (Vector2.Distance(transform.position, targetPoint.position) < 0.01f)
             {
                 StartCoroutine(WaitAndSwitch());
@@ -163,7 +161,7 @@ public class MovingPlatform : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             playerOnPlatform = true;
-            collision.transform.SetParent(transform); // Faz o jogador se mover junto com a plataforma
+            collision.transform.SetParent(transform); // Makes the player move together with the platform
         }
     }
 

@@ -14,11 +14,11 @@ using Thinklib.Telemetry;
 [AddComponentMenu("Thinklib/Grid/GridCommandManager")]
 public class GridCommandManager : MonoBehaviour
 {
-    [Header("Referências Principais")]
+    [Header("Main References")]
     public GridAgent gridAgent;
     public TextMeshProUGUI commandListText;
 
-    [Header("Referências da UI de Input")]
+    [Header("Input UI References")]
     public TMP_InputField rowInput;
     public TMP_InputField colInput;
 

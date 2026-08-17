@@ -10,11 +10,11 @@ using UnityEngine;
 [AddComponentMenu("Thinklib/Game/PlayerShooter")]
 public class PlayerShooter : MonoBehaviour
 {
-    [Header("Configuração")]
-    [Tooltip("O prefab do projétil que será disparado.")]
+    [Header("Configuration")]
+    [Tooltip("The projectile prefab that will be fired.")]
     public GameObject projectilePrefab;
-    
-    [Tooltip("O ponto de onde o projétil deve sair.")]
+
+    [Tooltip("The point the projectile is fired from.")]
     public Transform firePoint;
 
     private Camera mainCamera;
@@ -24,7 +24,7 @@ public class PlayerShooter : MonoBehaviour
         mainCamera = Camera.main;
         if (firePoint == null)
         {
-            Debug.LogError("O 'firePoint' não foi atribuído no PlayerShooter!");
+            Debug.LogError("The 'firePoint' was not assigned on PlayerShooter!");
             firePoint = transform;
         }
     }

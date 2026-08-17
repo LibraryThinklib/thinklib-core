@@ -18,15 +18,19 @@ namespace Thinklib.Telemetry.Editor
     [InitializeOnLoad]
     public static class ThinklibVersionSync
     {
-        // ID do pacote (veio do "name" no package.json)
+        /// <summary>
+        /// Package ID (matches the "name" field in package.json).
+        /// </summary>
         const string PackageName = "com.thinklib.core";
         const string OutputRelPath = "Runtime/Common/Telemetry/ThinklibVersion.cs";
 
         [System.Serializable] class Pkg { public string name; public string version; }
 
+        /// <summary>
+        /// Runs on every domain reload.
+        /// </summary>
         static ThinklibVersionSync()
         {
-            // dispara em todo domain reload
             TrySync(silent:true);
         }
 
@@ -40,7 +44,6 @@ namespace Thinklib.Telemetry.Editor
         {
             try
             {
-                // Descobre o caminho resolvido do pacote via PackageInfo
                 var pi = UPMInfo.FindForAssetPath($"Packages/{PackageName}");
                 if (pi == null)
                 {
@@ -67,7 +70,13 @@ namespace Thinklib.Telemetry.Editor
                 }
 
                 var code =
-$@"// AUTO-GERADO a partir de {packageJsonPath}. NÃO editar manualmente.
+$@"// Copyright (c) 2026 Thinkted Lab
+// Licensed under the Apache License, Version 2.0 (the ""License"");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+
 namespace Thinklib.Telemetry
 {{
     internal static class ThinklibVersion

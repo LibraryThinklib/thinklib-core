@@ -11,9 +11,9 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public class Projectile : MonoBehaviour
 {
-    [Header("Configuração")]
+    [Header("Configuration")]
     public float speed = 20f;
-    [Tooltip("Tempo em segundos antes do projétil se auto-destruir (se não atingir nada).")]
+    [Tooltip("Time in seconds before the projectile self-destructs (if it doesn't hit anything).")]
     public float lifetime = 5.0f;
 
     private Rigidbody2D rb;

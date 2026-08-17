@@ -1,4 +1,16 @@
 # Changelog
+## 0.3.3 — 2026-08-07
+* **Novo – Point & Click:** novo visual do peão do jogador (`PlayerPawnPrefab`), com sprite dedicado (`pawn-img.png`) e reposicionamento/reescala dos prefabs `Node_Prefab` e `EdgePrefab`.
+* **Fix – Menu de componentes:** corrigida a categoria/nome de vários `[AddComponentMenu]` que estavam fora do padrão (`Thinklib/Game/...`, `Thinklib/Core/...`) ou com resíduo em português:
+  * `RewardChest.cs` → `Thinklib/Common/Environment/Reward Chest`
+  * `SawHazard.cs` → `Thinklib/Platformer/Environment/Saw Hazard`
+  * `ProjectileShooterBase.cs` → `Thinklib/Platformer/Combat/Projectile Shooter (Base)`
+  * `PatrollerAI.cs` → `"Patrulheiro AI"` renomeado para `"Patroller AI"`
+* **Fix – Menu de componentes:** removida a duplicidade de nome entre `MovementController` (classe base) e `PlatformerMovementController`/`TopdownMovementController` — a classe base não aparece mais sozinha no menu de Add Component, e os controllers completos ganharam nomes únicos e sem prefixo redundante (`Movement Controller`, `Jump Controller`).
+* **Fix – `ThinklibTagInstaller`:** adicionadas as tags `Blocked` (usada por `TowerPlacement`) e `DespawnZone` (usada por `FallingItem`), que eram exigidas pelo pacote mas não eram criadas automaticamente.
+* **Fix – `ThinklibVersionSync`:** o gerador de `ThinklibVersion.cs` não apaga mais o header de licença Apache-2.0 ao resincronizar, e não grava mais o caminho absoluto da máquina local no comentário do arquivo gerado.
+* **Chore:** `.gitignore` atualizado com os artefatos padrão de projeto Unity (`Library/`, `Logs/`, `Packages/`, `ProjectSettings/`, `UserSettings/`, `Assets/`), que não fazem parte do pacote.
+
 ## 0.3.2 — 2026-05-21
 * **Docs:** adicionado README em Chinês Simplificado (`docs/README.zh-cn.md`).
 * **Docs:** links de idioma adicionados no `README.md` e `docs/README.pt-br.md`.
@@ -28,7 +40,7 @@
   * `GridAgent.cs`, `GridCommandManager.cs`, `GridManager.cs`
   * `Dropzone.cs`, `ItemSlot.cs`
 
-## 0.2.1 — 2026-04-24
+## 0.2.1 — 2026-04-24 *(deprecated)*
 * **Novo – Mecânicas de Platformer:**
   * `RewardChest.cs` — baú de recompensa que cura o jogador ao toque (via `LifeSystemController.Heal`); muda sprite ao ser usado e desativa collider.
   * `SawHazard.cs` — perigo de serra que causa dano ao jogador (via `LifeSystemController.TakeDamage`); suporta modo de patrulha entre pontos A e B com Gizmos de debug.
@@ -56,7 +68,7 @@
   * **PointAndClick / GridCoordinates:** `GridAgent.cs`, `GridCommandManager.cs`, `GridManager.cs`
   * **PointAndClick / Dropzone:** `DropZone.cs`, `ItemSlot.cs`
 
-## 0.2.0 — 2025-12-12
+## 0.2.0 — 2025-12-12 *(deprecated)*
 * **Novo – MIA (Métricas & Instrumentação Analítica):** telemetria unificada no runtime.
   * Eventos padrão: `mechanic_instantiated`, `mechanic_used`, `mechanic_error`.
   * Config via **ThinklibTelemetryConfig.asset** (apiBase/route, batch window, etc.).
@@ -107,7 +119,7 @@
     * **Tower upgrade:** `TowerUpgrade.cs`
 
 
-## 0.1.17 — 2025-09-01
+## 0.1.17 — 2025-09-01 *(deprecated)*
 * **Novo:** adição do menu **Thinklib → Point and Click**, com categorias de componentes para **Dropzone**, **Graph** e **Inventory**:
   * Scripts atualizados com `AddComponentMenu` / `CreateAssetMenu` para aparecerem no menu **Component → Thinklib → Point and Click → …**.
   * Organização interna dos scripts em subpastas lógicas (Dropzone, Graph e Inventory).
@@ -116,7 +128,7 @@
 * **Chore:** pequenas revisões no código para unificação do estilo e estrutura dos atributos `[AddComponentMenu]` e `[CreateAssetMenu]`.
 
 
-## 0.1.16 — 2025-09-01
+## 0.1.16 — 2025-09-01 *(deprecated)*
 * **Novo:** adição do menu **Thinklib → Point and Click**, com categorias de componentes para **Dropzone**, **Graph** e **Inventory**:
   * Scripts atualizados com `AddComponentMenu` / `CreateAssetMenu` para aparecerem no menu **Component → Thinklib → Point and Click → …**.
   * Organização interna dos scripts em subpastas lógicas (Dropzone, Graph e Inventory).
@@ -124,43 +136,43 @@
 * **Chore:** pequenas revisões no código para unificação do estilo e estrutura dos atributos `[AddComponentMenu]` e `[CreateAssetMenu]`.
 
 
-## 0.1.15 — 2025-08-15
+## 0.1.15 — 2025-08-15 *(deprecated)*
 * **Style:** melhorias de estilização no `README.md` para torná-lo mais agradável e informativo para o usuário.
 
-## 0.1.14 — 2025-08-15
+## 0.1.14 — 2025-08-15 *(deprecated)*
 * **Style:** melhorias de estilização no `README.md` para torná-lo mais agradável e informativo para o usuário.
 
-## 0.1.13 — 2025-08-15
-* **Style:** melhorias de estilização no `README.md` para torná-lo mais agradável e informativo para o usuário.
-* **Chore:** remoção de arquivos `.meta` desnecessários fora da pasta `Assets/`.
-
-## 0.1.12 — 2025-08-15
+## 0.1.13 — 2025-08-15 *(deprecated)*
 * **Style:** melhorias de estilização no `README.md` para torná-lo mais agradável e informativo para o usuário.
 * **Chore:** remoção de arquivos `.meta` desnecessários fora da pasta `Assets/`.
 
-## 0.1.11 — 2025-08-15
+## 0.1.12 — 2025-08-15 *(deprecated)*
 * **Style:** melhorias de estilização no `README.md` para torná-lo mais agradável e informativo para o usuário.
 * **Chore:** remoção de arquivos `.meta` desnecessários fora da pasta `Assets/`.
 
-## 0.1.10 — 2025-08-15
+## 0.1.11 — 2025-08-15 *(deprecated)*
 * **Style:** melhorias de estilização no `README.md` para torná-lo mais agradável e informativo para o usuário.
 * **Chore:** remoção de arquivos `.meta` desnecessários fora da pasta `Assets/`.
 
-## 0.1.9 — 2025-08-15
+## 0.1.10 — 2025-08-15 *(deprecated)*
 * **Style:** melhorias de estilização no `README.md` para torná-lo mais agradável e informativo para o usuário.
 * **Chore:** remoção de arquivos `.meta` desnecessários fora da pasta `Assets/`.
 
-## 0.1.8 — 2025-08-15
+## 0.1.9 — 2025-08-15 *(deprecated)*
+* **Style:** melhorias de estilização no `README.md` para torná-lo mais agradável e informativo para o usuário.
+* **Chore:** remoção de arquivos `.meta` desnecessários fora da pasta `Assets/`.
+
+## 0.1.8 — 2025-08-15 *(deprecated)*
 * **Chore:** ajustes de `.workflows`.
 
-## 0.1.7 — 2025-08-15
+## 0.1.7 — 2025-08-15 *(deprecated)*
 * **Style:** melhorias de estilização no `README.md` para torná-lo mais agradável e informativo para o usuário.
 * **Chore:** remoção de arquivos `.meta` desnecessários fora da pasta `Assets/`.
 
-## 0.1.6 — 2025-08-15
+## 0.1.6 — 2025-08-15 *(deprecated)*
 * **Fix:** resolução de problemas de missing scripts em novos prefabs.
 
-## 0.1.5 — 2025-08-15
+## 0.1.5 — 2025-08-15 *(deprecated)*
 
 * **Novo:** adicionados mais **prefabs** de inimigos:
   * **Patroller** (patrulheiro)
@@ -169,14 +181,14 @@
   * **Sniper** (franco-atirador)
 * Prefabs seguem o padrão de organização e referências internas da biblioteca, compatíveis com o sistema de importação via **Thinklib → Import Resources**.
 
-## 0.1.4 — 2025-08-13
+## 0.1.4 — 2025-08-13 *(deprecated)*
 
 * **Novo:** menu **Thinklib → Import Resources** que importa os **prefabs** disponibilizados pela lib para `Assets/Thinklib/Resources/Prefabs` (somente `.prefab`, dependências continuam apontando para os assets do pacote).
 * **Change:** reorganização dos prefabs em `Runtime/Resources/Prefabs/...` e atualização das referências internas para usar assets do próprio pacote (sprites, materials, anims etc.).
 * **Fix:** eliminação de conflitos de **GUID** e de **Missing (Mono Script)** ao importar recursos — o importador ignora `.cs/.asmdef/.asmref`, evitando duplicar código no `Assets/`.
 * **DX:** importação silenciosa (sem diálogos), com log simples no Console indicando a quantidade de prefabs importados.
 
-## 0.1.3 — 2025-08-12
+## 0.1.3 — 2025-08-12 *(deprecated)*
 
 * **Fix:** erros de compilação (**CS1671**) corrigidos ao mover atributos (`AddComponentMenu`, `RequireComponent` etc.) **para dentro** dos `namespace` nos scripts:
 
@@ -201,7 +213,7 @@
 * **Editor:** ajustes de UX nos *inspectors* (rótulos padronizados, seções agrupadas, avisos).
 * **Chore:** limpeza de *namespaces* e referências de asmdefs.
 
-## 0.1.1 — 2025-08-11
+## 0.1.1 — 2025-08-11 *(deprecated)*
 
 * **Release funcional; 0.1.0 marcado como *deprecated*.**
 * Corrigida instalação via UPM (Git URL) com `package.json` válido e metadados.

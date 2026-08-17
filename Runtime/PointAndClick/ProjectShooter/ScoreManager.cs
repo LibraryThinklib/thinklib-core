@@ -14,10 +14,10 @@ public class ScoreManager : MonoBehaviour
     public static ScoreManager instance;
 
     [Header("UI")]
-    [Tooltip("O texto da UI para mostrar a pontuação.")]
+    [Tooltip("The UI text used to display the score.")]
     public TextMeshProUGUI scoreText;
 
-    [Header("Estado")]
+    [Header("State")]
     private int currentScore = 0;
 
     void Awake()
@@ -41,7 +41,7 @@ public class ScoreManager : MonoBehaviour
         
         currentScore += amount;
         UpdateScoreUI();
-        Debug.Log($"Pontuação: {currentScore}");
+        Debug.Log($"Score: {currentScore}");
     }
 
     private void UpdateScoreUI()

@@ -27,7 +27,7 @@ namespace Thinklib.Telemetry
         public long tsUnixMs;
         public Dictionary<string, object> extra;
 
-        // JSON minimamente seguro para strings
+        // Minimal safe JSON escaping for strings
         static string Esc(string s)
         {
             if (s == null) return "";
@@ -46,7 +46,6 @@ namespace Thinklib.Telemetry
             }
         }
 
-        // Serializa 1 evento para JSON em camelCase
         public string ToJson()
         {
             var sb = new StringBuilder(256);

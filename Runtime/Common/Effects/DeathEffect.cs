@@ -54,7 +54,7 @@ public class DeathEffect : MonoBehaviour
         {
             HideUIElements();
 
-            // mechanic_used (primeira execução do efeito)
+            // mechanic_used (first time the effect runs)
             if (!_sentUsed)
             {
                 _sentUsed = true;
@@ -98,7 +98,7 @@ public class DeathEffect : MonoBehaviour
         }
     }
 
-    // >>> Não usar try/catch em iteradores. Use helpers sem yield para telemetria de erro e try/finally aqui.
+    // >>> Don't use try/catch in iterators. Use yield-free helpers for error telemetry, and try/finally here.
     private IEnumerator BlinkAndDestroy()
     {
         float timer = 0f;
@@ -107,22 +107,20 @@ public class DeathEffect : MonoBehaviour
         {
             while (timer < blinkDuration)
             {
-                // Operação sem yield -> pode ter try/catch interno com telemetria
+                // Yield-free operation -> can have internal try/catch with telemetry
                 BlinkStepSafe();
 
-                // O yield permanece limpo (sem catch no iterador)
                 yield return new WaitForSeconds(blinkInterval);
                 timer += blinkInterval;
             }
         }
         finally
         {
-            // Limpeza garantida
             SafeDestroy();
         }
     }
 
-    // Helper sem yield: aqui podemos capturar exceções e enviar telemetria
+    // Yield-free helper: exceptions can be caught and reported via telemetry here
     private void BlinkStepSafe()
     {
         try

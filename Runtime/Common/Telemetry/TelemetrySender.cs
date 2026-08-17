@@ -16,7 +16,7 @@ namespace Thinklib.Telemetry
 {
     public static class TelemetrySender
     {
-        // Coloque false para silenciar logs. Ou defina THINKLIB_TELEMETRY_LOG em Scripting Define Symbols.
+        // Set to false to silence logs. Or define THINKLIB_TELEMETRY_LOG in Scripting Define Symbols.
         const bool LOG = true;
 
         public static IEnumerator PostBatch(TelemetryConfig cfg, List<TelemetryEvent> items, Action<bool, long> onDone)
@@ -34,7 +34,7 @@ namespace Thinklib.Telemetry
 
             if (LOG)
             {
-                // Mostra só o início do payload para não poluir o console
+                // Show only the start of the payload, to avoid flooding the console
                 var preview = body.Length > 400 ? body.Substring(0, 400) + " …" : body;
                 D("POST {0} | events={1} | bytes={2}\nPayload preview: {3}", url, items.Count, data.Length, preview);
             }

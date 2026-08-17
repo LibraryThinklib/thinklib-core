@@ -10,7 +10,7 @@ using UnityEngine;
 
 public class MoveForwardCommand : ICommand
 {
-    public string CommandName => "Mover";
+    public string CommandName => "Move";
 
     public IEnumerator Execute(PlayerAgent agent)
     {

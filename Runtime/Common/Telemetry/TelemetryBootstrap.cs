@@ -22,7 +22,7 @@ namespace Thinklib.Telemetry
             var cfg = Resources.Load<TelemetryConfig>(ConfigResourceName);
             if (cfg == null)
             {
-                // Fallback só para desenvolvimento, para não quebrar
+                // Fallback for development only, so it doesn't break
                 cfg = ScriptableObject.CreateInstance<TelemetryConfig>();
             }
 

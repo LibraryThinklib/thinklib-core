@@ -11,7 +11,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Thinklib.Telemetry;
 
-[AddComponentMenu("Thinklib/Platformer/Movement/Platformer Jump Controller", -98)]
+[AddComponentMenu("Thinklib/Platformer/Movement/Jump Controller", -98)]
 public class PlatformerJumpController : MonoBehaviour
 {
     [Header("Jump Settings")]
@@ -26,7 +26,6 @@ public class PlatformerJumpController : MonoBehaviour
     private bool isGrounded = false;
     private bool canDoubleJump = false;
 
-    // Telemetry
     private const string MechanicName = "Platformer/Jump";
     private bool _sentUsed = false;
 
@@ -36,7 +35,6 @@ public class PlatformerJumpController : MonoBehaviour
         animator = GetComponent<Animator>();
         ConfigureJumpButton();
 
-        // telemetry: instanciado
         ThinklibTelemetry.Track("mechanic_instantiated", MechanicName, nameof(PlatformerJumpController));
     }
 
@@ -47,7 +45,6 @@ public class PlatformerJumpController : MonoBehaviour
             Jump();
         }
 
-        // Update falling state in animator
         animator.SetBool("IsFalling", rb.velocity.y < 0 && !isGrounded);
     }
 
@@ -81,7 +78,7 @@ public class PlatformerJumpController : MonoBehaviour
                 jumped = true;
             }
 
-            // telemetry: primeiro uso real (primeiro pulo efetivo)
+            // Telemetry: first real use (the first effective jump).
             if (jumped && !_sentUsed)
             {
                 _sentUsed = true;
@@ -90,7 +87,6 @@ public class PlatformerJumpController : MonoBehaviour
         }
         catch (Exception ex)
         {
-            // telemetry: erro
             ThinklibTelemetry.Track(
                 "mechanic_error",
                 MechanicName,
@@ -100,7 +96,8 @@ public class PlatformerJumpController : MonoBehaviour
                     { "stack", ex.StackTrace }
                 }
             );
-            throw; // mantém comportamento padrão
+            // Keeps Unity's default behavior (re-throws instead of swallowing the exception).
+            throw;
         }
     }
 

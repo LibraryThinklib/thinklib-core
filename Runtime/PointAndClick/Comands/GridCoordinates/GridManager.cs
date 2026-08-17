@@ -14,11 +14,11 @@ public class GridManager : MonoBehaviour
 {
     public static GridManager instance;
 
-    [Header("Configuração do Grid")]
-    [Tooltip("A posição do mundo (X, Y) da sua célula (0, 0) no canto superior esquerdo.")]
+    [Header("Grid Configuration")]
+    [Tooltip("The world position (X, Y) of your (0, 0) cell, in the top-left corner.")]
     public Vector2 gridOrigin;
 
-    [Tooltip("O tamanho de cada célula do grid (em unidades do Unity).")]
+    [Tooltip("The size of each grid cell (in Unity units).")]
     public float cellSize = 1.0f;
 
     private const string MechanicName = "PointAndClick/GridCoordinates/GridManager";
