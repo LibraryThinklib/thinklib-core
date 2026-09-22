@@ -149,6 +149,8 @@ namespace Thinklib.Platformer.Enemy.Types
             try
             {
                 if (animator != null) animator.SetBool("IsWalking", true);
+
+                Flip();
                 transform.position = Vector2.MoveTowards(transform.position, currentTarget.position, patrolSpeed * Time.deltaTime);
 
                 if (Vector2.Distance(transform.position, currentTarget.position) <= patrolTolerance)
