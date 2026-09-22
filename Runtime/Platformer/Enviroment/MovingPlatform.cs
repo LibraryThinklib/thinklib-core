@@ -30,6 +30,12 @@ public class MovingPlatform : MonoBehaviour
     private bool isActive = false;
     private bool playerOnPlatform = false;
 
+    private const float TopContactTolerance = 0.1f;
+    private Collider2D platformCollider;
+    private Rigidbody2D carriedPlayerRb;
+    private Transform carriedPlayerTransform;
+    private Vector2 previousPosition;
+
     // Telemetry
     private const string MechanicName = "Platformer/Environment/MovingPlatform";
     private bool _sentUsed = false;
@@ -44,7 +50,14 @@ public class MovingPlatform : MonoBehaviour
             return;
         }
 
+        platformCollider = GetComponent<Collider2D>();
+        if (platformCollider == null)
+        {
+            Debug.LogWarning("MovingPlatform has no Collider2D; player-on-top detection will be skipped.");
+        }
+
         transform.position = pointA.position;
+        previousPosition = transform.position;
         targetPoint = pointB;
         isActive = startActive;
 
@@ -156,21 +169,116 @@ public class MovingPlatform : MonoBehaviour
         }
     }
 
+    private void LateUpdate()
+    {
+        Vector2 delta = (Vector2)transform.position - previousPosition;
+
+        if (carriedPlayerTransform != null && delta != Vector2.zero)
+        {
+            if (carriedPlayerRb != null)
+            {
+                carriedPlayerRb.position += delta;
+            }
+            else
+            {
+                carriedPlayerTransform.position += (Vector3)delta;
+            }
+        }
+
+        previousPosition = transform.position;
+    }
+
+    private bool IsPlayerOnTop(Collision2D collision)
+    {
+        if (platformCollider == null) return false;
+
+        float platformTop = platformCollider.bounds.max.y;
+        float playerBottom = collision.collider.bounds.min.y;
+
+        if (Mathf.Abs(playerBottom - platformTop) > TopContactTolerance) return false;
+
+        for (int i = 0; i < collision.contactCount; i++)
+        {
+            Vector2 normal = collision.GetContact(i).normal;
+            if (Mathf.Abs(normal.y) > Mathf.Abs(normal.x)) return true;
+        }
+
+        return false;
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (!collision.gameObject.CompareTag("Player")) return;
+
+        try
         {
-            playerOnPlatform = true;
-            collision.transform.SetParent(transform); // Makes the player move together with the platform
+            if (IsPlayerOnTop(collision))
+            {
+                playerOnPlatform = true;
+                carriedPlayerRb = collision.rigidbody;
+                carriedPlayerTransform = collision.transform;
+            }
+        }
+        catch (Exception ex)
+        {
+            ThinklibTelemetry.Track(
+                "mechanic_error",
+                MechanicName,
+                nameof(MovingPlatform),
+                new Dictionary<string, object> {
+                    { "where", "OnCollisionEnter2D" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                }
+            );
+            throw;
+        }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (!collision.gameObject.CompareTag("Player")) return;
+
+        try
+        {
+            if (IsPlayerOnTop(collision))
+            {
+                playerOnPlatform = true;
+                carriedPlayerRb = collision.rigidbody;
+                carriedPlayerTransform = collision.transform;
+            }
+            else if (carriedPlayerTransform == collision.transform)
+            {
+                playerOnPlatform = false;
+                carriedPlayerRb = null;
+                carriedPlayerTransform = null;
+            }
+        }
+        catch (Exception ex)
+        {
+            ThinklibTelemetry.Track(
+                "mechanic_error",
+                MechanicName,
+                nameof(MovingPlatform),
+                new Dictionary<string, object> {
+                    { "where", "OnCollisionStay2D" },
+                    { "message", ex.Message },
+                    { "stack", ex.StackTrace }
+                }
+            );
+            throw;
         }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (!collision.gameObject.CompareTag("Player")) return;
+
+        if (carriedPlayerTransform == collision.transform)
         {
             playerOnPlatform = false;
-            collision.transform.SetParent(null);
+            carriedPlayerRb = null;
+            carriedPlayerTransform = null;
         }
     }
 
