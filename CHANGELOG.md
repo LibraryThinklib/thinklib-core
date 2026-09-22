@@ -1,4 +1,7 @@
 # Changelog
+## 0.3.6 — 2026-09-22
+* **Fix – `TimedPlatform`:** o modo `Disappear` agora faz fade/desliga/restaura **todos** os `SpriteRenderer` da hierarquia (o do pai, se houver, mais os de todos os filhos), não só o do objeto pai. Corrige o caso onde a arte é montada em tiles-filhos (`SpriteRenderer` em GameObjects filhos): antes só o collider sumia com a física, mas os tiles filhos continuavam visíveis; agora todos somem juntos no fade e voltam com a cor original no respawn. O modo `Fall` não foi alterado.
+
 ## 0.3.5 — 2026-09-22
 * **Fix – `MovingPlatform`:** carregar o jogador não usa mais `SetParent`. Aninhar o `Rigidbody2D` Dynamic do jogador dentro do `Rigidbody2D` Kinematic da plataforma fazia a física brigar e teleportava o jogador perto das bordas do collider. Agora o jogador só é considerado "em cima" quando o contato indica a superfície superior (base do collider do jogador próxima do topo da plataforma + normal do contato predominantemente vertical, checado continuamente via `OnCollisionStay2D`), e é carregado aplicando o deslocamento por frame da plataforma na posição do `Rigidbody2D` do jogador (`LateUpdate`), sem reparentear. Contato lateral ou por baixo não gruda nem arrasta mais o jogador.
 
