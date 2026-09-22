@@ -10,6 +10,6 @@ namespace Thinklib.Telemetry
     internal static class ThinklibVersion
     {
         public const string PackageName = "com.thinklib.core";
-        public const string PackageVersion = "0.3.4";
+        public const string PackageVersion = "0.3.5";
     }
 }

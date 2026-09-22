@@ -1,4 +1,7 @@
 # Changelog
+## 0.3.5 — 2026-09-22
+* **Fix – `MovingPlatform`:** carregar o jogador não usa mais `SetParent`. Aninhar o `Rigidbody2D` Dynamic do jogador dentro do `Rigidbody2D` Kinematic da plataforma fazia a física brigar e teleportava o jogador perto das bordas do collider. Agora o jogador só é considerado "em cima" quando o contato indica a superfície superior (base do collider do jogador próxima do topo da plataforma + normal do contato predominantemente vertical, checado continuamente via `OnCollisionStay2D`), e é carregado aplicando o deslocamento por frame da plataforma na posição do `Rigidbody2D` do jogador (`LateUpdate`), sem reparentear. Contato lateral ou por baixo não gruda nem arrasta mais o jogador.
+
 ## 0.3.4 — 2026-09-22
 * **Fix – `SawHazard`:** o dano agora respeita a invulnerabilidade do jogador, igual ao resto do jogo. Trocado `OnTriggerEnter2D` por `OnTriggerStay2D`: enquanto o jogador estiver na serra, dano só é reaplicado quando o `PlayerHurtEffect` (se presente) sinalizar `IsInvulnerable == false`, e `TriggerInvulnerability()` é disparado a cada dano para abrir a janela de imunidade/piscar. Sem `PlayerHurtEffect` no jogador, um cooldown simples (`damageInterval`, padrão 1s) evita drenar vida todo frame.
 
