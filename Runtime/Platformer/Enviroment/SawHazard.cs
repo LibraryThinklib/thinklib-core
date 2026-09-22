@@ -18,6 +18,9 @@ public class SawHazard : MonoBehaviour
     [Tooltip("How much damage this saw deals when touching the player.")]
     public int damageAmount = 1;
 
+    [Tooltip("Fallback damage cooldown (seconds) used only when the player has no PlayerHurtEffect component.")]
+    public float damageInterval = 1f;
+
     [Header("Movement (Patrol)")]
     [Tooltip("Check if this saw should move.")]
     public bool shouldMove = false;
@@ -35,6 +38,7 @@ public class SawHazard : MonoBehaviour
 
     private Vector2 targetPosition;
     private bool _sentUsed = false;
+    private float _damageCooldownTimer = 0f;
 
     private void Awake()
     {
@@ -73,7 +77,7 @@ public class SawHazard : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerStay2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
 
@@ -83,7 +87,19 @@ public class SawHazard : MonoBehaviour
 
             if (lifeSystem != null)
             {
+                PlayerHurtEffect hurtEffect = other.GetComponent<PlayerHurtEffect>();
+
+                if (hurtEffect != null && hurtEffect.IsInvulnerable) return;
+
+                if (hurtEffect == null)
+                {
+                    _damageCooldownTimer -= Time.deltaTime;
+                    if (_damageCooldownTimer > 0f) return;
+                    _damageCooldownTimer = damageInterval;
+                }
+
                 lifeSystem.TakeDamage(damageAmount);
+                hurtEffect?.TriggerInvulnerability();
 
                 if (!_sentUsed)
                 {
@@ -106,7 +122,7 @@ public class SawHazard : MonoBehaviour
             ThinklibTelemetry.Track("mechanic_error", MechanicName, nameof(SawHazard),
                 new Dictionary<string, object>
                 {
-                    { "where", "OnTriggerEnter2D" },
+                    { "where", "OnTriggerStay2D" },
                     { "message", ex.Message },
                     { "stack", ex.StackTrace }
                 });
