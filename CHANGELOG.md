@@ -1,4 +1,7 @@
 # Changelog
+## 0.3.8 — 2026-09-22
+* **Fix – `EnemyShooterAI`:** patrulheiros voltam a virar pra direção real do movimento assim que o jogador sai do `shootingRadius`. Antes, depois de virar pro jogador (via `FacePlayer`), o inimigo continuava andando de costas até alcançar o ponto extremo da patrulha, porque `Flip()` só era chamado na troca de alvo. Agora `Patrol()` chama `Flip()` a cada frame, corrigindo a orientação no frame seguinte.
+
 ## 0.3.7 — 2026-09-22
 * **Fix – `EnemyShooterAI`:** o inimigo agora vira o sprite pra encarar o jogador continuamente enquanto ele está dentro do `shootingRadius`, mesmo em modo estático (`isStatic = true`, sem patrulha) e mesmo em cooldown entre tiros. Antes o flip só acontecia dentro de `Patrol()`, então um atirador estático nunca virava e podia atirar de costas pro jogador. A direção do projétil e o `aimAtTarget` não mudaram.
 
