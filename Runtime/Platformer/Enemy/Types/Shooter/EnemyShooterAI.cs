@@ -84,6 +84,8 @@ namespace Thinklib.Platformer.Enemy.Types
 
                 if (distance <= shootingRadius)
                 {
+                    FacePlayer();
+
                     if (currentCooldown <= 0f)
                     {
                         Vector2 direction = aimAtTarget
@@ -175,6 +177,19 @@ namespace Thinklib.Platformer.Enemy.Types
         {
             Vector3 scale = transform.localScale;
             float direction = currentTarget.position.x - transform.position.x;
+
+            if (direction > 0f)
+                scale.x = Mathf.Abs(scale.x);
+            else if (direction < 0f)
+                scale.x = -Mathf.Abs(scale.x);
+
+            transform.localScale = scale;
+        }
+
+        private void FacePlayer()
+        {
+            Vector3 scale = transform.localScale;
+            float direction = player.position.x - transform.position.x;
 
             if (direction > 0f)
                 scale.x = Mathf.Abs(scale.x);
