@@ -1,4 +1,8 @@
 # Changelog
+## 0.4.0 — 2026-09-22
+* **Novo – `RewardChest`:** modo de abertura configurável (`OpenMode`): `OnTouch` (comportamento anterior) ou `OnKeyPress` (abre com uma tecla configurável enquanto o jogador está no trigger). Recompensa agora entregue via `GameManager.AddCollectible(rewardType, rewardAmount)`, suportando `Coin` e `Life` como qualquer outro coletável. Nova animação cosmética opcional (`rewardVisualPrefab` surge em `launchPoint`, sobe com fade-in, segura e some com fade-out) que roda em paralelo e não bloqueia a entrega da recompensa.
+* **Breaking – `RewardChest`:** o campo público `healthToGive` foi removido e substituído por `rewardType` (`CollectibleType`, default `Life`) + `rewardAmount`. Baús configurados com `healthToGive` em cenas existentes precisam ser reconfigurados com os novos campos.
+
 ## 0.3.8 — 2026-09-22
 * **Fix – `EnemyShooterAI`:** patrulheiros voltam a virar pra direção real do movimento assim que o jogador sai do `shootingRadius`. Antes, depois de virar pro jogador (via `FacePlayer`), o inimigo continuava andando de costas até alcançar o ponto extremo da patrulha, porque `Flip()` só era chamado na troca de alvo. Agora `Patrol()` chama `Flip()` a cada frame, corrigindo a orientação no frame seguinte.
 
