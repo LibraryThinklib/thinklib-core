@@ -1,4 +1,7 @@
 # Changelog
+## 0.3.7 — 2026-09-22
+* **Fix – `EnemyShooterAI`:** o inimigo agora vira o sprite pra encarar o jogador continuamente enquanto ele está dentro do `shootingRadius`, mesmo em modo estático (`isStatic = true`, sem patrulha) e mesmo em cooldown entre tiros. Antes o flip só acontecia dentro de `Patrol()`, então um atirador estático nunca virava e podia atirar de costas pro jogador. A direção do projétil e o `aimAtTarget` não mudaram.
+
 ## 0.3.6 — 2026-09-22
 * **Fix – `TimedPlatform`:** o modo `Disappear` agora faz fade/desliga/restaura **todos** os `SpriteRenderer` da hierarquia (o do pai, se houver, mais os de todos os filhos), não só o do objeto pai. Corrige o caso onde a arte é montada em tiles-filhos (`SpriteRenderer` em GameObjects filhos): antes só o collider sumia com a física, mas os tiles filhos continuavam visíveis; agora todos somem juntos no fade e voltam com a cor original no respawn. O modo `Fall` não foi alterado.
 
