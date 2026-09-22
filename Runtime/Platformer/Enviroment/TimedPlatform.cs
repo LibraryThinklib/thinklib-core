@@ -33,8 +33,8 @@ public class TimedPlatform : MonoBehaviour
 
     private Rigidbody2D rb;
     private Collider2D col;
-    private SpriteRenderer sr;
-    private Color originalColor;
+    private SpriteRenderer[] spriteRenderers;
+    private Color[] originalColors;
     private Vector3 originalPosition;
     private Quaternion originalRotation;
     private bool isTriggered = false;
@@ -47,9 +47,14 @@ public class TimedPlatform : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
-        sr = GetComponent<SpriteRenderer>();
+        spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
 
-        originalColor = sr.color;
+        originalColors = new Color[spriteRenderers.Length];
+        for (int i = 0; i < spriteRenderers.Length; i++)
+        {
+            originalColors[i] = spriteRenderers[i].color;
+        }
+
         originalPosition = transform.position;
         originalRotation = transform.rotation;
 
@@ -134,7 +139,7 @@ public class TimedPlatform : MonoBehaviour
             while (elapsed < fadeDuration)
             {
                 // Step without yield -> can have an internal try/catch
-                SafeSetAlpha(Mathf.Lerp(originalColor.a, 0f, elapsed / fadeDuration));
+                SafeSetAlpha(Mathf.Lerp(1f, 0f, elapsed / fadeDuration));
                 elapsed += Time.deltaTime;
 
                 yield return null;
@@ -146,12 +151,15 @@ public class TimedPlatform : MonoBehaviour
         }
     }
 
-    private void SafeSetAlpha(float alpha)
+    private void SafeSetAlpha(float t)
     {
         try
         {
-            var c = sr.color;
-            sr.color = new Color(c.r, c.g, c.b, alpha);
+            for (int i = 0; i < spriteRenderers.Length; i++)
+            {
+                Color original = originalColors[i];
+                spriteRenderers[i].color = new Color(original.r, original.g, original.b, original.a * t);
+            }
         }
         catch (Exception ex)
         {
@@ -161,7 +169,7 @@ public class TimedPlatform : MonoBehaviour
                 nameof(TimedPlatform),
                 new Dictionary<string, object> {
                     { "where", "SafeSetAlpha" },
-                    { "alpha", alpha },
+                    { "t", t },
                     { "message", ex.Message },
                     { "stack", ex.StackTrace }
                 }
@@ -174,9 +182,13 @@ public class TimedPlatform : MonoBehaviour
     {
         try
         {
-            var c = sr.color;
-            sr.color = new Color(c.r, c.g, c.b, 0f);
-            sr.enabled = false;
+            for (int i = 0; i < spriteRenderers.Length; i++)
+            {
+                Color original = originalColors[i];
+                spriteRenderers[i].color = new Color(original.r, original.g, original.b, 0f);
+                spriteRenderers[i].enabled = false;
+            }
+
             col.enabled = false;
 
             if (enableRespawn)
@@ -200,9 +212,13 @@ public class TimedPlatform : MonoBehaviour
 
     private void ResetPlatform()
     {
-        sr.enabled = true;
+        for (int i = 0; i < spriteRenderers.Length; i++)
+        {
+            spriteRenderers[i].enabled = true;
+            spriteRenderers[i].color = originalColors[i];
+        }
+
         col.enabled = true;
-        sr.color = originalColor;
 
         rb.velocity = Vector2.zero;
         rb.angularVelocity = 0f;
