@@ -1,4 +1,7 @@
 # Changelog
+## 0.3.4 — 2026-09-22
+* **Fix – `SawHazard`:** o dano agora respeita a invulnerabilidade do jogador, igual ao resto do jogo. Trocado `OnTriggerEnter2D` por `OnTriggerStay2D`: enquanto o jogador estiver na serra, dano só é reaplicado quando o `PlayerHurtEffect` (se presente) sinalizar `IsInvulnerable == false`, e `TriggerInvulnerability()` é disparado a cada dano para abrir a janela de imunidade/piscar. Sem `PlayerHurtEffect` no jogador, um cooldown simples (`damageInterval`, padrão 1s) evita drenar vida todo frame.
+
 ## 0.3.3 — 2026-08-07
 * **Novo – Point & Click:** novo visual do peão do jogador (`PlayerPawnPrefab`), com sprite dedicado (`pawn-img.png`) e reposicionamento/reescala dos prefabs `Node_Prefab` e `EdgePrefab`.
 * **Fix – Menu de componentes:** corrigida a categoria/nome de vários `[AddComponentMenu]` que estavam fora do padrão (`Thinklib/Game/...`, `Thinklib/Core/...`) ou com resíduo em português:
